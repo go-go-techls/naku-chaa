@@ -13,7 +13,7 @@ const ArtworkDetails = () => {
       <Box style={{height:"25%"}}></Box>
       <Box display="flex" alignItems="center">
         <Typography mr={0.7} variant="h4" component="h1" sx={{ flexGrow: 0 }}>
-          猫と女の子のお茶会
+          お召し上がり
         </Typography>
         <IconButton onClick={handleReload} aria-label="リロード">
           <RefreshIcon />
@@ -23,19 +23,19 @@ const ArtworkDetails = () => {
         こんな絵に見える
       </Typography>
       <Typography variant="body1" gutterBottom>
-        女性が猫と鳥と一緒に窓に座っています。鳥が飛んでいる間、猫は口を開けています。このシーンには2つのパイも表示されています。
+        この作品は、絵画におけるアイデンティティと創造性を表現したり、自然な形状と動物の顔を組み合わせたりすることで、視聴者に新たな感情や思い出をもたらす。
       </Typography>
       <Typography mt={3}　variant="h6" gutterBottom>
         この絵の良いところ
       </Typography>
       <Typography variant="body1" gutterBottom>
-        子供たちにとって楽しいイラストレーションで、猫や鳥が描かれている。女性が窓から吹き出される蒸気を手で捕まえるというユニークなシチュエーションがあり、子供たちにとって魅力的である。
+      この絵は、小さなアニメーションのキャラクターが描かれており、その中にはペンギンやサルが含まれています。キャラクターたちは、彼らが食べることに焦点を当てており、一部はパンを食べています。
       </Typography>
       <Typography mt={3}　variant="h6" gutterBottom>
         こんな工夫もできそう
       </Typography>
       <Typography mb={4} variant="body1" gutterBottom>
-        このイラストレーションは、子供達に楽しんでもらえるような色彩とキャラクターが使われています。
+      この作家が次の作品を制作する時のテーマや画材のアドバイスは、子供たちに楽しんでもらえる絵本風のキャラクターとデザイン、色彩、アニメーションを用いて、動物や料理、冒険、友情などのテーマを描くことが重要です。
       </Typography>
       <Divider></Divider>
       <Typography mt={4}　variant="h6" gutterBottom>
