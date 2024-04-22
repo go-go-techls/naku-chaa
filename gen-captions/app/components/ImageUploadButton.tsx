@@ -1,105 +1,60 @@
-import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import { Fab, Input } from "@mui/material";
+import React from "react";
+import { Fab } from "@mui/material";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Dispatch, SetStateAction } from "react";
+import { fetchData } from "@/lib/generate";
 
 interface ChildComponentProps {
   setImageBase64: Dispatch<SetStateAction<string>>;
-  setData: Dispatch<SetStateAction<string>>;
+  setTitle: Dispatch<SetStateAction<string>>;
+  setFeature: Dispatch<SetStateAction<string>>;
+  setAdvantage: Dispatch<SetStateAction<string>>;
+  setAdvice: Dispatch<SetStateAction<string>>;
 }
 
-function ImageUploadButton({ setImageBase64, setData }: ChildComponentProps) {
+function ImageUploadButton({
+  setImageBase64,
+  setTitle,
+  setFeature,
+  setAdvantage,
+  setAdvice,
+}: ChildComponentProps) {
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files && event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        setImageBase64(e.target!.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      return <div>ファイル読み取りエラー</div>;
     }
-    //   };
 
-    //   async function fetchData() {
-    const req = {
-      model: "llama2",
-      prompt: "この作品のタイトルを日本語で答えて",
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const base64ImageDisplay = e.target!.result as string;
+      const base64Image = (e.target!.result as string).split(",")[1];
+
+      setImageBase64(base64ImageDisplay);
+      fetchData(
+        base64Image,
+        "この絵画が伝えている感情やストーリーを考え、それに合ったタイトルを20字以内で教えてください。日本語でタイトルだけ返してください。",
+        setTitle
+      );
+      fetchData(
+        base64Image,
+        "多く人が共感する説明を、100字以内で考えてください。",
+        setFeature
+      );
+      fetchData(
+        base64Image,
+        "この画像を日本語で100字程度で褒めてください。",
+        setAdvantage
+      );
+      fetchData(
+        base64Image,
+        "この作者が次の作品を制作する時の、テーマや画材のアドバイスをそれぞれ100字以内で考えてください。",
+        setAdvice
+      );
     };
-
-    const URL = "http://localhost:11434/api/generate";
-
-    try {
-      const response = await fetch(URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(req),
-      });
-      // setLoading(true);
-
-      const reader = response!.body!.getReader();
-      let accumulatedText = ""; // 読み取ったテキストを蓄積する変数
-      let accumulatedResponse = ""; // response値を蓄積する変数
-
-      // チャンク処理の再帰関数をasync/awaitで実装
-      const processText = async () => {
-        const { done, value } = await reader.read();
-        if (done) {
-          console.log("Stream complete");
-          // setLoading(false);
-
-          // console.log(accumulatedText); // 最後に蓄積されたテキストをログに出力
-          return;
-        }
-
-        // チャンクをデコードして蓄積
-        accumulatedText += new TextDecoder("utf-8").decode(value);
-
-        // 蓄積されたテキストから完全なJSONオブジェクトを抽出し処理
-        try {
-          let startPos = 0;
-          let endPos = 0;
-
-          // 複数のJSONオブジェクトを処理するためのループ
-          while (
-            (startPos = accumulatedText.indexOf("{", endPos)) !== -1 &&
-            (endPos = accumulatedText.indexOf("}", startPos)) !== -1
-          ) {
-            const jsonString = accumulatedText.substring(startPos, endPos + 1);
-            try {
-              const jsonObj = JSON.parse(jsonString);
-              if (jsonObj.response) {
-                // JSONオブジェクトのresponseプロパティを処理
-                // console.log(jsonObj.response);
-                accumulatedResponse += jsonObj.response; // divに内容を追加
-                // resultDiv.textContent = accumulatedResponse;
-                setData(accumulatedResponse);
-              }
-            } catch (e) {
-              console.error("Error parsing JSON chunk", e);
-            }
-            // 処理済みの部分を蓄積テキストから削除
-            accumulatedText = accumulatedText.substring(endPos + 1);
-            endPos = 0; // インデックスをリセット
-          }
-        } catch (error) {
-          console.error("Error processing accumulated text", error);
-        }
-
-        // 次のチャンクを再帰的に処理
-        await processText();
-      };
-
-      await processText();
-    } catch (error) {
-      console.error(error);
-      // resultDiv.style.display = "none"; // エラーが発生した場合に表示を非表示にする
-      setData("エラーです。もう一度試してみてください。");
-    }
+    reader.readAsDataURL(file);
   };
 
   return (

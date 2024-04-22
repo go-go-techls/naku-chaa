@@ -8,7 +8,10 @@ import { useState } from "react";
 import ImageUploadButton from "./components/ImageUploadButton";
 
 export default function Home() {
-  const [data, setData] = useState("");
+  const [title, setTitle] = useState("");
+  const [feature, setFeature] = useState("");
+  const [advantage, setAdvantage] = useState("");
+  const [advice, setAdvice] = useState("");
   const [imageBase64, setImageBase64] = useState("");
 
   // const [loading, setLoading] = useState(false);
@@ -37,7 +40,13 @@ export default function Home() {
         >
           <ArtworkDisplay imageBase64={imageBase64} />
         </Grid>
-        <ImageUploadButton setImageBase64={setImageBase64} setData={setData} />
+        <ImageUploadButton
+          setImageBase64={setImageBase64}
+          setTitle={setTitle}
+          setFeature={setFeature}
+          setAdvantage={setAdvantage}
+          setAdvice={setAdvice}
+        />
 
         <Grid
           item
@@ -46,7 +55,12 @@ export default function Home() {
           container
           style={{ height: "100vh", width: "100vw" }}
         >
-          <ArtworkDetails title={data} />
+          <ArtworkDetails
+            title={title}
+            feature={feature}
+            advantage={advantage}
+            advice={advice}
+          />
         </Grid>
       </Grid>
     </Box>
