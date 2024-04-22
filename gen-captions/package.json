@@ -1,0 +1,39 @@
+{
+  "name": "next-langchain",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@langchain/community": "^0.0.50",
+    "@langchain/core": "^0.1.58",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "@mui/material-nextjs": "^5.15.11",
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
+    "ai": "2.2.16",
+    "langchain": "^0.0.129",
+    "next": "13.4.12",
+    "postcss-nesting": "^12.1.2",
+    "react": "18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.12",
+    "@types/react": "18.2.8",
+    "@types/react-dom": "18.2.4",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^7.32.0",
+    "eslint-config-next": "13.4.12",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.4.3",
+    "typescript": "5.1.3"
+  }
+}
