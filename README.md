@@ -18,3 +18,9 @@ npm run dev
 ```
 
 app/README.md 参照
+
+## 初めて実装する時
+
+```
+npm install
+```
