@@ -1,8 +1,10 @@
+"use client";
 import React from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Box, Fab } from "@mui/material";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { Box } from "@mui/material";
+import Link from "next/link";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { list } from "@/lib/testList";
 
 function ImageGrid() {
@@ -16,29 +18,41 @@ function ImageGrid() {
       minHeight="100vh"
     >
       <Grid container spacing={2}>
-        {images.map((src, index) => (
-          <Grid item xs={12} sm={4} key={index}>
+        <Grid item xs={12} sm={4}>
+          <Link href={`/`} passHref>
             <Paper
               elevation={3}
               sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 width: "32.4vw", // ビューポートの1/3の幅
                 height: "32.4vw", // ビューポートの1/3の高さ
-                backgroundImage: `url(${src.image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                overflow: "hidden",
               }}
-            />
+            >
+              <AddCircleOutlineIcon fontSize="large" color="action" />
+            </Paper>
+          </Link>
+        </Grid>
+
+        {images.map((src, index) => (
+          <Grid item xs={12} sm={4} key={index}>
+            <Link href={`/arts/${src.id}`} passHref>
+              <Paper
+                elevation={3}
+                sx={{
+                  width: "32.4vw", // ビューポートの1/3の幅
+                  height: "32.4vw", // ビューポートの1/3の高さ
+                  backgroundImage: `url(${src.image})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  overflow: "hidden",
+                }}
+              />
+            </Link>
           </Grid>
         ))}
       </Grid>
-      <Fab
-        color="primary"
-        aria-label="add"
-        style={{ position: "fixed", bottom: 20, left: 20 }}
-      >
-        <CameraAltIcon />
-      </Fab>
     </Box>
   );
 }

@@ -8,6 +8,7 @@ import { useState } from "react";
 import ImageUploadButton from "./components/ImageUploadButton";
 import ArtworkTitle from "./components/ArtworkTitle";
 import RefreshTitle from "./components/RefreshTitle";
+import Link from "next/link";
 
 export default function Home() {
   const [title, setTitle] = useState("");
@@ -20,13 +21,16 @@ export default function Home() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <IconButton
-        aria-label="戻る"
-        size="large"
-        sx={{ position: "fixed", top: "1rem", left: "1rem" }}
-      >
-        <ArrowBackIosNewIcon />
-      </IconButton>
+      <Link href="/list" passHref>
+        <IconButton
+          aria-label="戻る"
+          size="large"
+          sx={{ position: "fixed", top: "1rem", left: "1rem" }}
+        >
+          <ArrowBackIosNewIcon />
+        </IconButton>
+      </Link>
+
       <Grid
         container
         // style={{ height: "100vh", width: "100vw"}}
@@ -70,6 +74,7 @@ export default function Home() {
               advantage={advantage}
               advice={advice}
               image={imageBase64}
+              disable={false}
             />
           </Box>
         </Grid>

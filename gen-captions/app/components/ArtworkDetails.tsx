@@ -16,6 +16,7 @@ interface ChildComponentProps {
   advantage: string;
   advice: string;
   image: string;
+  disable: boolean;
 }
 const ArtworkDetails = ({
   title,
@@ -23,6 +24,7 @@ const ArtworkDetails = ({
   advantage,
   advice,
   image,
+  disable,
 }: ChildComponentProps) => {
   // ユーザー入力を保持するための状態変数を初期化
   const [inputValue, setInputValue] = useState("");
@@ -98,7 +100,7 @@ const ArtworkDetails = ({
       <Typography mt={4} variant="h6" gutterBottom>
         フィードバック
       </Typography>
-      <RadioGroupRating disabled={!done} setRating={setRating} />
+      <RadioGroupRating disabled={disable || !done} setRating={setRating} />
       <Box
         component="form"
         sx={{
@@ -112,7 +114,7 @@ const ArtworkDetails = ({
         <TextField
           value={inputValue} // テキストフィールドの値として状態変数を設定
           onChange={handleInputChange} // 値が変更されたときに実行する関数を設定
-          disabled={!done}
+          disabled={disable || !done}
           fullWidth
           label="コメントを残す"
           variant="outlined"
@@ -123,7 +125,7 @@ const ArtworkDetails = ({
         <Button
           variant="contained"
           fullWidth
-          disabled={!done}
+          disabled={disable || !done}
           onClick={handleSave}
         >
           保存
