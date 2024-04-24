@@ -6,6 +6,7 @@ import {
   IconButton,
   Divider,
   Skeleton,
+  Button,
 } from "@mui/material";
 import RadioGroupRating from "./RadioGroupRating";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -25,6 +26,8 @@ const ArtworkDetails = ({
   const handleReload = () => {
     window.location.reload(); // ページの再読み込み
   };
+
+  const done = title && feature && advantage && advice;
 
   return (
     <Box sx={{ p: 4 }} style={{ maxHeight: "100vh", overflow: "auto" }}>
@@ -78,16 +81,29 @@ const ArtworkDetails = ({
       <Typography mt={4} variant="h6" gutterBottom>
         フィードバック
       </Typography>
-      <RadioGroupRating disabled={!(title && feature && advantage && advice)} />
-      <Box component="form" sx={{ mt: 1 }}>
+      <RadioGroupRating disabled={!done} />
+      <Box
+        component="form"
+        sx={{
+          // display: "flex", // Flexbox container
+          alignItems: "center", // Align items vertically
+          width: "100%", // フォームの幅を100%に設定
+
+          mt: 1,
+        }}
+      >
         <TextField
-          disabled={!(title && feature && advantage && advice)}
+          disabled={!done}
           fullWidth
           label="コメントを残す"
           variant="outlined"
           multiline
           rows={2}
-        />
+          sx={{ mb: 1 }}
+        />{" "}
+        <Button variant="contained" fullWidth disabled={!done}>
+          保存
+        </Button>
       </Box>
     </Box>
   );
