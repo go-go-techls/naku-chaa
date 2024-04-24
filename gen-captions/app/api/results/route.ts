@@ -1,7 +1,7 @@
 // app/routes/api/results.tsx
 import { v4 as uuidv4 } from "uuid";
 
-type DataItem = {
+export type DataItem = {
   id: string;
   title: string;
   feature: string;
