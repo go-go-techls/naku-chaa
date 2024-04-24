@@ -46,10 +46,15 @@ function IconContainer(props: IconContainerProps) {
   return <span {...other}>{customIcons[value].icon}</span>;
 }
 
-export default function RadioGroupRating() {
+interface ChildComponentProps {
+  disabled: boolean;
+}
+
+export default function RadioGroupRating({ disabled }: ChildComponentProps) {
   return (
     <StyledRating
       name="highlight-selected-only"
+      disabled={disabled}
       defaultValue={3}
       IconContainerComponent={IconContainer}
       getLabelText={(value: number) => customIcons[value].label}

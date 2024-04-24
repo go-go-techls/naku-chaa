@@ -78,9 +78,10 @@ const ArtworkDetails = ({
       <Typography mt={4} variant="h6" gutterBottom>
         フィードバック
       </Typography>
-      <RadioGroupRating />
+      <RadioGroupRating disabled={!(title && feature && advantage && advice)} />
       <Box component="form" sx={{ mt: 1 }}>
         <TextField
+          disabled={!(title && feature && advantage && advice)}
           fullWidth
           label="コメントを残す"
           variant="outlined"

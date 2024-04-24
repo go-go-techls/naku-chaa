@@ -9,8 +9,11 @@ export async function fetchData(
     model: "llava",
     prompt: prompt,
     images: [base64Image],
+    options: {
+      num_predict: 5, // TODO
+    },
   };
-
+  console.log("start to generate!");
   const URL = "http://localhost:11434/api/generate";
   // const URL = "http://macbook.local:11434/api/generate";
 
@@ -32,10 +35,9 @@ export async function fetchData(
     const processText = async () => {
       const { done, value } = await reader.read();
       if (done) {
-        console.log("Stream complete");
         // setLoading(false);
-
-        // console.log(accumulatedText); // 最後に蓄積されたテキストをログに出力
+        console.log(accumulatedResponse); // 最後に蓄積されたテキストをログに出力
+        // return accumulatedResponse;
         return;
       }
 
@@ -78,6 +80,7 @@ export async function fetchData(
     };
 
     await processText();
+    return accumulatedResponse;
   } catch (error) {
     console.error(error);
     // resultDiv.style.display = "none"; // エラーが発生した場合に表示を非表示にする
