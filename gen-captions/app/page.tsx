@@ -6,6 +6,8 @@ import ArtworkDetails from "./components/ArtworkDetails";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useState } from "react";
 import ImageUploadButton from "./components/ImageUploadButton";
+import ArtworkTitle from "./components/ArtworkTitle";
+import RefreshTitle from "./components/RefreshTitle";
 
 export default function Home() {
   const [title, setTitle] = useState("");
@@ -55,12 +57,21 @@ export default function Home() {
           container
           style={{ height: "100vh", width: "100vw" }}
         >
-          <ArtworkDetails
-            title={title}
-            feature={feature}
-            advantage={advantage}
-            advice={advice}
-          />
+          <Box
+            sx={{ p: 4, mt: 4 }}
+            style={{ maxHeight: "100vh", overflow: "auto" }}
+          >
+            <ArtworkTitle title={title}>
+              <RefreshTitle imageBase64={imageBase64} setTitle={setTitle} />
+            </ArtworkTitle>
+            <ArtworkDetails
+              title={title}
+              feature={feature}
+              advantage={advantage}
+              advice={advice}
+              image={imageBase64}
+            />
+          </Box>
         </Grid>
       </Grid>
     </Box>

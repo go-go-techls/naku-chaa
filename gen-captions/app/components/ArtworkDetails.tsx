@@ -1,37 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Box,
   TextField,
-  IconButton,
   Divider,
   Skeleton,
   Button,
 } from "@mui/material";
 import RadioGroupRating from "./RadioGroupRating";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import { Data, postResult } from "@/lib/postResult";
 
 interface ChildComponentProps {
   title: string;
   feature: string;
   advantage: string;
   advice: string;
+  image: string;
 }
 const ArtworkDetails = ({
   title,
   feature,
   advantage,
   advice,
+  image,
 }: ChildComponentProps) => {
-  const handleReload = () => {
-    window.location.reload(); // ページの再読み込み
+  // ユーザー入力を保持するための状態変数を初期化
+  const [inputValue, setInputValue] = useState("");
+  const [rating, setRating] = useState(3);
+
+  // ユーザーがテキストフィールドに入力した値で状態を更新する関数
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSave = async () => {
+    const req: Data = {
+      title: title,
+      feature: feature,
+      advantage: advantage,
+      advice: advice,
+      image: image,
+      rating: rating,
+      comment: inputValue,
+    };
+    postResult(req);
+    // window.location.reload(); // ページの再読み込み
   };
 
   const done = title && feature && advantage && advice;
 
   return (
-    <Box sx={{ p: 4 }} style={{ maxHeight: "100vh", overflow: "auto" }}>
-      <Box style={{ height: "2%" }}></Box>
+    <>
+      {/* <Box style={{ height: "2%" }}></Box>
       <Box display="flex" alignItems="center">
         {title ? (
           <Typography mr={0.7} variant="h4" component="h1" sx={{ flexGrow: 0 }}>
@@ -43,17 +63,16 @@ const ArtworkDetails = ({
         <IconButton onClick={handleReload} aria-label="リロード">
           <RefreshIcon />
         </IconButton>
-      </Box>
+      </Box> */}
       <Typography mt={3} variant="h6" gutterBottom>
         こんな絵に見える
       </Typography>
       {feature ? (
         <Typography variant="body1" gutterBottom>
           {feature}
-          {/* この作品は、絵画におけるアイデンティティと創造性を表現したり、自然な形状と動物の顔を組み合わせたりすることで、視聴者に新たな感情や思い出をもたらす。 */}
         </Typography>
       ) : (
-        <Skeleton variant="text" height={100} width="100%" />
+        <Skeleton variant="text" height={80} width="100%" />
       )}
       <Typography mt={3} variant="h6" gutterBottom>
         この絵の良いところ
@@ -61,10 +80,9 @@ const ArtworkDetails = ({
       {advantage ? (
         <Typography variant="body1" gutterBottom>
           {advantage}
-          {/* この作品は、絵画におけるアイデンティティと創造性を表現したり、自然な形状と動物の顔を組み合わせたりすることで、視聴者に新たな感情や思い出をもたらす。 */}
         </Typography>
       ) : (
-        <Skeleton variant="text" height={100} width="100%" />
+        <Skeleton variant="text" height={80} width="100%" />
       )}
       <Typography mt={3} variant="h6" gutterBottom>
         こんな工夫もできそう
@@ -72,16 +90,15 @@ const ArtworkDetails = ({
       {advice ? (
         <Typography variant="body1" gutterBottom>
           {advice}
-          {/* この作品は、絵画におけるアイデンティティと創造性を表現したり、自然な形状と動物の顔を組み合わせたりすることで、視聴者に新たな感情や思い出をもたらす。 */}
         </Typography>
       ) : (
-        <Skeleton variant="text" height={100} width="100%" />
+        <Skeleton variant="text" height={80} width="100%" />
       )}
       <Divider></Divider>
       <Typography mt={4} variant="h6" gutterBottom>
         フィードバック
       </Typography>
-      <RadioGroupRating disabled={!done} />
+      <RadioGroupRating disabled={!done} setRating={setRating} />
       <Box
         component="form"
         sx={{
@@ -93,6 +110,8 @@ const ArtworkDetails = ({
         }}
       >
         <TextField
+          value={inputValue} // テキストフィールドの値として状態変数を設定
+          onChange={handleInputChange} // 値が変更されたときに実行する関数を設定
           disabled={!done}
           fullWidth
           label="コメントを残す"
@@ -100,12 +119,17 @@ const ArtworkDetails = ({
           multiline
           rows={2}
           sx={{ mb: 1 }}
-        />{" "}
-        <Button variant="contained" fullWidth disabled={!done}>
+        />
+        <Button
+          variant="contained"
+          fullWidth
+          disabled={!done}
+          onClick={handleSave}
+        >
           保存
         </Button>
       </Box>
-    </Box>
+    </>
   );
 };
 

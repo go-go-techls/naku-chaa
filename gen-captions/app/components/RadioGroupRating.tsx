@@ -1,4 +1,3 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Rating, { IconContainerProps } from "@mui/material/Rating";
 import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
@@ -6,6 +5,7 @@ import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+import { Dispatch, ReactElement, SetStateAction } from "react";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
   "& .MuiRating-iconEmpty .MuiSvgIcon-root": {
@@ -15,7 +15,7 @@ const StyledRating = styled(Rating)(({ theme }) => ({
 
 const customIcons: {
   [index: string]: {
-    icon: React.ReactElement;
+    icon: ReactElement;
     label: string;
   };
 } = {
@@ -48,14 +48,19 @@ function IconContainer(props: IconContainerProps) {
 
 interface ChildComponentProps {
   disabled: boolean;
+  setRating: Dispatch<SetStateAction<number>>;
 }
 
-export default function RadioGroupRating({ disabled }: ChildComponentProps) {
+export default function RadioGroupRating({
+  disabled,
+  setRating,
+}: ChildComponentProps) {
   return (
     <StyledRating
       name="highlight-selected-only"
       disabled={disabled}
       defaultValue={3}
+      onChange={(event, newValue) => setRating(newValue!)}
       IconContainerComponent={IconContainer}
       getLabelText={(value: number) => customIcons[value].label}
       highlightSelectedOnly

@@ -4,6 +4,12 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Dispatch, SetStateAction } from "react";
 import { fetchData } from "@/lib/generate";
 import { Data, postResult } from "@/lib/postResult";
+import {
+  promptAdvantage,
+  promptAdvice,
+  promptFeature,
+  promptTitle,
+} from "@/lib/prompts";
 
 interface ChildComponentProps {
   setImageBase64: Dispatch<SetStateAction<string>>;
@@ -40,59 +46,26 @@ function ImageUploadButton({
       setAdvantage("");
       setAdvice("");
 
-      const promptTitle = `\
-あなたはアート専門のAIインストラクターです。この作品について、順守事項を踏まえた上で、回答項目を日本語の丁寧語で回答してください。回答内容は作品を展示する際に使用します。
-■順守事項
-・作者をリスペクトし、差別的な表現を含まない回答
-・人間が思い付かないようなAIならではのユニークな視点での回答
-・同じ内容を反復しない
-この絵画が伝えている感情やストーリーを考え、それに合ったタイトルを20字以内で教えてください。
-タイトルのみ回答してください。
-タイトル：「`;
-      const promptFeature = `\
-あなたはアート専門のAIインストラクターです。この作品について、順守事項を踏まえた上で、回答項目を日本語の丁寧語で回答してください。回答内容は作品を展示する際に使用します。
-■順守事項
-・作者をリスペクトし、差別的な表現を含まない回答
-・人間が思い付かないようなAIならではのユニークな視点での回答
-・同じ内容を反復しない
-多く人が共感する説明を、100字以内で考えてください。
-`;
-      const promptAdvantage = `\
-あなたはアート専門のAIインストラクターです。この作品について、順守事項を踏まえた上で、回答項目を日本語の丁寧語で回答してください。回答内容は作品を展示する際に使用します。
-■順守事項
-・作者をリスペクトし、差別的な表現を含まない回答
-・人間が思い付かないようなAIならではのユニークな視点での回答
-・同じ内容を反復しない
-この画像を日本語で100字程度で褒めてください。
-`;
-      const promptAdvice = `\
-あなたはアート専門のAIインストラクターです。この作品について、順守事項を踏まえた上で、回答項目を日本語の丁寧語で回答してください。回答内容は作品を展示する際に使用します。
-■順守事項
-・作者をリスペクトし、差別的な表現を含まない回答
-・人間が思い付かないようなAIならではのユニークな視点での回答
-・同じ内容を反復しない
-この作者が次の作品を制作する時の、テーマや画材のアドバイスをそれぞれ100字以内で考えてください。
-`;
-
       const results = await Promise.all([
         fetchData(base64Image, promptTitle, setTitle),
         fetchData(base64Image, promptFeature, setFeature),
         fetchData(base64Image, promptAdvantage, setAdvantage),
         fetchData(base64Image, promptAdvice, setAdvice),
       ]);
+      console.log(results);
       // const results = await Promise.all([
       //   fetchData(base64Image, promptTitle, setTitle),
       //   // fetchData(base64Image, promptFeature, setFeature),
       // ]);
       // console.log(results);
       // console.log(base64ImageDisplay);
-      const req: Data = {
-        title: results[0]!,
-        feature: results[1]!,
-        advantage: results[2]!,
-        advice: results[3]!,
-        image: base64ImageDisplay,
-      };
+      // const req: Data = {
+      //   title: results[0]!,
+      //   feature: results[1]!,
+      //   advantage: results[2]!,
+      //   advice: results[3]!,
+      //   image: base64ImageDisplay,
+      // };
       // const req: Data = {
       //   title: results[0]!,
       //   feature: "feature",
@@ -100,7 +73,7 @@ function ImageUploadButton({
       //   advice: "advice",
       //   image: base64ImageDisplay,
       // };
-      postResult(req);
+      // postResult(req);
     };
     reader.readAsDataURL(file);
   };

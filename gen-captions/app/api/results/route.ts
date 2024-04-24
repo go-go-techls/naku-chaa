@@ -8,6 +8,8 @@ type DataItem = {
   advantage: string;
   advice: string;
   image: string;
+  rating: number;
+  comment: string;
 };
 
 type Data = DataItem[];
@@ -20,6 +22,8 @@ const data: Data = [
     advantage: "良いところ1",
     advice: "アドバイス1",
     image: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD/...",
+    rating: 4,
+    comment: "コメント1",
   },
   {
     id: "2",
@@ -28,6 +32,8 @@ const data: Data = [
     advantage: "良いところ2",
     advice: "アドバイス2",
     image: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD/...",
+    rating: 5,
+    comment: "コメント5",
   },
 ];
 
@@ -38,7 +44,8 @@ export function GET() {
 
 // POSTリクエストを処理するAPI関数
 export async function POST(req: Request) {
-  const { title, feature, advantage, advice, image } = await req.json();
+  const { title, feature, advantage, advice, image, rating, comment } =
+    await req.json();
   const id = uuidv4();
   const newItem: DataItem = {
     id,
@@ -47,6 +54,8 @@ export async function POST(req: Request) {
     advantage,
     advice,
     image,
+    rating,
+    comment,
   };
   data.push(newItem);
   console.log(newItem);

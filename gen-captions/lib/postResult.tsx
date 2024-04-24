@@ -4,6 +4,8 @@ export type Data = {
   advantage: string;
   advice: string;
   image: string;
+  rating: number;
+  comment: string;
 };
 
 export async function postResult(data: Data) {
