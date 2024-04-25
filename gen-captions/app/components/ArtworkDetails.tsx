@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   Typography,
   Box,
@@ -16,6 +16,10 @@ interface ChildComponentProps {
   advantage: string;
   advice: string;
   image: string;
+  rating: number;
+  inputValue: string;
+  setRating: Dispatch<SetStateAction<number>>;
+  setInputValue: Dispatch<SetStateAction<string>>;
   disable: boolean;
 }
 const ArtworkDetails = ({
@@ -24,11 +28,15 @@ const ArtworkDetails = ({
   advantage,
   advice,
   image,
+  rating,
+  inputValue,
+  setRating,
+  setInputValue,
   disable,
 }: ChildComponentProps) => {
   // ユーザー入力を保持するための状態変数を初期化
-  const [inputValue, setInputValue] = useState("");
-  const [rating, setRating] = useState(3);
+  // const [inputValue, setInputValue] = useState("");
+  // const [rating, setRating] = useState(3);
 
   // ユーザーがテキストフィールドに入力した値で状態を更新する関数
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,19 +61,6 @@ const ArtworkDetails = ({
 
   return (
     <>
-      {/* <Box style={{ height: "2%" }}></Box>
-      <Box display="flex" alignItems="center">
-        {title ? (
-          <Typography mr={0.7} variant="h4" component="h1" sx={{ flexGrow: 0 }}>
-            {title}
-          </Typography>
-        ) : (
-          <Skeleton variant="text" height={70} width={400} />
-        )}
-        <IconButton onClick={handleReload} aria-label="リロード">
-          <RefreshIcon />
-        </IconButton>
-      </Box> */}
       <Typography mt={3} variant="h6" gutterBottom>
         こんな絵に見える
       </Typography>
@@ -104,7 +99,6 @@ const ArtworkDetails = ({
       <Box
         component="form"
         sx={{
-          // display: "flex", // Flexbox container
           alignItems: "center", // Align items vertically
           width: "100%", // フォームの幅を100%に設定
 
@@ -116,7 +110,7 @@ const ArtworkDetails = ({
           onChange={handleInputChange} // 値が変更されたときに実行する関数を設定
           disabled={disable || !done}
           fullWidth
-          label="コメントを残す"
+          placeholder="コメントを残す"
           variant="outlined"
           multiline
           rows={2}

@@ -2,7 +2,8 @@ export const list = [
   {
     id: "d6e730f8-7118-4d48-b500-d28be57a6451",
     title: " 「絮",
-    feature: " このアー",
+    feature:
+      " このアートああああああああああああああああああああああああああああああ",
     advantage: " この画像",
     advice: " 1. テ",
     image:

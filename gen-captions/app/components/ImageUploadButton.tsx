@@ -17,6 +17,8 @@ interface ChildComponentProps {
   setFeature: Dispatch<SetStateAction<string>>;
   setAdvantage: Dispatch<SetStateAction<string>>;
   setAdvice: Dispatch<SetStateAction<string>>;
+  setRating: Dispatch<SetStateAction<number>>;
+  setInputValue: Dispatch<SetStateAction<string>>;
 }
 
 function ImageUploadButton({
@@ -25,6 +27,8 @@ function ImageUploadButton({
   setFeature,
   setAdvantage,
   setAdvice,
+  setRating,
+  setInputValue,
 }: ChildComponentProps) {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -45,6 +49,8 @@ function ImageUploadButton({
       setFeature("");
       setAdvantage("");
       setAdvice("");
+      setRating(3);
+      setInputValue("");
 
       const results = await Promise.all([
         fetchData(base64Image, promptTitle, setTitle),

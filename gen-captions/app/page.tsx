@@ -16,6 +16,8 @@ export default function Home() {
   const [advantage, setAdvantage] = useState("");
   const [advice, setAdvice] = useState("");
   const [imageBase64, setImageBase64] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [rating, setRating] = useState(3);
 
   // const [loading, setLoading] = useState(false);
 
@@ -52,6 +54,8 @@ export default function Home() {
           setFeature={setFeature}
           setAdvantage={setAdvantage}
           setAdvice={setAdvice}
+          setRating={setRating}
+          setInputValue={setInputValue}
         />
 
         <Grid
@@ -74,6 +78,10 @@ export default function Home() {
               advantage={advantage}
               advice={advice}
               image={imageBase64}
+              rating={rating}
+              inputValue={inputValue}
+              setRating={setRating}
+              setInputValue={setInputValue}
               disable={false}
             />
           </Box>

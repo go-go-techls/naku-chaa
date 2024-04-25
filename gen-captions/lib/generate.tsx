@@ -14,8 +14,8 @@ export async function fetchData(
     },
   };
   console.log("start to generate!");
-  const URL = "http://localhost:11434/api/generate";
-  // const URL = "http://macbook.local:11434/api/generate";
+  // const URL = "http://localhost:11434/api/generate";
+  const URL = "http://macbook.local:11434/api/generate";
 
   try {
     const response = await fetch(URL, {

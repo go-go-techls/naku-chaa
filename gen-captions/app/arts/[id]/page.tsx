@@ -17,8 +17,6 @@ export default function Arts({ params }: { params: { id: string } }) {
     getArt(params.id, setData);
   }, [params.id]); // IDが変わるたびにAPIが呼び出される
 
-  function doNothing() {}
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Link href="/list" passHref>
@@ -66,26 +64,15 @@ export default function Arts({ params }: { params: { id: string } }) {
               advantage={data.advantage}
               advice={data.advice}
               image={data.image}
+              rating={data.rating}
+              inputValue={data.comment}
+              setRating={() => {}}
+              setInputValue={() => {}}
               disable={true}
             />
           </Box>
         </Grid>
       </Grid>
     </Box>
-
-    // <div>
-    //       <h1>My Post: {params.id}</h1>
-    //       <Paper
-    //         elevation={3}
-    //         sx={{
-    //           width: "32.4vw", // ビューポートの1/3の幅
-    //           height: "32.4vw", // ビューポートの1/3の高さ
-    //           backgroundImage: `url(${data.image})`,
-    //           backgroundSize: "cover",
-    //           backgroundPosition: "center",
-    //           overflow: "hidden",
-    //         }}
-    //       />
-    //     </div>
   );
 }
