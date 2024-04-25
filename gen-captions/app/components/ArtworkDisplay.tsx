@@ -17,6 +17,7 @@ const ArtworkDisplay = ({ imageBase64 }: ChildComponentProps) => {
         justifyContent: "center",
         alignItems: "center",
         gap: 8,
+        // borderRadius: "0 5vh 5vh 0",
       }}
     >
       {imageBase64 ? (

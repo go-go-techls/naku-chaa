@@ -9,6 +9,15 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArtworkTitle from "../../components/ArtworkTitle";
 import RefreshTitle from "../../components/RefreshTitle";
 import Link from "next/link";
+import { createTheme, responsiveFontSizes, ThemeProvider } from '@mui/material/styles';
+
+let theme = createTheme({
+  typography: {
+    fontSize: 13,
+  },
+});
+theme = responsiveFontSizes(theme);
+
 
 export default function Arts({ params }: { params: { id: string } }) {
   const [data, setData] = useState<DataItem>({} as DataItem);
@@ -18,61 +27,62 @@ export default function Arts({ params }: { params: { id: string } }) {
   }, [params.id]); // IDが変わるたびにAPIが呼び出される
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Link href="/list" passHref>
-        <IconButton
-          aria-label="戻る"
-          size="large"
-          sx={{ position: "fixed", top: "1rem", left: "1rem" }}
-        >
-          <ArrowBackIosNewIcon />
-        </IconButton>
-      </Link>
-
-      <Grid
-        container
-        // style={{ height: "100vh", width: "100vw"}}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid
-          item
-          xs={12}
-          md={7}
-          container
-          style={{ height: "100vh", width: "100vw" }}
-        >
-          <ArtworkDisplay imageBase64={data.image} />
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          md={5}
-          container
-          style={{ height: "100vh", width: "100vw" }}
-        >
-          <Box
-            sx={{ p: 4, mt: 4 }}
-            style={{ maxHeight: "100vh", overflow: "auto" }}
+    <ThemeProvider theme={theme}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Link href="/list" passHref>
+          <IconButton
+            aria-label="戻る"
+            size="large"
+            sx={{ position: "fixed", top: "1rem", left: "1rem" }}
           >
-            <ArtworkTitle title={data.title}>
-              <RefreshTitle imageBase64={data.image} setTitle={() => {}} />
-            </ArtworkTitle>
-            <ArtworkDetails
-              title={data.title}
-              feature={data.feature}
-              advantage={data.advantage}
-              advice={data.advice}
-              image={data.image}
-              rating={data.rating}
-              inputValue={data.comment}
-              setRating={() => {}}
-              setInputValue={() => {}}
-              disable={true}
-            />
-          </Box>
+            <ArrowBackIosNewIcon />
+          </IconButton>
+        </Link>
+
+        <Grid
+          container
+          style={{ height: "100vh", width: "100vw"}}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Grid
+            item
+            xs={12}
+            md={7}
+            style={{ height: "100vh"}}
+          >
+            <ArtworkDisplay imageBase64={data.image} />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={5}
+            style={{ maxHeight: "100vh", overflow: "auto"}}
+          >
+            <Box
+              sx={{ p: 4, mt: 4 }}
+            >
+              <Box style={{height: "15vh"}}></Box>
+              <ArtworkTitle title={data.title}>
+                {/* <RefreshTitle imageBase64={data.image} setTitle={() => {}} /> */}
+              </ArtworkTitle>
+              <ArtworkDetails
+                title={data.title}
+                feature={data.feature}
+                advantage={data.advantage}
+                advice={data.advice}
+                image={data.image}
+                rating={data.rating}
+                inputValue={data.comment}
+                setRating={() => {}}
+                setInputValue={() => {}}
+                disable={true}
+              />
+              <Box style={{height: "15vh"}}></Box>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </ThemeProvider>
   );
 }

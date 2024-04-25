@@ -24,5 +24,3 @@ app/README.md 参照
 ```
 npm install
 ```
-
-test

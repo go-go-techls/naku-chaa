@@ -85,14 +85,14 @@ const ArtworkDetails = ({
         こんな工夫もできそう
       </Typography>
       {advice ? (
-        <Typography variant="body1" gutterBottom>
+        <Typography mb={5} variant="body1" gutterBottom>
           {advice}
         </Typography>
       ) : (
-        <Skeleton variant="text" height={80} width="100%" />
+        <Skeleton sx={{mb:5}} variant="text" height={80} width="100%" />
       )}
       <Divider></Divider>
-      <Typography mt={4} variant="h6" gutterBottom>
+      <Typography mt={3} variant="h6" gutterBottom>
         フィードバック
       </Typography>
       <RadioGroupRating disabled={disable || !done} setRating={setRating} />
@@ -101,7 +101,6 @@ const ArtworkDetails = ({
         sx={{
           alignItems: "center", // Align items vertically
           width: "100%", // フォームの幅を100%に設定
-
           mt: 1,
         }}
       >
@@ -121,8 +120,11 @@ const ArtworkDetails = ({
           fullWidth
           disabled={disable || !done}
           onClick={handleSave}
+          sx={{mt:1}}
         >
-          保存
+          <Typography variant="body1">
+            保存
+          </Typography>
         </Button>
       </Box>
     </>
