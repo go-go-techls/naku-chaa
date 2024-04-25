@@ -39,11 +39,14 @@ const data: Data = [
 
 // GETリクエストを処理するAPI関数
 export function GET() {
+  // TODO: データベースから全て取得
   return Response.json(data);
 }
 
 // POSTリクエストを処理するAPI関数
 export async function POST(req: Request) {
+  // TODO: データベースに登録。
+  // TODO: createdAtで並べ替えして返す
   const { title, feature, advantage, advice, image, rating, comment } =
     await req.json();
   const id = uuidv4();

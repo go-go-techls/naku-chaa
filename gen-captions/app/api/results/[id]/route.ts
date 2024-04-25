@@ -2,13 +2,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { DataItem } from "../route";
 import { list } from "@/lib/testList";
-
-const data: Data = list;
+import { Data } from "@/lib/postResult";
 
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
+  // TODO: データベースに接続して、selectぶんで取得
   const id = params.id;
   console.log(id);
 
