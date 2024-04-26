@@ -1,14 +1,20 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Box } from "@mui/material";
 import Link from "next/link";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { list } from "@/lib/testList";
+// import { list } from "@/lib/testList";
+import { DataItem } from "../api/results/route";
+import { getArts } from "@/lib/getArts";
 
 function ImageGrid() {
-  const images = list;
+  // const images = list;
+  const [data, setData] = useState<DataItem[]>([]);
+  useEffect(() => {
+    getArts(setData);
+  }, [data]); // IDが変わるたびにAPIが呼び出される
 
   return (
     <Box
@@ -19,7 +25,7 @@ function ImageGrid() {
       maxHeight="100vw"
     >
       <Grid container spacing={5} p={5}>
-        <Grid item xs={12} sm={4} style={{aspectRatio: "1/1"}}>
+        <Grid item xs={12} sm={4} style={{ aspectRatio: "1/1" }}>
           <Link href={`/`} passHref>
             <Paper
               elevation={15}
@@ -38,8 +44,8 @@ function ImageGrid() {
           </Link>
         </Grid>
 
-        {images.map((src, index) => (
-          <Grid item xs={12} sm={4} style={{aspectRatio: "1/1"}} key={index}>
+        {data.map((src, index) => (
+          <Grid item xs={12} sm={4} style={{ aspectRatio: "1/1" }} key={index}>
             <Link href={`/arts/${src.id}`} passHref>
               <Paper
                 elevation={12}

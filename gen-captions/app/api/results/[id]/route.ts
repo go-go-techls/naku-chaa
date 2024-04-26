@@ -29,3 +29,26 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
     return Response.json(new Error("Not found"), { status: 404 });
   }
 }
+
+export async function DELETE(
+  _: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
+  const numericId = parseInt(id); // 文字列を整数に変換
+
+  try {
+    const item = await prisma.art.delete({
+      where: { id: numericId },
+    });
+    if (item) {
+      console.log("Deleted item:", item);
+      return Response.json(item); // 正常に削除されたアイテムを返す
+    }
+  } catch (error) {
+    console.warn("Item not found or error deleting:", error);
+    return Response.json(new Error("Item not found or error deleting"), {
+      status: 404,
+    });
+  }
+}

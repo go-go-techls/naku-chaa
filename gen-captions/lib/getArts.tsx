@@ -16,3 +16,18 @@ export const getArt = async (
     console.error("Error fetching data:", error);
   }
 };
+
+export const getArts = async (
+  setData: Dispatch<SetStateAction<DataItem[]>>
+) => {
+  try {
+    const response = await fetch(`/api/results`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const data = await response.json();
+    setData(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};

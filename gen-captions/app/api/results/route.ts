@@ -44,7 +44,11 @@ const data: Data = [
 export async function GET() {
   // TODO: データベースから全て取得
   try {
-    const data = await prisma.art.findMany();
+    const data = await prisma.art.findMany({
+      orderBy: {
+        id: "desc", // 'desc'は降順を意味し、'asc'は昇順を意味します。
+      },
+    });
     if (data) {
       return Response.json(data);
     } else {
