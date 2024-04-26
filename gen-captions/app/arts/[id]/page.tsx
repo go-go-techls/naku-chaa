@@ -9,7 +9,11 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArtworkTitle from "../../components/ArtworkTitle";
 import RefreshTitle from "../../components/RefreshTitle";
 import Link from "next/link";
-import { createTheme, responsiveFontSizes, ThemeProvider } from '@mui/material/styles';
+import {
+  createTheme,
+  responsiveFontSizes,
+  ThemeProvider,
+} from "@mui/material/styles";
 
 let theme = createTheme({
   typography: {
@@ -18,8 +22,7 @@ let theme = createTheme({
 });
 theme = responsiveFontSizes(theme);
 
-
-export default function Arts({ params }: { params: { id: string } }) {
+export default function Arts({ params }: { params: { id: number } }) {
   const [data, setData] = useState<DataItem>({} as DataItem);
 
   useEffect(() => {
@@ -41,29 +44,23 @@ export default function Arts({ params }: { params: { id: string } }) {
 
         <Grid
           container
-          style={{ height: "100vh", width: "100vw"}}
+          style={{ height: "100vh", width: "100vw" }}
           alignItems="center"
           justifyContent="center"
         >
-          <Grid
-            item
-            xs={12}
-            md={7}
-            style={{ height: "100vh"}}
-          >
+          <Grid item xs={12} md={7} style={{ height: "100vh" }}>
             <ArtworkDisplay imageBase64={data.image} />
           </Grid>
           <Grid
             item
             xs={12}
             md={5}
-            style={{ maxHeight: "100vh", overflow: "auto"}}
+            style={{ maxHeight: "100vh", overflow: "auto" }}
           >
-            <Box
-              sx={{ p: 4, mt: 4 }}
-            >
-              <Box style={{height: "15vh"}}></Box>
+            <Box sx={{ p: 4, mt: 4 }}>
+              <Box style={{ height: "15vh" }}></Box>
               <ArtworkTitle title={data.title}>
+                <></>
                 {/* <RefreshTitle imageBase64={data.image} setTitle={() => {}} /> */}
               </ArtworkTitle>
               <ArtworkDetails
@@ -78,7 +75,7 @@ export default function Arts({ params }: { params: { id: string } }) {
                 setInputValue={() => {}}
                 disable={true}
               />
-              <Box style={{height: "15vh"}}></Box>
+              <Box style={{ height: "15vh" }}></Box>
             </Box>
           </Grid>
         </Grid>

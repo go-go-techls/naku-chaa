@@ -2,7 +2,7 @@ import { DataItem } from "@/app/api/results/route";
 import { Dispatch, SetStateAction } from "react";
 
 export const getArt = async (
-  id: string,
+  id: number,
   setData: Dispatch<SetStateAction<DataItem>>
 ) => {
   try {

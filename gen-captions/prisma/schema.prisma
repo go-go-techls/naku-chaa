@@ -9,6 +9,17 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Art {
+  id        Int    @id @default(autoincrement())
+  title     String
+  feature   String
+  advantage String
+  advice    String
+  image     String
+  rating    Int
+  comment   String
 }

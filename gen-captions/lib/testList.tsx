@@ -1,6 +1,6 @@
 export const list = [
   {
-    id: "d6e730f8-7118-4d48-b500-d28be57a6451",
+    id: 1,
     title: " 「絮",
     feature:
       " このアートああああああああああああああああああああああああああああああ",
@@ -12,7 +12,7 @@ export const list = [
     comment: "hoge",
   },
   {
-    id: "940b78ac-3bab-45ba-839a-7a60f0190eac",
+    id: 2,
     title: " 「絮",
     feature: " このアー",
     advantage: " この画像",
@@ -23,7 +23,7 @@ export const list = [
     comment: "hoge3",
   },
   {
-    id: "4a007d2a-24d5-4edf-8ab8-cd89d0e473c1",
+    id: 3,
     title: " 「AIアル",
     feature: " 作品のア",
     advantage: " あなたは",
@@ -34,7 +34,7 @@ export const list = [
     comment: "fefe",
   },
   {
-    id: "b3d85539-aeda-485c-b8db-9aa66efc2c08",
+    id: 4,
     title: " 愛が",
     feature: " この作品",
     advantage: " このアー",

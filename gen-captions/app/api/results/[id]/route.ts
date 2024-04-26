@@ -1,30 +1,31 @@
 // app/routes/api/results.tsx
-import { v4 as uuidv4 } from "uuid";
 import { DataItem } from "../route";
-import { list } from "@/lib/testList";
-import { Data } from "@/lib/postResult";
+import { PrismaClient } from "@prisma/client";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+const prisma = new PrismaClient();
+
+export async function GET(_: Request, { params }: { params: { id: string } }) {
   // TODO: データベースに接続して、selectぶんで取得
   const id = params.id;
-  console.log(id);
+  const numericId = parseInt(id); // 文字列を整数に変換
 
-  // IDで要素を検索する関数
-  function findItemById(id: string) {
-    return list.find((item) => item.id === id);
+  async function findItemById(id: number) {
+    try {
+      const art = await prisma.art.findUnique({ where: { id: id } });
+      return art;
+    } catch (error) {
+      console.error("Error fetching arts:", error);
+    }
   }
 
   // 使用例: ID 'd6e730f8-7118-4d48-b500-d28be57a6451' を持つ要素を取得
-  const item = findItemById(id);
+  const item = await findItemById(numericId);
   console.log(item);
 
-  // TODO 検索
   if (item) {
     return Response.json(item);
   } else {
+    console.warn("Not found");
     return Response.json(new Error("Not found"), { status: 404 });
   }
 }
