@@ -6,11 +6,12 @@ export async function fetchData(
   setData: Dispatch<SetStateAction<string>>
 ) {
   const req = {
-    model: "llava",
+    model: "llava:13b",
     prompt: prompt,
     images: [base64Image],
     options: {
-      num_predict: 5, // TODO
+      // num_predict: 5, // TODO
+      repeat_penalty: 1.2, // TODO
     },
   };
   console.log("start to generate!");
