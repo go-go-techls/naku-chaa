@@ -16,18 +16,21 @@ function ImageGrid() {
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
+      maxHeight="100vw"
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
+      <Grid container spacing={5} p={5}>
+        <Grid item xs={12} sm={4} style={{aspectRatio: "1/1"}}>
           <Link href={`/`} passHref>
             <Paper
-              elevation={3}
+              elevation={15}
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                width: "32.4vw", // ビューポートの1/3の幅
-                height: "32.4vw", // ビューポートの1/3の高さ
+                width: "100%",
+                height: "100%",
+                // width: "32.4vw", // ビューポートの1/3の幅
+                // height: "32.4vw", // ビューポートの1/3の高さ
               }}
             >
               <AddCircleOutlineIcon fontSize="large" color="action" />
@@ -36,13 +39,15 @@ function ImageGrid() {
         </Grid>
 
         {images.map((src, index) => (
-          <Grid item xs={12} sm={4} key={index}>
+          <Grid item xs={12} sm={4} style={{aspectRatio: "1/1"}} key={index}>
             <Link href={`/arts/${src.id}`} passHref>
               <Paper
-                elevation={3}
+                elevation={12}
                 sx={{
-                  width: "32.4vw", // ビューポートの1/3の幅
-                  height: "32.4vw", // ビューポートの1/3の高さ
+                  width: "100%",
+                  height: "100%",
+                  // width: "32.4vw", // ビューポートの1/3の幅
+                  // height: "32.4vw", // ビューポートの1/3の高さ
                   backgroundImage: `url(${src.image})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
