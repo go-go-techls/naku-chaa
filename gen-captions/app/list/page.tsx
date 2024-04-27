@@ -21,8 +21,8 @@ function ImageGrid() {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      minHeight="100vh"
-      maxHeight="100vw"
+      // minHeight="100vh"
+      // maxHeight="100vw"
     >
       <Grid container spacing={5} p={5}>
         <Grid item xs={12} sm={4} style={{ aspectRatio: "1/1" }}>

@@ -2,6 +2,16 @@
 
 This example shows how to use the [Vercel AI SDK](https://sdk.vercel.ai/docs) with [Next.js](https://nextjs.org/), [LangChain](https://js.langchain.com), and [Ollama](https://ollama.ai) to create a ChatGPT-like AI-powered streaming chat bot.
 
+## TODO
+
+proxy 設定。
+ollama へのアクセス時（`api/generate`）は、proxy
+するようにしたい。
+https://imatomix.com/imatomix/notes/1629523270000
+https://www.ey-office.com/blog_archive/2022/03/03/learned-the-proxy-setting-of-create-react-app/
+https://stackoverflow.com/questions/61791826/how-to-use-proxy-in-package-json-in-next-js
+https://www.npmjs.com/package/next-http-proxy-middleware
+
 ## Deploy your own
 
 > NOTE: Ollama needs to be deployed separately.
@@ -33,7 +43,6 @@ To run the example locally you need to:
 3. Open http://localhost:11434 to check if _Ollama is running_.
 4. `yarn install` to install the required dependencies.
 5. `yarn dev` to launch the development server.
-
 
 ## Learn More
 
