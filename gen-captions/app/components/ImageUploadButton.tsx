@@ -52,13 +52,17 @@ function ImageUploadButton({
       setRating(3);
       setInputValue("");
 
-      const results = await Promise.all([
-        fetchData(base64Image, promptTitle, setTitle),
-        fetchData(base64Image, promptFeature, setFeature),
-        fetchData(base64Image, promptAdvantage, setAdvantage),
-        fetchData(base64Image, promptAdvice, setAdvice),
-      ]);
-      console.log(results);
+      // const results = await Promise.all([
+      //   fetchData(base64Image, promptTitle, setTitle),
+      //   fetchData(base64Image, promptFeature, setFeature),
+      //   fetchData(base64Image, promptAdvantage, setAdvantage),
+      //   fetchData(base64Image, promptAdvice, setAdvice),
+      // ]);
+      await fetchData(base64Image, promptTitle, setTitle);
+      await fetchData(base64Image, promptFeature, setFeature);
+      await fetchData(base64Image, promptAdvantage, setAdvantage);
+      await fetchData(base64Image, promptAdvice, setAdvice);
+      // console.log(results);
       // const results = await Promise.all([
       //   fetchData(base64Image, promptTitle, setTitle),
       //   // fetchData(base64Image, promptFeature, setFeature),
