@@ -1,6 +1,7 @@
 // app/routes/api/results.tsx
 import { v4 as uuidv4 } from "uuid";
 import { PrismaClient } from "@prisma/client";
+import { NextRequest } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -16,15 +17,27 @@ export type DataItem = {
 };
 
 // GETリクエストを処理するAPI関数
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const page = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("pageSize")) || 10;
+
+  // const page = Number(req.query.page) || 1;
+  // const pageSize = Number(req.query.pageSize) || 10;
+
   try {
-    const data = await prisma.art.findMany({
+    const arts = await prisma.art.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: {
         id: "desc", // 'desc'は降順を意味し、'asc'は昇順を意味します。
       },
     });
-    if (data) {
-      return Response.json(data);
+    const total = await prisma.art.count();
+
+    if (arts) {
+      return Response.json({ data: arts, total, page, pageSize });
+      // return Response.json(arts);
     } else {
       return Response.json(new Error("Not found"), { status: 404 });
     }
