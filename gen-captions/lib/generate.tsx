@@ -6,17 +6,18 @@ export async function fetchData(
   setData: Dispatch<SetStateAction<string>>
 ) {
   const req = {
-    model: "llava:13b",
+    model: "llava:13b", // 少し大きなモデル
     prompt: prompt,
     images: [base64Image],
     options: {
-      // num_predict: 5, // TODO
-      repeat_penalty: 1.2, // TODO
+      // num_predict: 5, // 短くしとくと、テストしやすい
+      repeat_penalty: 1.2, // 繰り返さないように
     },
   };
   console.log("start to generate!");
   // const URL = "http://localhost:11434/api/generate";
-  const URL = "http://macbook.local:11434/api/generate";
+  // const URL = "http://macbook.local:11434/api/generate";
+  const URL = "/api/generate";
 
   try {
     const response = await fetch(URL, {
