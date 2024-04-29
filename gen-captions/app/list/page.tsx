@@ -17,7 +17,6 @@ function ImageGrid() {
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-    getArts(setData, setTotal, page, pageSize);
   };
 
   const [total, setTotal] = useState<number>(1);
@@ -33,8 +32,6 @@ function ImageGrid() {
       flexDirection="column" // Flexbox 方向を縦に設定
       justifyContent="center"
       alignItems="center"
-      // minHeight="100vh"
-      // maxHeight="100vw"
     >
       <Grid container spacing={5} p={5}>
         <Grid item xs={12} sm={4} style={{ aspectRatio: "1/1" }}>
@@ -47,8 +44,6 @@ function ImageGrid() {
                 alignItems: "center",
                 width: "100%",
                 height: "100%",
-                // width: "32.4vw", // ビューポートの1/3の幅
-                // height: "32.4vw", // ビューポートの1/3の高さ
               }}
             >
               <AddCircleOutlineIcon fontSize="large" color="action" />
@@ -64,8 +59,6 @@ function ImageGrid() {
                 sx={{
                   width: "100%",
                   height: "100%",
-                  // width: "32.4vw", // ビューポートの1/3の幅
-                  // height: "32.4vw", // ビューポートの1/3の高さ
                   backgroundImage: `url(${src.image})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
