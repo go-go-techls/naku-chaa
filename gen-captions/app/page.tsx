@@ -9,7 +9,11 @@ import ImageUploadButton from "./components/ImageUploadButton";
 import ArtworkTitle from "./components/ArtworkTitle";
 import RefreshTitle from "./components/RefreshTitle";
 import Link from "next/link";
-import { createTheme, responsiveFontSizes, ThemeProvider } from '@mui/material/styles';
+import {
+  createTheme,
+  responsiveFontSizes,
+  ThemeProvider,
+} from "@mui/material/styles";
 
 let theme = createTheme({
   typography: {
@@ -32,7 +36,7 @@ export default function Home() {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1 }}>
-        <Link href="/list" passHref>
+        <Link href="/arts" passHref>
           <IconButton
             aria-label="戻る"
             size="large"
@@ -44,16 +48,11 @@ export default function Home() {
 
         <Grid
           container
-          style={{ height: "100vh", width: "100vw"}}
+          style={{ height: "100vh", width: "100vw" }}
           alignItems="center"
           justifyContent="center"
         >
-          <Grid
-            item
-            xs={12}
-            md={7}
-            style={{ height: "100vh"}}
-          >
+          <Grid item xs={12} md={7} style={{ height: "100vh" }}>
             <ArtworkDisplay imageBase64={imageBase64} />
           </Grid>
           <ImageUploadButton
@@ -70,12 +69,10 @@ export default function Home() {
             item
             xs={12}
             md={5}
-            style={{ maxHeight: "100vh", overflow: "auto"}}
+            style={{ maxHeight: "100vh", overflow: "auto" }}
           >
-            <Box
-              sx={{ p: 4, mt: 4 }}
-            >
-              <Box style={{height: "15vh"}}></Box>
+            <Box sx={{ p: 4, mt: 4 }}>
+              <Box style={{ height: "15vh" }}></Box>
               <ArtworkTitle title={title}>
                 <RefreshTitle imageBase64={imageBase64} setTitle={setTitle} />
               </ArtworkTitle>
@@ -91,7 +88,7 @@ export default function Home() {
                 setInputValue={setInputValue}
                 disable={false}
               />
-              <Box style={{height: "15vh"}}></Box>
+              <Box style={{ height: "15vh" }}></Box>
             </Box>
           </Grid>
         </Grid>

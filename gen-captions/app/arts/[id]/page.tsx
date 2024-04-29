@@ -32,7 +32,7 @@ export default function Arts({ params }: { params: { id: number } }) {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1 }}>
-        <Link href="/list" passHref>
+        <Link href="/arts" passHref>
           <IconButton
             aria-label="戻る"
             size="large"
