@@ -39,3 +39,7 @@ next-env.d.ts
 
 # db
 prisma/dev.db
+
+# images
+scripts/images
+scripts/temp.json
