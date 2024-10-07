@@ -2,7 +2,8 @@ import React, { Dispatch, SetStateAction } from "react";
 import { IconButton } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { promptTitle } from "@/lib/prompts";
-import { fetchData } from "@/lib/generate";
+import { fetchData } from "@/lib/openai";
+// import { fetchData } from "@/lib/ollama";
 
 interface ChildProps {
   imageBase64: string;

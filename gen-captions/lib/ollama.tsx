@@ -6,17 +6,10 @@ export async function fetchData(
   setData: Dispatch<SetStateAction<string>>
 ) {
   const req = {
-    model: "llava:13b", // 少し大きなモデル
     prompt: prompt,
     images: [base64Image],
-    options: {
-      // num_predict: 5, // 短くしとくと、テストしやすい
-      repeat_penalty: 1.2, // 繰り返さないように
-    },
   };
   console.log("start to generate!");
-  // const URL = "http://localhost:11434/api/generate";
-  // const URL = "http://macbook.local:11434/api/generate";
   const URL = "/api/generate";
 
   try {
@@ -27,7 +20,6 @@ export async function fetchData(
       },
       body: JSON.stringify(req),
     });
-    // setLoading(true);
 
     const reader = response!.body!.getReader();
     let accumulatedText = ""; // 読み取ったテキストを蓄積する変数
@@ -37,9 +29,7 @@ export async function fetchData(
     const processText = async () => {
       const { done, value } = await reader.read();
       if (done) {
-        // setLoading(false);
         console.log(accumulatedResponse); // 最後に蓄積されたテキストをログに出力
-        // return accumulatedResponse;
         return;
       }
 
@@ -61,9 +51,7 @@ export async function fetchData(
             const jsonObj = JSON.parse(jsonString);
             if (jsonObj.response) {
               // JSONオブジェクトのresponseプロパティを処理
-              // console.log(jsonObj.response);
               accumulatedResponse += jsonObj.response; // divに内容を追加
-              // resultDiv.textContent = accumulatedResponse;
               setData(accumulatedResponse);
             }
           } catch (e) {
@@ -85,7 +73,6 @@ export async function fetchData(
     return accumulatedResponse;
   } catch (error) {
     console.error(error);
-    // resultDiv.style.display = "none"; // エラーが発生した場合に表示を非表示にする
     setData("エラーです。もう一度試してみてください。");
   }
 }

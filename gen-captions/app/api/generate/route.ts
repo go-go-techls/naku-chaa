@@ -1,30 +1,17 @@
-import { generate } from "@/app/_utils/ollama";
-// import { generate } from "@/app/_utils/openai";
+// import { generate } from "@/app/api/_utils/ollama";
+import { generate } from "@/app/api/_utils/openai";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     // リクエストボディを取得
     const requestBody = await req.json(); // JSON形式のデータを取得
-    console.log("hoge");
-    // 環境変数から認証トークンを取得
-    // const token = process.env.API_TOKEN;
-    // if (!token) {
-    //   return NextResponse.json(
-    //     { error: "API token not found" },
-    //     { status: 500 }
-    //   );
-    // }
 
-    // llava
-    const body = JSON.stringify(requestBody);
-    const externalResponse = await generate(body);
-
-    // // OpenAI
-    // const externalResponse = await generate(
-    //   requestBody.prompt,
-    //   requestBody.images
-    // );
+    // OpenAI / Ollama
+    const externalResponse = await generate(
+      requestBody.prompt,
+      requestBody.images
+    );
 
     // エラーハンドリング
     if (!externalResponse.ok) {

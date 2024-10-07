@@ -2,7 +2,8 @@ import React from "react";
 import { Fab } from "@mui/material";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Dispatch, SetStateAction } from "react";
-import { fetchData } from "@/lib/generate";
+import { fetchData } from "@/lib/openai";
+// import { fetchData } from "@/lib/ollama";
 import { Data, postResult } from "@/lib/postResult";
 import {
   promptAdvantage,
