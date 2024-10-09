@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import RadioGroupRating from "./RadioGroupRating";
 import { Data, postResult } from "@/lib/postResult";
+import ReactMarkdown from "react-markdown";
 
 interface ChildComponentProps {
   title: string;
@@ -62,34 +63,63 @@ const ArtworkDetails = ({
   return (
     <>
       <Typography mt={3} variant="h6" gutterBottom>
-        こんな絵に見える
+        AIがあなたの作品にコメントをつけるとすると…
       </Typography>
       {feature ? (
         <Typography variant="body1" gutterBottom>
-          {feature}
+          {/* {feature
+            .replace(/\n+/g, "\n")
+            .split("\n")
+            .map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))} */}
+          <ReactMarkdown>{feature}</ReactMarkdown>
         </Typography>
       ) : (
         <Skeleton variant="text" height={80} width="100%" />
       )}
       <Typography mt={3} variant="h6" gutterBottom>
-        この絵の良いところ
+        次の制作の…
+        <br />
+        参考作品
       </Typography>
       {advantage ? (
         <Typography variant="body1" gutterBottom>
-          {advantage}
+          {/* {advantage
+            .replace(/\n+/g, "\n")
+            .split("\n")
+            .map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))} */}
+          <ReactMarkdown>{advantage}</ReactMarkdown>
         </Typography>
       ) : (
         <Skeleton variant="text" height={80} width="100%" />
       )}
       <Typography mt={3} variant="h6" gutterBottom>
-        こんな工夫もできそう
+        アドバイス
       </Typography>
       {advice ? (
-        <Typography mb={5} variant="body1" gutterBottom>
-          {advice}
+        <Typography variant="body1" gutterBottom>
+          {/* {advice
+            .replace(/\n+/g, "\n")
+            .split("\n")
+            .map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))} */}
+          <ReactMarkdown>{advice}</ReactMarkdown>
         </Typography>
       ) : (
-        <Skeleton sx={{mb:5}} variant="text" height={80} width="100%" />
+        <Skeleton variant="text" height={80} width="100%" />
       )}
       <Divider></Divider>
       <Typography mt={3} variant="h6" gutterBottom>
@@ -120,11 +150,9 @@ const ArtworkDetails = ({
           fullWidth
           disabled={disable || !done}
           onClick={handleSave}
-          sx={{mt:1}}
+          sx={{ mt: 1 }}
         >
-          <Typography variant="body1">
-            保存
-          </Typography>
+          <Typography variant="body1">保存</Typography>
         </Button>
       </Box>
     </>

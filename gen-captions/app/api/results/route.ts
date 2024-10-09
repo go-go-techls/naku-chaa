@@ -1,7 +1,7 @@
 // app/routes/api/results.tsx
 import { v4 as uuidv4 } from "uuid";
 import { PrismaClient } from "@prisma/client";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
@@ -36,10 +36,10 @@ export async function GET(request: NextRequest) {
     const total = await prisma.art.count();
 
     if (arts) {
-      return Response.json({ data: arts, total, page, pageSize });
+      return NextResponse.json({ data: arts, total, page, pageSize });
       // return Response.json(arts);
     } else {
-      return Response.json(new Error("Not found"), { status: 404 });
+      return NextResponse.json(new Error("Not found"), { status: 404 });
     }
   } catch (error) {
     console.error("Error fetching arts:", error);
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   try {
     const newArt: DataItem = await prisma.art.create({ data });
     console.log(newArt);
-    return Response.json(newArt);
+    return NextResponse.json(newArt);
   } catch (error) {
     console.error("Error fetching arts:", error);
   }

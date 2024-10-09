@@ -1,4 +1,5 @@
 // app/routes/api/results.tsx
+import { NextResponse } from "next/server";
 import { DataItem } from "../route";
 import { PrismaClient } from "@prisma/client";
 
@@ -23,10 +24,10 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
   console.log(item);
 
   if (item) {
-    return Response.json(item);
+    return NextResponse.json(item);
   } else {
     console.warn("Not found");
-    return Response.json(new Error("Not found"), { status: 404 });
+    return NextResponse.json(new Error("Not found"), { status: 404 });
   }
 }
 
@@ -43,11 +44,11 @@ export async function DELETE(
     });
     if (item) {
       console.log("Deleted item:", item);
-      return Response.json(item); // 正常に削除されたアイテムを返す
+      return NextResponse.json(item); // 正常に削除されたアイテムを返す
     }
   } catch (error) {
     console.warn("Item not found or error deleting:", error);
-    return Response.json(new Error("Item not found or error deleting"), {
+    return NextResponse.json(new Error("Item not found or error deleting"), {
       status: 404,
     });
   }

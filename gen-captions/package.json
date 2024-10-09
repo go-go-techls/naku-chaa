@@ -19,6 +19,7 @@
     "@mui/material-nextjs": "^5.15.11",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "ai": "2.2.16",
+    "browser-image-compression": "^2.0.2",
     "fs": "^0.0.1-security",
     "langchain": "^0.0.129",
     "next": "13.4.7",
@@ -26,6 +27,7 @@
     "postcss-nesting": "^12.1.2",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
