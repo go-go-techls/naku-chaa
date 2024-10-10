@@ -5,6 +5,9 @@ import { Dispatch, SetStateAction } from "react";
 import { fetchData } from "@/lib/openai";
 // import { fetchData } from "@/lib/ollama";
 import { Data, postResult } from "@/lib/postResult";
+
+import imageCompression from "browser-image-compression";
+
 import {
   promptAdvantage,
   promptAdvice,
@@ -31,62 +34,80 @@ function ImageUploadButton({
   setRating,
   setInputValue,
 }: ChildComponentProps) {
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files && event.target.files[0];
     if (!file) {
       return <div>ファイル読み取りエラー</div>;
     }
 
-    const reader = new FileReader();
-    reader.onload = async function (e) {
-      e.preventDefault(); // リンクのデフォルトの遷移処理をキャンセル
+    try {
+      // 圧縮オプションの設定
+      const options = {
+        maxSizeMB: 0.1, // 最大ファイルサイズ (例: 0.1MB = 100kB)
+        // maxWidthOrHeight: 500, // 最大幅または高さ
+        useWebWorker: true, // WebWorkerを使用して、UIがブロックされるのを防ぐ
+      };
 
-      const base64ImageDisplay = e.target!.result as string;
-      const base64Image = (e.target!.result as string).split(",")[1];
+      // 画像を圧縮
+      const compressedFile = await imageCompression(file, options);
+      console.log(`圧縮後のファイルサイズ: ${compressedFile.size / 1024}KB`);
 
-      setImageBase64(base64ImageDisplay);
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        e.preventDefault(); // リンクのデフォルトの遷移処理をキャンセル
 
-      setTitle("");
-      setFeature("");
-      setAdvantage("");
-      setAdvice("");
-      setRating(3);
-      setInputValue("");
+        const base64ImageDisplay = e.target!.result as string;
+        const base64Image = (e.target!.result as string).split(",")[1];
 
-      // const results = await Promise.all([
-      //   fetchData(base64Image, promptTitle, setTitle),
-      //   fetchData(base64Image, promptFeature, setFeature),
-      //   fetchData(base64Image, promptAdvantage, setAdvantage),
-      //   fetchData(base64Image, promptAdvice, setAdvice),
-      // ]);
-      await fetchData(base64Image, promptTitle, setTitle);
-      await fetchData(base64Image, promptFeature, setFeature);
-      await fetchData(base64Image, promptAdvantage, setAdvantage);
-      await fetchData(base64Image, promptAdvice, setAdvice);
-      // console.log(results);
-      // const results = await Promise.all([
-      //   fetchData(base64Image, promptTitle, setTitle),
-      //   // fetchData(base64Image, promptFeature, setFeature),
-      // ]);
-      // console.log(results);
-      // console.log(base64ImageDisplay);
-      // const req: Data = {
-      //   title: results[0]!,
-      //   feature: results[1]!,
-      //   advantage: results[2]!,
-      //   advice: results[3]!,
-      //   image: base64ImageDisplay,
-      // };
-      // const req: Data = {
-      //   title: results[0]!,
-      //   feature: "feature",
-      //   advantage: "hoge",
-      //   advice: "advice",
-      //   image: base64ImageDisplay,
-      // };
-      // postResult(req);
-    };
-    reader.readAsDataURL(file);
+        setImageBase64(base64ImageDisplay);
+
+        setTitle("");
+        setFeature("");
+        setAdvantage("");
+        setAdvice("");
+        setRating(3);
+        setInputValue("");
+
+        // const results = await Promise.all([
+        //   fetchData(base64Image, promptTitle, setTitle),
+        //   fetchData(base64Image, promptFeature, setFeature),
+        //   fetchData(base64Image, promptAdvantage, setAdvantage),
+        //   fetchData(base64Image, promptAdvice, setAdvice),
+        // ]);
+        await fetchData(base64Image, promptTitle, setTitle);
+        await fetchData(base64Image, promptFeature, setFeature);
+        await fetchData(base64Image, promptAdvantage, setAdvantage);
+        await fetchData(base64Image, promptAdvice, setAdvice);
+        // console.log(results);
+        // const results = await Promise.all([
+        //   fetchData(base64Image, promptTitle, setTitle),
+        //   // fetchData(base64Image, promptFeature, setFeature),
+        // ]);
+        // console.log(results);
+        // console.log(base64ImageDisplay);
+        // const req: Data = {
+        //   title: results[0]!,
+        //   feature: results[1]!,
+        //   advantage: results[2]!,
+        //   advice: results[3]!,
+        //   image: base64ImageDisplay,
+        // };
+        // const req: Data = {
+        //   title: results[0]!,
+        //   feature: "feature",
+        //   advantage: "hoge",
+        //   advice: "advice",
+        //   image: base64ImageDisplay,
+        // };
+        // postResult(req);
+      };
+      // 圧縮されたファイルをBase64に変換
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error("画像圧縮エラー:", error);
+    }
   };
 
   return (
