@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Box, Pagination } from "@mui/material";
+import { Box, Pagination, Skeleton } from "@mui/material";
 import Link from "next/link";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 // import { list } from "@/lib/testList";
@@ -51,23 +51,46 @@ function ImageGrid() {
           </Link>
         </Grid>
 
-        {data.map((src, index) => (
-          <Grid item xs={12} sm={4} style={{ aspectRatio: "1/1" }} key={index}>
-            <Link href={`/arts/${src.id}`} passHref>
-              <Paper
-                elevation={12}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundImage: `url(${src.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  overflow: "hidden",
-                }}
-              />
-            </Link>
-          </Grid>
-        ))}
+        {data.length === 0
+          ? Array.from(new Array(pageSize)).map((_, index) => (
+              <Grid
+                item
+                xs={12}
+                sm={4}
+                style={{ aspectRatio: "1/1" }}
+                key={index}
+              >
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height="100%"
+                  animation="wave"
+                />
+              </Grid>
+            ))
+          : data.map((src, index) => (
+              <Grid
+                item
+                xs={12}
+                sm={4}
+                style={{ aspectRatio: "1/1" }}
+                key={index}
+              >
+                <Link href={`/arts/${src.id}`} passHref>
+                  <Paper
+                    elevation={12}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundImage: `url(${src.image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      overflow: "hidden",
+                    }}
+                  />
+                </Link>
+              </Grid>
+            ))}
       </Grid>
       <Pagination count={total} page={page} onChange={handleChange} />
     </Box>
