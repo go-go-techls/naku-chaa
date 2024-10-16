@@ -7,7 +7,7 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useState } from "react";
 import ImageUploadButton from "@/app/components/ImageUploadButton";
 import ArtworkTitle from "@/app/components/ArtworkTitle";
-import RefreshTitle from "@/app/components/RefreshTitleButton";
+import RefreshTitleButton from "@/app/components/RefreshTitleButton";
 import Link from "next/link";
 import {
   createTheme,
@@ -74,7 +74,11 @@ export default function Home() {
             <Box sx={{ p: 4, mt: 4 }}>
               <Box style={{ height: "2vh" }}></Box>
               <ArtworkTitle title={title}>
-                <RefreshTitle imageBase64={imageBase64} setTitle={setTitle} />
+                <RefreshTitleButton
+                  imageBase64={imageBase64}
+                  setTitle={setTitle}
+                  disabled={!title}
+                />
               </ArtworkTitle>
               <ArtworkDetails
                 title={title}

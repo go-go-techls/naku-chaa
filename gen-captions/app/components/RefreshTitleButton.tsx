@@ -8,9 +8,14 @@ import { fetchData } from "@/lib/openai";
 interface ChildProps {
   imageBase64: string;
   setTitle: Dispatch<SetStateAction<string>>;
+  disabled: boolean;
 }
 
-const RefreshTitleButton = ({ imageBase64, setTitle }: ChildProps) => {
+const RefreshTitleButton = ({
+  imageBase64,
+  setTitle,
+  disabled,
+}: ChildProps) => {
   const handleReload = () => {
     const base64Image = imageBase64.split(",")[1];
     setTitle("");
@@ -18,7 +23,11 @@ const RefreshTitleButton = ({ imageBase64, setTitle }: ChildProps) => {
   };
 
   return (
-    <IconButton onClick={handleReload} aria-label="リロード">
+    <IconButton
+      onClick={handleReload}
+      aria-label="リロード"
+      disabled={disabled}
+    >
       <RefreshIcon />
     </IconButton>
   );
