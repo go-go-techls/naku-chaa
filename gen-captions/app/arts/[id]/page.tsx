@@ -1,13 +1,13 @@
 "use client";
-import { DataItem } from "@/app/api/results/route";
+import { DataItem } from "@/app/api/arts/route";
 import { getArt } from "@/lib/getArts";
 import { useEffect, useState } from "react";
 import { Box, Grid, IconButton } from "@mui/material";
 import ArtworkDisplay from "../../components/ArtworkDisplay";
-import ArtworkDetails from "../../components/ArtworkDetails";
+import ArtworkDetails from "../../components/common/ArtworkDetails/ArtworkDetails";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArtworkTitle from "../../components/ArtworkTitle";
-import RefreshTitle from "../../components/RefreshTitle";
+// import RefreshTitle from "../../components/RefreshTitleButton";
 import Link from "next/link";
 import {
   createTheme,
@@ -58,7 +58,7 @@ export default function Arts({ params }: { params: { id: number } }) {
             style={{ maxHeight: "100vh", overflow: "auto" }}
           >
             <Box sx={{ p: 4, mt: 4 }}>
-              <Box style={{ height: "15vh" }}></Box>
+              <Box style={{ height: "2vh" }}></Box>
               <ArtworkTitle title={data.title}>
                 <></>
                 {/* <RefreshTitle imageBase64={data.image} setTitle={() => {}} /> */}

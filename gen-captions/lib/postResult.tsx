@@ -10,7 +10,7 @@ export type Data = {
 
 export async function postResult(data: Data) {
   try {
-    const response = await fetch("/api/results", {
+    const response = await fetch("/api/arts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

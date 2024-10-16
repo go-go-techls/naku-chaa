@@ -6,7 +6,7 @@ import { Box, Pagination } from "@mui/material";
 import Link from "next/link";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 // import { list } from "@/lib/testList";
-import { DataItem } from "../api/results/route";
+import { DataItem } from "../api/arts/route";
 import { getArts } from "@/lib/getArts";
 
 function ImageGrid() {

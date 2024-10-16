@@ -10,7 +10,7 @@ export async function fetchData(
     images: [base64Image],
   };
   console.log("start to generate by OpenAI!");
-  const URL = "/api/generate";
+  const URL = "/api/arts/generate";
 
   try {
     const response = await fetch(URL, {

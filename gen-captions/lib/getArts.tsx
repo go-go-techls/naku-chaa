@@ -1,4 +1,4 @@
-import { DataItem } from "@/app/api/results/route";
+import { DataItem } from "@/app/api/arts/route";
 import { Dispatch, SetStateAction } from "react";
 
 export const getArt = async (
@@ -6,7 +6,7 @@ export const getArt = async (
   setData: Dispatch<SetStateAction<DataItem>>
 ) => {
   try {
-    const response = await fetch(`/api/results/${id}`);
+    const response = await fetch(`/api/arts/${id}`);
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
@@ -24,9 +24,7 @@ export const getArts = async (
   pageSize = 11
 ) => {
   try {
-    const response = await fetch(
-      `/api/results?page=${page}&pageSize=${pageSize}`
-    );
+    const response = await fetch(`/api/arts?page=${page}&pageSize=${pageSize}`);
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }

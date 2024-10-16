@@ -2,7 +2,7 @@ export const generate = async (
   prompt: string,
   base64Image: string
 ): Promise<Response> => {
-  const URL = "http://localhost:11434/api/generate";
+  const URL = "http://localhost:11434/api/arts/generate";
   const req = {
     model: "llava:13b", // 少し大きなモデル
     prompt: prompt,

@@ -10,7 +10,7 @@ interface ChildProps {
   setTitle: Dispatch<SetStateAction<string>>;
 }
 
-const RefreshTitle = ({ imageBase64, setTitle }: ChildProps) => {
+const RefreshTitleButton = ({ imageBase64, setTitle }: ChildProps) => {
   const handleReload = () => {
     const base64Image = imageBase64.split(",")[1];
     setTitle("");
@@ -24,4 +24,4 @@ const RefreshTitle = ({ imageBase64, setTitle }: ChildProps) => {
   );
 };
 
-export default RefreshTitle;
+export default RefreshTitleButton;
