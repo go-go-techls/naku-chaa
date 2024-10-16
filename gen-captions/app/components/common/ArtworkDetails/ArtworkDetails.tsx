@@ -38,6 +38,7 @@ const ArtworkDetails = ({
   // ユーザー入力を保持するための状態変数を初期化
   // const [inputValue, setInputValue] = useState("");
   // const [rating, setRating] = useState(3);
+  const [saved, setSaved] = useState(false);
 
   // ユーザーがテキストフィールドに入力した値で状態を更新する関数
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +56,7 @@ const ArtworkDetails = ({
       comment: inputValue,
     };
     postResult(req);
+    setSaved(true);
     // window.location.reload(); // ページの再読み込み
   };
 
@@ -125,7 +127,10 @@ const ArtworkDetails = ({
       <Typography mt={3} variant="h6" gutterBottom>
         フィードバック
       </Typography>
-      <RadioGroupRating disabled={disable || !done} setRating={setRating} />
+      <RadioGroupRating
+        disabled={disable || !done || saved}
+        setRating={setRating}
+      />
       <Box
         component="form"
         sx={{
@@ -148,7 +153,7 @@ const ArtworkDetails = ({
         <Button
           variant="contained"
           fullWidth
-          disabled={disable || !done}
+          disabled={disable || !done || saved}
           onClick={handleSave}
           sx={{ mt: 1 }}
         >
