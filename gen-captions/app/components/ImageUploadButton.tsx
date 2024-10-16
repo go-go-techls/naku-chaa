@@ -4,7 +4,6 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { Dispatch, SetStateAction } from "react";
 import { fetchData } from "@/lib/openai";
 // import { fetchData } from "@/lib/ollama";
-import { Data, postResult } from "@/lib/postResult";
 
 import imageCompression from "browser-image-compression";
 
@@ -70,38 +69,18 @@ function ImageUploadButton({
         setRating(3);
         setInputValue("");
 
-        // const results = await Promise.all([
-        //   fetchData(base64Image, promptTitle, setTitle),
-        //   fetchData(base64Image, promptFeature, setFeature),
-        //   fetchData(base64Image, promptAdvantage, setAdvantage),
-        //   fetchData(base64Image, promptAdvice, setAdvice),
-        // ]);
-        await fetchData(base64Image, promptTitle, setTitle);
-        await fetchData(base64Image, promptFeature, setFeature);
-        await fetchData(base64Image, promptAdvantage, setAdvantage);
-        await fetchData(base64Image, promptAdvice, setAdvice);
+        // 同時に生成
+        const results = await Promise.all([
+          fetchData(base64Image, promptTitle, setTitle),
+          fetchData(base64Image, promptFeature, setFeature),
+          fetchData(base64Image, promptAdvantage, setAdvantage),
+          fetchData(base64Image, promptAdvice, setAdvice),
+        ]);
         // console.log(results);
-        // const results = await Promise.all([
-        //   fetchData(base64Image, promptTitle, setTitle),
-        //   // fetchData(base64Image, promptFeature, setFeature),
-        // ]);
-        // console.log(results);
-        // console.log(base64ImageDisplay);
-        // const req: Data = {
-        //   title: results[0]!,
-        //   feature: results[1]!,
-        //   advantage: results[2]!,
-        //   advice: results[3]!,
-        //   image: base64ImageDisplay,
-        // };
-        // const req: Data = {
-        //   title: results[0]!,
-        //   feature: "feature",
-        //   advantage: "hoge",
-        //   advice: "advice",
-        //   image: base64ImageDisplay,
-        // };
-        // postResult(req);
+        // await fetchData(base64Image, promptTitle, setTitle);
+        // await fetchData(base64Image, promptFeature, setFeature);
+        // await fetchData(base64Image, promptAdvantage, setAdvantage);
+        // await fetchData(base64Image, promptAdvice, setAdvice);
       };
       // 圧縮されたファイルをBase64に変換
       reader.readAsDataURL(compressedFile);
