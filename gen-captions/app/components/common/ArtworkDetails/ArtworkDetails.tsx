@@ -89,18 +89,19 @@ const ArtworkDetails = ({
         参考作品
       </Typography>
       {advantage ? (
-        <Typography variant="body1" gutterBottom>
-          {/* {advantage
-            .replace(/\n+/g, "\n")
-            .split("\n")
-            .map((line, index) => (
-              <React.Fragment key={index}>
-                {line}
-                <br />
-              </React.Fragment>
-            ))} */}
-          <ReactMarkdown>{advantage}</ReactMarkdown>
-        </Typography>
+        // <Typography variant="body1" gutterBottom>
+        //   {/* {advantage
+        //     .replace(/\n+/g, "\n")
+        //     .split("\n")
+        //     .map((line, index) => (
+        //       <React.Fragment key={index}>
+        //         {line}
+        //         <br />
+        //       </React.Fragment>
+        //     ))} */}
+        //   <ReactMarkdown>{advantage}</ReactMarkdown>
+        // </Typography>
+        <ReactMarkdown>{advantage}</ReactMarkdown>
       ) : (
         <Skeleton variant="text" height={80} width="100%" />
       )}
@@ -108,18 +109,19 @@ const ArtworkDetails = ({
         アドバイス
       </Typography>
       {advice ? (
-        <Typography variant="body1" gutterBottom>
-          {/* {advice
-            .replace(/\n+/g, "\n")
-            .split("\n")
-            .map((line, index) => (
-              <React.Fragment key={index}>
-                {line}
-                <br />
-              </React.Fragment>
-            ))} */}
-          <ReactMarkdown>{advice}</ReactMarkdown>
-        </Typography>
+        // <Typography variant="body1" gutterBottom>
+        //   {/* {advice
+        //     .replace(/\n+/g, "\n")
+        //     .split("\n")
+        //     .map((line, index) => (
+        //       <React.Fragment key={index}>
+        //         {line}
+        //         <br />
+        //       </React.Fragment>
+        //     ))} */}
+        //   <ReactMarkdown>{advice}</ReactMarkdown>
+        // </Typography>
+        <ReactMarkdown>{advice}</ReactMarkdown>
       ) : (
         <Skeleton variant="text" height={80} width="100%" />
       )}

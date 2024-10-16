@@ -9,7 +9,7 @@ export async function fetchData(
     prompt: prompt,
     images: [base64Image],
   };
-  console.log("start to generate!");
+  console.log("start to generate by Ollama!");
   const URL = "/api/arts/generate";
 
   try {

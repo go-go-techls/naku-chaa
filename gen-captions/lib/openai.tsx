@@ -27,6 +27,7 @@ export async function fetchData(
     while (true) {
       const { done, value } = await reader.read();
       if (done) {
+        console.log(accumulatedResponse); // 最後に蓄積されたテキストをログに出力
         break;
       }
 
@@ -37,14 +38,11 @@ export async function fetchData(
       // テキストには複数のメッセージが含まれている可能性があるため、
       // 改行 (LF) で分離して、1 行ずつ処理する
       const lines = text.split(/\n+/);
-      console.log(lines);
 
       for (const line of lines) {
         // 先頭の "data: " を削除してメッセージ本文 (JSON 文字列か "[DONE]" のいずれか) を抜き出す
-        console.log(line);
 
         const jsonText = line.replace(/^data:\s*/, "");
-        console.log(jsonText);
 
         if (jsonText === "[DONE]") {
           break;
@@ -54,8 +52,6 @@ export async function fetchData(
             const content = data.choices[0].delta.content;
             if (content) {
               accumulatedResponse += content;
-              console.log(content);
-              console.log(accumulatedResponse);
 
               setData(accumulatedResponse);
             }
