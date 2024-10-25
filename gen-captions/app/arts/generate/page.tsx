@@ -14,6 +14,7 @@ import {
   responsiveFontSizes,
   ThemeProvider,
 } from "@mui/material/styles";
+import Header from "@/app/components/common/Header/Header";
 
 let theme = createTheme({
   typography: {
@@ -35,8 +36,11 @@ export default function Home() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Box sx={{ position: "relative", zIndex: 10 }}>
+        <Header />
+      </Box>
       <Box sx={{ flexGrow: 1 }}>
-        <Link href="/arts" passHref>
+        {/* <Link href="/arts" passHref>
           <IconButton
             aria-label="戻る"
             size="large"
@@ -44,7 +48,7 @@ export default function Home() {
           >
             <ArrowBackIosNewIcon />
           </IconButton>
-        </Link>
+        </Link> */}
 
         <Grid
           container

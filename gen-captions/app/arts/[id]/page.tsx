@@ -14,6 +14,7 @@ import {
   responsiveFontSizes,
   ThemeProvider,
 } from "@mui/material/styles";
+import Header from "@/app/components/common/Header/Header";
 
 let theme = createTheme({
   typography: {
@@ -30,9 +31,12 @@ export default function Arts({ params }: { params: { id: number } }) {
   }, [params.id]); // IDが変わるたびにAPIが呼び出される
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
+      <Box sx={{ position: "relative", zIndex: 10 }}>
+        <Header />
+      </Box>
       <Box sx={{ flexGrow: 1 }}>
-        <Link href="/arts" passHref>
+        {/* <Link href="/arts" passHref>
           <IconButton
             aria-label="戻る"
             size="large"
@@ -40,7 +44,7 @@ export default function Arts({ params }: { params: { id: number } }) {
           >
             <ArrowBackIosNewIcon />
           </IconButton>
-        </Link>
+        </Link> */}
 
         <Grid
           container
@@ -80,6 +84,6 @@ export default function Arts({ params }: { params: { id: number } }) {
           </Grid>
         </Grid>
       </Box>
-    </ThemeProvider>
+    </>
   );
 }

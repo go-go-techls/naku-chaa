@@ -8,6 +8,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 // import { list } from "@/lib/testList";
 import { DataItem } from "../api/arts/route";
 import { getArts } from "@/lib/getArts";
+import Header from "../components/common/Header/Header";
 
 function ImageGrid() {
   // const images = list;
@@ -27,73 +28,78 @@ function ImageGrid() {
   }, [page]); // IDが変わるたびにAPIが呼び出される
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column" // Flexbox 方向を縦に設定
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Grid container spacing={5} p={5}>
-        <Grid item xs={12} sm={4} style={{ aspectRatio: "1/1" }}>
-          <Link href={`/`} passHref>
-            <Paper
-              elevation={15}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <AddCircleOutlineIcon fontSize="large" color="action" />
-            </Paper>
-          </Link>
-        </Grid>
+    <>
+      <Box sx={{ position: "relative", zIndex: 10 }}>
+        <Header />
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="column" // Flexbox 方向を縦に設定
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Grid container spacing={3} p={2} justifyContent="center">
+          <Grid item xs={12} sm={3.6} style={{ aspectRatio: "1/1" }}>
+            <Link href={`/`} passHref>
+              <Paper
+                elevation={15}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <AddCircleOutlineIcon fontSize="large" color="action" />
+              </Paper>
+            </Link>
+          </Grid>
 
-        {data.length === 0
-          ? Array.from(new Array(pageSize)).map((_, index) => (
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                style={{ aspectRatio: "1/1" }}
-                key={index}
-              >
-                <Skeleton
-                  variant="rectangular"
-                  width="100%"
-                  height="100%"
-                  animation="wave"
-                />
-              </Grid>
-            ))
-          : data.map((src, index) => (
-              <Grid
-                item
-                xs={12}
-                sm={4}
-                style={{ aspectRatio: "1/1" }}
-                key={index}
-              >
-                <Link href={`/arts/${src.id}`} passHref>
-                  <Paper
-                    elevation={12}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      backgroundImage: `url(${src.image})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      overflow: "hidden",
-                    }}
+          {data.length === 0
+            ? Array.from(new Array(pageSize)).map((_, index) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={3.6}
+                  style={{ aspectRatio: "1/1" }}
+                  key={index}
+                >
+                  <Skeleton
+                    variant="rectangular"
+                    width="100%"
+                    height="100%"
+                    animation="wave"
                   />
-                </Link>
-              </Grid>
-            ))}
-      </Grid>
-      <Pagination count={total} page={page} onChange={handleChange} />
-    </Box>
+                </Grid>
+              ))
+            : data.map((src, index) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={3.6}
+                  style={{ aspectRatio: "1/1" }}
+                  key={index}
+                >
+                  <Link href={`/arts/${src.id}`} passHref>
+                    <Paper
+                      elevation={12}
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        backgroundImage: `url(${src.image})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        overflow: "hidden",
+                      }}
+                    />
+                  </Link>
+                </Grid>
+              ))}
+        </Grid>
+        <Pagination count={total} page={page} onChange={handleChange} />
+      </Box>
+    </>
   );
 }
 
