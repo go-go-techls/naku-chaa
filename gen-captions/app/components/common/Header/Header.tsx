@@ -13,20 +13,20 @@ const Logo = styled("img")({
   marginRight: 10,
 });
 
-function MyAppBar() {
+function Header() {
   return (
     <AppBar
       position="static"
       sx={{
         bgcolor: "#ffffff",
-        color: "#3A7CC0",
+        color: "#3386E7",
         boxShadow: "0px 1px 10px 0px rgba(0,0,0,0.1)", // カスタムシャドーを設定
       }}
     >
       <Link href="/arts" passHref>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="logo">
-            <Logo src="/logo.png" alt="App Icon" />
+            <Logo src="/logo.svg" alt="App Icon" />
           </IconButton>
           <Typography
             component="div"
@@ -36,7 +36,7 @@ function MyAppBar() {
               fontSize: "1.25rem", // フォントサイズを直接指定
             }}
           >
-            生成AIに作品をみせてみよう by テックルズ
+            生成AIに作品をみてもらおう by テックルズ
           </Typography>
         </Toolbar>
       </Link>
@@ -44,4 +44,4 @@ function MyAppBar() {
   );
 }
 
-export default MyAppBar;
+export default Header;
