@@ -65,7 +65,7 @@ const ArtworkDetails = ({
   return (
     <>
       <Typography mt={3} variant="h6" gutterBottom>
-        AIがあなたの作品にコメントをつけるとすると…
+        あなたの作品の印象
       </Typography>
       {feature ? (
         <Typography variant="body1" gutterBottom>
@@ -84,9 +84,7 @@ const ArtworkDetails = ({
         <Skeleton variant="text" height={80} width="100%" />
       )}
       <Typography mt={3} variant="h6" gutterBottom>
-        次の制作の…
-        <br />
-        参考作品
+        あなたの作品の良いところ
       </Typography>
       {advantage ? (
         // <Typography variant="body1" gutterBottom>
@@ -106,7 +104,7 @@ const ArtworkDetails = ({
         <Skeleton variant="text" height={80} width="100%" />
       )}
       <Typography mt={3} variant="h6" gutterBottom>
-        アドバイス
+        次の作品へのアドバイス
       </Typography>
       {advice ? (
         // <Typography variant="body1" gutterBottom>
