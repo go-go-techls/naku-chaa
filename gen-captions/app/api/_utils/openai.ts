@@ -24,7 +24,7 @@ export const generate = async (
       },
     ],
     stream: true,
-    max_tokens: 300,
+    max_tokens: 2000,
   };
 
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
