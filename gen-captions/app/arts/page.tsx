@@ -13,12 +13,11 @@ function ImageGrid() {
   const [data, setData] = useState<DataItem[]>([]);
   const [page, setPage] = useState(1);
   const pageSize = 14;
+  const [total, setTotal] = useState<number>(1);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
-
-  const [total, setTotal] = useState<number>(1);
 
   useEffect(() => {
     getArts(setData, setTotal, page, pageSize);
@@ -35,9 +34,19 @@ function ImageGrid() {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        sx={{ pb: 4 }} // 下部にパディングを追加
+        sx={{ pb: 4 }}
       >
-        <Grid container spacing={2} p={2} justifyContent="center">
+        <Grid
+          container
+          spacing={2}
+          p={2}
+          justifyContent="center"
+          sx={{
+            width: "100%",
+            maxWidth: "1100px", // iPad 横向きでも収まるように調整
+            mx: "auto",
+          }}
+        >
           <Grid item xs={12} sm={2.3} md={2.3} style={{ aspectRatio: "1/1" }}>
             <Link href={`/`} passHref>
               <Paper
@@ -48,7 +57,7 @@ function ImageGrid() {
                   alignItems: "center",
                   width: "100%",
                   height: "100%",
-                  padding: 1, // 余白を追加
+                  padding: 1,
                 }}
               >
                 <AddCircleOutlineIcon fontSize="large" color="action" />
@@ -93,7 +102,7 @@ function ImageGrid() {
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         overflow: "hidden",
-                        padding: 1, // 余白を追加
+                        padding: 1,
                       }}
                     />
                   </Link>
@@ -105,7 +114,7 @@ function ImageGrid() {
           page={page}
           onChange={handleChange}
           size="small"
-          sx={{ mt: 2 }} // ページネーションの上部にマージンを追加
+          sx={{ mt: 2 }}
         />
       </Box>
     </>
