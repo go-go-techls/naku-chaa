@@ -1,6 +1,12 @@
 "use client";
 
-import { Box, Grid, IconButton } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  IconButton,
+} from "@mui/material";
 import ArtworkDisplay from "@/app/components/ArtworkDisplay";
 import ArtworkDetails from "@/app/components/common/ArtworkDetails/ArtworkDetails";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -31,6 +37,7 @@ export default function Home() {
   const [imageBase64, setImageBase64] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [rating, setRating] = useState(3);
+  const [snsCheck, setSnsCheck] = useState(true);
 
   // const [loading, setLoading] = useState(false);
 
@@ -59,6 +66,7 @@ export default function Home() {
           <Grid item xs={12} md={7} style={{ height: "100vh" }}>
             <ArtworkDisplay imageBase64={imageBase64} />
           </Grid>
+
           <ImageUploadButton
             setImageBase64={setImageBase64}
             setTitle={setTitle}
@@ -67,8 +75,41 @@ export default function Home() {
             setAdvice={setAdvice}
             setRating={setRating}
             setInputValue={setInputValue}
+            sx={{ position: "fixed", bottom: "1.5rem", left: "1.5rem" }}
           />
 
+          <ImageUploadButton
+            setImageBase64={setImageBase64}
+            setTitle={setTitle}
+            setFeature={setFeature}
+            setAdvantage={setAdvantage}
+            setAdvice={setAdvice}
+            setRating={setRating}
+            setInputValue={setInputValue}
+            sx={{ position: "fixed", bottom: "1.5rem", left: "5.5rem" }}
+          />
+
+          <ImageUploadButton
+            setImageBase64={setImageBase64}
+            setTitle={setTitle}
+            setFeature={setFeature}
+            setAdvantage={setAdvantage}
+            setAdvice={setAdvice}
+            setRating={setRating}
+            setInputValue={setInputValue}
+            sx={{ position: "fixed", bottom: "1.5rem", left: "9.5rem" }}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={snsCheck}
+                onChange={(e) => setSnsCheck(e.target.checked)}
+                color="primary"
+              />
+            }
+            label="📸 SNSに投稿していいよ"
+            sx={{ position: "fixed", bottom: "2rem", left: "14.5rem" }}
+          />
           <Grid
             item
             xs={12}
