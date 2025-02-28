@@ -113,6 +113,7 @@ export default function Arts({ params }: { params: { id: number } }) {
               setRating={() => {}}
               setInputValue={() => {}}
               disable={true}
+              isComplete={true}
             />
             <Box style={{ height: "15vh" }}></Box>
           </Box>
