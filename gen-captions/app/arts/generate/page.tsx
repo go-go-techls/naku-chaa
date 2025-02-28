@@ -106,6 +106,7 @@ export default function Home() {
 
         {/* 画像アップロードボタン */}
         <ImageUploadButton
+          character="teacher"
           setImageBase64={setImageBase64}
           setTitle={setTitle}
           setFeature={setFeature}
@@ -117,6 +118,7 @@ export default function Home() {
         />
 
         <ImageUploadButton
+          character="geinin"
           setImageBase64={setImageBase64}
           setTitle={setTitle}
           setFeature={setFeature}
@@ -124,10 +126,11 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
-          sx={{ position: "fixed", bottom: "2rem", left: "5.5rem" }}
+          sx={{ position: "fixed", bottom: "2rem", left: "8.5rem" }}
         />
 
         <ImageUploadButton
+          character="instructor"
           setImageBase64={setImageBase64}
           setTitle={setTitle}
           setFeature={setFeature}
@@ -135,7 +138,7 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
-          sx={{ position: "fixed", bottom: "2rem", left: "9.5rem" }}
+          sx={{ position: "fixed", bottom: "2rem", left: "15.5rem" }}
         />
 
         <FormControlLabel
@@ -147,7 +150,14 @@ export default function Home() {
             />
           }
           label="📸 SNS 投稿 OK"
-          sx={{ position: "fixed", bottom: "2.5rem", left: "14.5rem" }}
+          sx={{
+            position: "fixed",
+            bottom: "3.5rem",
+            left: "23.5rem",
+            "& .MuiFormControlLabel-label": {
+              fontSize: "1.2rem", // フォントサイズを変更
+            },
+          }}
         />
       </Box>
     </ThemeProvider>
