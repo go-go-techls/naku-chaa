@@ -5,16 +5,14 @@ import Paper from "@mui/material/Paper";
 import { Box, Pagination, Skeleton } from "@mui/material";
 import Link from "next/link";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-// import { list } from "@/lib/testList";
 import { DataItem } from "../api/arts/route";
 import { getArts } from "@/lib/getArts";
 import Header from "../components/common/Header/Header";
 
 function ImageGrid() {
-  // const images = list;
   const [data, setData] = useState<DataItem[]>([]);
   const [page, setPage] = useState(1);
-  const pageSize = 5;
+  const pageSize = 14;
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -25,7 +23,7 @@ function ImageGrid() {
   useEffect(() => {
     getArts(setData, setTotal, page, pageSize);
     console.log("refreshed");
-  }, [page]); // IDが変わるたびにAPIが呼び出される
+  }, [page]);
 
   return (
     <>
@@ -34,12 +32,13 @@ function ImageGrid() {
       </Box>
       <Box
         display="flex"
-        flexDirection="column" // Flexbox 方向を縦に設定
+        flexDirection="column"
         justifyContent="center"
         alignItems="center"
+        sx={{ pb: 4 }} // 下部にパディングを追加
       >
-        <Grid container spacing={3} p={2} justifyContent="center">
-          <Grid item xs={12} sm={3.6} style={{ aspectRatio: "1/1" }}>
+        <Grid container spacing={2} p={2} justifyContent="center">
+          <Grid item xs={12} sm={2.3} md={2.3} style={{ aspectRatio: "1/1" }}>
             <Link href={`/`} passHref>
               <Paper
                 elevation={15}
@@ -49,6 +48,7 @@ function ImageGrid() {
                   alignItems: "center",
                   width: "100%",
                   height: "100%",
+                  padding: 1, // 余白を追加
                 }}
               >
                 <AddCircleOutlineIcon fontSize="large" color="action" />
@@ -61,7 +61,8 @@ function ImageGrid() {
                 <Grid
                   item
                   xs={12}
-                  sm={3.6}
+                  sm={2.3}
+                  md={2.3}
                   style={{ aspectRatio: "1/1" }}
                   key={index}
                 >
@@ -77,7 +78,8 @@ function ImageGrid() {
                 <Grid
                   item
                   xs={12}
-                  sm={3.6}
+                  sm={2.3}
+                  md={2.3}
                   style={{ aspectRatio: "1/1" }}
                   key={index}
                 >
@@ -91,13 +93,20 @@ function ImageGrid() {
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         overflow: "hidden",
+                        padding: 1, // 余白を追加
                       }}
                     />
                   </Link>
                 </Grid>
               ))}
         </Grid>
-        <Pagination count={total} page={page} onChange={handleChange} />
+        <Pagination
+          count={total}
+          page={page}
+          onChange={handleChange}
+          size="small"
+          sx={{ mt: 2 }} // ページネーションの上部にマージンを追加
+        />
       </Box>
     </>
   );
