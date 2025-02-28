@@ -83,11 +83,12 @@ export default function Home() {
             <Box sx={{ p: 4, mt: 4 }}>
               <Box style={{ height: "2vh" }}></Box>
               <ArtworkTitle title={title}>
-                <RefreshTitleButton
+                {/* <RefreshTitleButton
                   imageBase64={imageBase64}
                   setTitle={setTitle}
                   disabled={!title}
-                />
+                /> */}
+                <></>
               </ArtworkTitle>
               <ArtworkDetails
                 title={title}

@@ -19,7 +19,7 @@ const RefreshTitleButton = ({
   const handleReload = () => {
     const base64Image = imageBase64.split(",")[1];
     setTitle("");
-    fetchData(base64Image, promptTitle, setTitle);
+    fetchData(base64Image, promptTitle.teacher, setTitle);
   };
 
   return (
