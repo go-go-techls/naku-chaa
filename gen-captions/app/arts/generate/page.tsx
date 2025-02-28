@@ -64,7 +64,7 @@ export default function Home() {
                 alignItems: "center",
               }}
             >
-              <ArtworkDisplay imageBase64={imageBase64} />
+              <ArtworkDisplay imageBase64={imageBase64} from="generate" />
             </Box>
           </Box>
 

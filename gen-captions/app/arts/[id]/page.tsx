@@ -59,7 +59,7 @@ export default function Arts({ params }: { params: { id: number } }) {
               alignItems: "center",
             }}
           >
-            <ArtworkDisplay imageBase64={data.image} />
+            <ArtworkDisplay imageBase64={data.image} from="id" />
           </Box>
         </Box>
 

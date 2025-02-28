@@ -1,11 +1,12 @@
 import React from "react";
-import { Paper } from "@mui/material";
+import { Paper, Skeleton } from "@mui/material";
 
 interface ChildComponentProps {
   imageBase64: string;
+  from: "generate" | "id"; // 呼び出し元の画面を識別
 }
 
-const ArtworkDisplay = ({ imageBase64 }: ChildComponentProps) => {
+const ArtworkDisplay = ({ imageBase64, from }: ChildComponentProps) => {
   return (
     <Paper
       elevation={8}
@@ -26,8 +27,8 @@ const ArtworkDisplay = ({ imageBase64 }: ChildComponentProps) => {
           alt="Artwork Image"
           style={{ maxWidth: "100%", maxHeight: "100%" }}
         />
-      ) : (
-        // first_step.png に置き換え
+      ) : from === "generate" ? (
+        // generate から呼ばれた場合は first_step.png を表示
         <img
           src="/images/first_step.png"
           alt="First Step"
@@ -38,6 +39,19 @@ const ArtworkDisplay = ({ imageBase64 }: ChildComponentProps) => {
             height: "auto",
             aspectRatio: "16 / 9",
             objectFit: "contain",
+          }}
+        />
+      ) : (
+        // id から呼ばれた場合は Skeleton を表示
+        <Skeleton
+          variant="rectangular"
+          // animation="wave"
+          style={{
+            maxWidth: "100%",
+            maxHeight: "100%",
+            width: "100%",
+            height: "auto",
+            aspectRatio: "16 / 9",
           }}
         />
       )}
