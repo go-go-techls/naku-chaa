@@ -3,7 +3,7 @@
 # response=$(curl -X GET http://localhost:3000/api/results\?page\=1\&pageSize\=40)
 # response=$(curl -X GET http://localhost:3000/api/results\?page\=2\&pageSize\=40)
 # response=$(curl -X GET http://localhost:3000/api/results\?page\=3\&pageSize\=40)
-curl -X GET http://localhost:3000/api/results\?page\=1\&pageSize\=200 >temp.json
+# curl -X GET http://localhost:3000/api/results\?page\=1\&pageSize\=200 >temp.json
 # response=$(curl -X GET http://localhost:3000/api/results\?page\=4\&pageSize\=40)
 # response=$(curl -X GET http://localhost:3000/api/results/27)
 # response=$(curl -X GET http://localhost:3000/api/results\?page\=1\&pageSize\=160)
