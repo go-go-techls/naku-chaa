@@ -2,13 +2,10 @@
 import { DataItem } from "@/app/api/arts/route";
 import { getArt } from "@/lib/getArts";
 import { useEffect, useState } from "react";
-import { Box, Grid, IconButton } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import ArtworkDisplay from "../../components/ArtworkDisplay";
 import ArtworkDetails from "../../components/common/ArtworkDetails/ArtworkDetails";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArtworkTitle from "../../components/ArtworkTitle";
-// import RefreshTitle from "../../components/RefreshTitleButton";
-import Link from "next/link";
 import {
   createTheme,
   responsiveFontSizes,
@@ -36,16 +33,6 @@ export default function Arts({ params }: { params: { id: number } }) {
         <Header />
       </Box>
       <Box sx={{ flexGrow: 1 }}>
-        {/* <Link href="/arts" passHref>
-          <IconButton
-            aria-label="戻る"
-            size="large"
-            sx={{ position: "fixed", top: "1rem", left: "1rem" }}
-          >
-            <ArrowBackIosNewIcon />
-          </IconButton>
-        </Link> */}
-
         <Grid
           container
           style={{ height: "100vh", width: "100vw" }}
@@ -61,11 +48,36 @@ export default function Arts({ params }: { params: { id: number } }) {
             md={5}
             style={{ maxHeight: "100vh", overflow: "auto" }}
           >
-            <Box sx={{ p: 4, mt: 4 }}>
-              <Box style={{ height: "2vh" }}></Box>
+            <Box sx={{ p: 4, mt: 0 }}>
+              {/* タグのような表示 */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  backgroundColor: "#E3F2FD", // 薄い青色
+                  color: "#0D47A1", // 濃い青色
+                  borderRadius: "15px",
+                  px: 2,
+                  py: 0.5,
+                  mb: 2, // 下に余白
+                  width: "fit-content",
+                }}
+              >
+                {/* teacher.svg の表示 */}
+                <img
+                  src="/teacher.svg"
+                  alt="Teacher"
+                  style={{ width: "20px", height: "20px" }}
+                />
+                {/* タグのテキスト */}
+                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                  AI先生からのコメント
+                </Typography>
+              </Box>
+
               <ArtworkTitle title={data.title}>
                 <></>
-                {/* <RefreshTitle imageBase64={data.image} setTitle={() => {}} /> */}
               </ArtworkTitle>
               <ArtworkDetails
                 title={data.title}
