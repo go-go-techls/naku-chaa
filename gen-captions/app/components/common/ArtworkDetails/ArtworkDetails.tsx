@@ -123,7 +123,7 @@ const ArtworkDetails = ({
       ) : (
         <Skeleton variant="text" height={80} width="100%" />
       )}
-      <Divider></Divider>
+      {/* <Divider></Divider>
       <Typography mt={3} variant="h6" gutterBottom>
         フィードバック
       </Typography>
@@ -159,7 +159,7 @@ const ArtworkDetails = ({
         >
           <Typography variant="body1">保存</Typography>
         </Button>
-      </Box>
+      </Box> */}
     </>
   );
 };

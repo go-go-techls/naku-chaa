@@ -59,11 +59,23 @@ export default function Home() {
 
         <Grid
           container
-          style={{ height: "100vh", width: "100vw" }}
+          style={{
+            height: "calc(100vh - 64px)", // ヘッダーの高さを引いた高さに変更
+            overflow: "auto", // 必要に応じてスクロール可能にする
+          }}
+          // style={{ height: "100vh", width: "100vw" }}
           alignItems="center"
           justifyContent="center"
         >
-          <Grid item xs={12} md={7} style={{ height: "100vh" }}>
+          <Grid
+            item
+            xs={12}
+            md={7}
+            style={{
+              height: "calc(100vh - 64px)", // ヘッダーの高さを引いた高さに変更
+            }}
+          >
+            {/* <Grid item xs={12} md={7} style={{ height: "100vh" }}> */}
             <ArtworkDisplay imageBase64={imageBase64} />
           </Grid>
 
@@ -75,7 +87,7 @@ export default function Home() {
             setAdvice={setAdvice}
             setRating={setRating}
             setInputValue={setInputValue}
-            sx={{ position: "fixed", bottom: "1.5rem", left: "1.5rem" }}
+            sx={{ position: "fixed", bottom: "2rem", left: "1.5rem" }}
           />
 
           <ImageUploadButton
@@ -86,7 +98,7 @@ export default function Home() {
             setAdvice={setAdvice}
             setRating={setRating}
             setInputValue={setInputValue}
-            sx={{ position: "fixed", bottom: "1.5rem", left: "5.5rem" }}
+            sx={{ position: "fixed", bottom: "2rem", left: "5.5rem" }}
           />
 
           <ImageUploadButton
@@ -97,7 +109,7 @@ export default function Home() {
             setAdvice={setAdvice}
             setRating={setRating}
             setInputValue={setInputValue}
-            sx={{ position: "fixed", bottom: "1.5rem", left: "9.5rem" }}
+            sx={{ position: "fixed", bottom: "2rem", left: "9.5rem" }}
           />
           <FormControlLabel
             control={
@@ -107,8 +119,8 @@ export default function Home() {
                 color="primary"
               />
             }
-            label="📸 SNSに投稿していいよ"
-            sx={{ position: "fixed", bottom: "2rem", left: "14.5rem" }}
+            label="📸 SNS 投稿 OK"
+            sx={{ position: "fixed", bottom: "2.5rem", left: "14.5rem" }}
           />
           <Grid
             item
@@ -137,7 +149,7 @@ export default function Home() {
                 setInputValue={setInputValue}
                 disable={false}
               />
-              <Box style={{ height: "15vh" }}></Box>
+              {/* <Box style={{ height: "15vh" }}></Box> */}
             </Box>
           </Grid>
         </Grid>
