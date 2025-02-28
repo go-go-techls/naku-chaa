@@ -33,28 +33,28 @@ const characterSettings = {
     icon: teacherIcon,
     title: "AI先生",
     backgroundColor: "#CEDCE9", // 背景色
-    promptTitle,
-    promptFeature,
-    promptAdvantage,
-    promptAdvice,
+    promptTitle: promptTitle.teacher,
+    promptFeature: promptFeature.teacher,
+    promptAdvantage: promptAdvantage.teacher,
+    promptAdvice: promptAdvice.teacher,
   },
   geinin: {
     icon: geininIcon,
     title: "お笑い芸人",
     backgroundColor: "#F6E2D7", // 背景色
-    promptTitle: "geininTitlePrompt",
-    promptFeature: "geininFeaturePrompt",
-    promptAdvantage: "geininAdvantagePrompt",
-    promptAdvice: "geininAdvicePrompt",
+    promptTitle: promptTitle.geinin,
+    promptFeature: promptFeature.geinin,
+    promptAdvantage: promptAdvantage.geinin,
+    promptAdvice: promptAdvice.geinin,
   },
   instructor: {
     icon: instructorIcon,
     title: "熱血コーチ",
     backgroundColor: "#F4F4DD", // 背景色
-    promptTitle: "instructorTitlePrompt",
-    promptFeature: "instructorFeaturePrompt",
-    promptAdvantage: "instructorAdvantagePrompt",
-    promptAdvice: "instructorAdvicePrompt",
+    promptTitle: promptTitle.instructor,
+    promptFeature: promptFeature.instructor,
+    promptAdvantage: promptAdvantage.instructor,
+    promptAdvice: promptAdvice.instructor,
   },
 };
 
@@ -71,10 +71,12 @@ function ImageUploadButton({
 }: ChildComponentProps) {
   // キャラクターに応じた設定を取得
   const settings = characterSettings[character];
+  // const settings = useMemo(() => characterSettings[character], [character]);
 
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    // console.log(settings.title);
     const file = event.target.files && event.target.files[0];
     if (!file) {
       return <div>ファイル読み取りエラー</div>;
@@ -120,10 +122,11 @@ function ImageUploadButton({
 
   return (
     <Box sx={{ textAlign: "center" }}>
-      <label htmlFor="upload-button">
+      <label htmlFor={`upload-button-${character}`}>
         <input
           style={{ display: "none" }}
-          id="upload-button"
+          // id="upload-button"
+          id={`upload-button-${character}`} // 🔽 id を一意に
           type="file"
           onChange={handleImageChange}
         />
