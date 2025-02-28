@@ -1,6 +1,5 @@
 import React from "react";
-import { Fab, SxProps, Theme } from "@mui/material";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import { Fab, SxProps, Theme, Box, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 import imageCompression from "browser-image-compression";
 import {
@@ -11,6 +10,9 @@ import {
 } from "@/lib/prompts";
 import { fetchData } from "@/lib/openai";
 
+// SVG をインポート
+import hogeIcon from "@/public/hoge.svg";
+
 interface ChildComponentProps {
   setImageBase64: Dispatch<SetStateAction<string>>;
   setTitle: Dispatch<SetStateAction<string>>;
@@ -19,7 +21,7 @@ interface ChildComponentProps {
   setAdvice: Dispatch<SetStateAction<string>>;
   setRating: Dispatch<SetStateAction<number>>;
   setInputValue: Dispatch<SetStateAction<string>>;
-  sx?: SxProps<Theme>; // MUIのスタイル用プロパティを追加
+  sx?: SxProps<Theme>;
 }
 
 function ImageUploadButton({
@@ -30,7 +32,7 @@ function ImageUploadButton({
   setAdvice,
   setRating,
   setInputValue,
-  sx = {}, // デフォルトは空のオブジェクト
+  sx = {},
 }: ChildComponentProps) {
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -79,22 +81,47 @@ function ImageUploadButton({
   };
 
   return (
-    <label htmlFor="upload-button">
-      <input
-        style={{ display: "none" }}
-        id="upload-button"
-        type="file"
-        onChange={handleImageChange}
-      />
-      <Fab
-        color="primary"
-        aria-label="upload picture"
-        component="span"
-        sx={sx} // 呼び出し側から受け取った `sx` を適用
-      >
-        <CameraAltIcon />
-      </Fab>
-    </label>
+    <Box sx={{ textAlign: "center" }}>
+      <label htmlFor="upload-button">
+        <input
+          style={{ display: "none" }}
+          id="upload-button"
+          type="file"
+          onChange={handleImageChange}
+        />
+        <Fab
+          // color="primary"
+          aria-label="upload picture"
+          component="span"
+          sx={sx}
+        >
+          <Box sx={{ textAlign: "center" }}>
+            {/* imgの表示 */}
+            <img
+              src={hogeIcon.src}
+              alt="Upload"
+              style={{ width: "60px" }} // アイコンのサイズ調整
+            />
+            {/* タグのような「AI先生」を追加 */}
+            <Typography
+              variant="caption"
+              sx={{
+                display: "inline-block",
+                mt: 0,
+                px: 1,
+                py: 0.2,
+                backgroundColor: "#CEDCE9",
+                color: "#555",
+                borderRadius: "10px",
+                fontSize: "0.65rem",
+              }}
+            >
+              AI先生
+            </Typography>
+          </Box>
+        </Fab>
+      </label>
+    </Box>
   );
 }
 
