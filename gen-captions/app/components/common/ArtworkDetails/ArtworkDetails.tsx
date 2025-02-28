@@ -1,15 +1,7 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import {
-  Typography,
-  Box,
-  TextField,
-  Divider,
-  Skeleton,
-  Button,
-} from "@mui/material";
-import RadioGroupRating from "./RadioGroupRating";
-import { Data, postResult } from "@/lib/postResult";
+import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { Typography, Box, TextField, Skeleton } from "@mui/material";
 import ReactMarkdown from "react-markdown";
+import { Data, postResult } from "@/lib/postResult";
 
 interface ChildComponentProps {
   title: string;
@@ -22,7 +14,9 @@ interface ChildComponentProps {
   setRating: Dispatch<SetStateAction<number>>;
   setInputValue: Dispatch<SetStateAction<string>>;
   disable: boolean;
+  isComplete: boolean;
 }
+
 const ArtworkDetails = ({
   title,
   feature,
@@ -34,13 +28,11 @@ const ArtworkDetails = ({
   setRating,
   setInputValue,
   disable,
+  isComplete,
 }: ChildComponentProps) => {
-  // ユーザー入力を保持するための状態変数を初期化
-  // const [inputValue, setInputValue] = useState("");
-  // const [rating, setRating] = useState(3);
+  // `saved` の状態は保持するが、`done` が `true` のたびに `handleSave` を実行
   const [saved, setSaved] = useState(false);
 
-  // ユーザーがテキストフィールドに入力した値で状態を更新する関数
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
@@ -55,12 +47,18 @@ const ArtworkDetails = ({
       rating: rating,
       comment: inputValue,
     };
-    postResult(req);
+    await postResult(req);
     setSaved(true);
-    // window.location.reload(); // ページの再読み込み
   };
 
   const done = title && feature && advantage && advice;
+
+  // `done` が `true` のたびに `handleSave` を実行する
+  useEffect(() => {
+    if (isComplete) {
+      handleSave();
+    }
+  }, [isComplete]); // done のみを依存に設定
 
   return (
     <>
@@ -69,97 +67,29 @@ const ArtworkDetails = ({
       </Typography>
       {feature ? (
         <Typography variant="body1" gutterBottom>
-          {/* {feature
-            .replace(/\n+/g, "\n")
-            .split("\n")
-            .map((line, index) => (
-              <React.Fragment key={index}>
-                {line}
-                <br />
-              </React.Fragment>
-            ))} */}
           <ReactMarkdown>{feature}</ReactMarkdown>
         </Typography>
       ) : (
         <Skeleton variant="text" height={80} width="100%" />
       )}
+
       <Typography mt={3} variant="h6" gutterBottom>
         あなたの作品の良いところ
       </Typography>
       {advantage ? (
-        // <Typography variant="body1" gutterBottom>
-        //   {/* {advantage
-        //     .replace(/\n+/g, "\n")
-        //     .split("\n")
-        //     .map((line, index) => (
-        //       <React.Fragment key={index}>
-        //         {line}
-        //         <br />
-        //       </React.Fragment>
-        //     ))} */}
-        //   <ReactMarkdown>{advantage}</ReactMarkdown>
-        // </Typography>
         <ReactMarkdown>{advantage}</ReactMarkdown>
       ) : (
         <Skeleton variant="text" height={80} width="100%" />
       )}
+
       <Typography mt={3} variant="h6" gutterBottom>
         次の作品へのアドバイス
       </Typography>
       {advice ? (
-        // <Typography variant="body1" gutterBottom>
-        //   {/* {advice
-        //     .replace(/\n+/g, "\n")
-        //     .split("\n")
-        //     .map((line, index) => (
-        //       <React.Fragment key={index}>
-        //         {line}
-        //         <br />
-        //       </React.Fragment>
-        //     ))} */}
-        //   <ReactMarkdown>{advice}</ReactMarkdown>
-        // </Typography>
         <ReactMarkdown>{advice}</ReactMarkdown>
       ) : (
         <Skeleton variant="text" height={80} width="100%" />
       )}
-      {/* <Divider></Divider>
-      <Typography mt={3} variant="h6" gutterBottom>
-        フィードバック
-      </Typography>
-      <RadioGroupRating
-        disabled={disable || !done || saved}
-        setRating={setRating}
-      />
-      <Box
-        component="form"
-        sx={{
-          alignItems: "center", // Align items vertically
-          width: "100%", // フォームの幅を100%に設定
-          mt: 1,
-        }}
-      >
-        <TextField
-          value={inputValue} // テキストフィールドの値として状態変数を設定
-          onChange={handleInputChange} // 値が変更されたときに実行する関数を設定
-          disabled={disable || !done}
-          fullWidth
-          placeholder="コメントを残す"
-          variant="outlined"
-          multiline
-          rows={2}
-          sx={{ mb: 1 }}
-        />
-        <Button
-          variant="contained"
-          fullWidth
-          disabled={disable || !done || saved}
-          onClick={handleSave}
-          sx={{ mt: 1 }}
-        >
-          <Typography variant="body1">保存</Typography>
-        </Button>
-      </Box> */}
     </>
   );
 };

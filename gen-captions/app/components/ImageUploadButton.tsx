@@ -24,6 +24,7 @@ interface ChildComponentProps {
   setRating: Dispatch<SetStateAction<number>>;
   setInputValue: Dispatch<SetStateAction<string>>;
   character: "teacher" | "geinin" | "instructor"; // キャラクターの種類
+  setIsComplete: Dispatch<SetStateAction<boolean>>; // 🔽 追加
   sx?: SxProps<Theme>;
 }
 
@@ -67,6 +68,7 @@ function ImageUploadButton({
   setRating,
   setInputValue,
   character, // キャラクターの種類を受け取る
+  setIsComplete, // 🔽 追加
   sx = {},
 }: ChildComponentProps) {
   // キャラクターに応じた設定を取得
@@ -112,6 +114,8 @@ function ImageUploadButton({
           fetchData(base64Image, settings.promptAdvantage, setAdvantage),
           fetchData(base64Image, settings.promptAdvice, setAdvice),
         ]);
+        // 全ての fetch が完了したら完了フラグを true に設定
+        setIsComplete(true);
       };
 
       reader.readAsDataURL(compressedFile);

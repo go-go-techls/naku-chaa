@@ -32,6 +32,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
   const [rating, setRating] = useState(3);
   const [snsCheck, setSnsCheck] = useState(true);
+  const [isComplete, setIsComplete] = useState(false); // 🔽 完了フラグ
 
   return (
     <ThemeProvider theme={theme}>
@@ -99,6 +100,7 @@ export default function Home() {
                 setRating={setRating}
                 setInputValue={setInputValue}
                 disable={false}
+                isComplete={isComplete}
               />
             </Box>
           </Box>
@@ -114,6 +116,7 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
+          setIsComplete={setIsComplete} // 🔽 完了フラグのセット関数を渡す
           sx={{ position: "fixed", bottom: "2rem", left: "1.5rem" }}
         />
 
@@ -126,6 +129,7 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
+          setIsComplete={setIsComplete} // 🔽 完了フラグのセット関数を渡す
           sx={{ position: "fixed", bottom: "2rem", left: "8.5rem" }}
         />
 
@@ -138,6 +142,7 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
+          setIsComplete={setIsComplete} // 🔽 完了フラグのセット関数を渡す
           sx={{ position: "fixed", bottom: "2rem", left: "15.5rem" }}
         />
 
