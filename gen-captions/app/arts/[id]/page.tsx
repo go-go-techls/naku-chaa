@@ -2,16 +2,13 @@
 import { DataItem } from "@/app/api/arts/route";
 import { getArt } from "@/lib/getArts";
 import { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import ArtworkDisplay from "../../components/ArtworkDisplay";
 import ArtworkDetails from "../../components/common/ArtworkDetails/ArtworkDetails";
 import ArtworkTitle from "../../components/ArtworkTitle";
-import {
-  createTheme,
-  responsiveFontSizes,
-  ThemeProvider,
-} from "@mui/material/styles";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import Header from "@/app/components/common/Header/Header";
+import TeacherBadge from "@/app/components/TeacherBadge";
 
 let theme = createTheme({
   typography: {
@@ -75,29 +72,7 @@ export default function Arts({ params }: { params: { id: number } }) {
           }}
         >
           <Box sx={{ p: 4, mt: 0 }}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                backgroundColor: "#E3F2FD", // 薄い青色
-                color: "#0D47A1", // 濃い青色
-                borderRadius: "15px",
-                px: 2,
-                py: 0.5,
-                mb: 2, // 下に余白
-                width: "fit-content",
-              }}
-            >
-              <img
-                src="/teacher.svg"
-                alt="Teacher"
-                style={{ width: "20px", height: "20px" }}
-              />
-              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                AI先生からのコメント
-              </Typography>
-            </Box>
+            <TeacherBadge />
 
             <ArtworkTitle title={data.title}>
               <></>
