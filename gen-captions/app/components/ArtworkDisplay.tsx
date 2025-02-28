@@ -8,7 +8,7 @@ interface ChildComponentProps {
 const ArtworkDisplay = ({ imageBase64 }: ChildComponentProps) => {
   return (
     <Paper
-      elevation={12}
+      elevation={8}
       sx={{ px: 4, py: 5 }}
       style={{
         width: "100%",
@@ -17,6 +17,7 @@ const ArtworkDisplay = ({ imageBase64 }: ChildComponentProps) => {
         justifyContent: "center",
         alignItems: "center",
         gap: 8,
+        boxShadow: "0px 1px 10px 0px rgba(0,0,0,0.1)", // カスタムシャドーを設定
       }}
     >
       {imageBase64 ? (

@@ -2,7 +2,7 @@
 import { DataItem } from "@/app/api/arts/route";
 import { getArt } from "@/lib/getArts";
 import { useEffect, useState } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ArtworkDisplay from "../../components/ArtworkDisplay";
 import ArtworkDetails from "../../components/common/ArtworkDetails/ArtworkDetails";
 import ArtworkTitle from "../../components/ArtworkTitle";
@@ -32,69 +32,91 @@ export default function Arts({ params }: { params: { id: number } }) {
       <Box sx={{ position: "relative", zIndex: 10 }}>
         <Header />
       </Box>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid
-          container
-          style={{ height: "100vh", width: "100vw" }}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Grid item xs={12} md={7} style={{ height: "100vh" }}>
-            <ArtworkDisplay imageBase64={data.image} />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={5}
-            style={{ maxHeight: "100vh", overflow: "auto" }}
-          >
-            <Box sx={{ p: 4, mt: 0 }}>
-              {/* タグのような表示 */}
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  backgroundColor: "#E3F2FD", // 薄い青色
-                  color: "#0D47A1", // 濃い青色
-                  borderRadius: "15px",
-                  px: 2,
-                  py: 0.5,
-                  mb: 2, // 下に余白
-                  width: "fit-content",
-                }}
-              >
-                {/* teacher.svg の表示 */}
-                <img
-                  src="/teacher.svg"
-                  alt="Teacher"
-                  style={{ width: "20px", height: "20px" }}
-                />
-                {/* タグのテキスト */}
-                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                  AI先生からのコメント
-                </Typography>
-              </Box>
 
-              <ArtworkTitle title={data.title}>
-                <></>
-              </ArtworkTitle>
-              <ArtworkDetails
-                title={data.title}
-                feature={data.feature}
-                advantage={data.advantage}
-                advice={data.advice}
-                image={data.image}
-                rating={data.rating}
-                inputValue={data.comment}
-                setRating={() => {}}
-                setInputValue={() => {}}
-                disable={true}
+      {/* Flexbox Layout */}
+      <Box
+        sx={{
+          display: "flex",
+          height: "calc(100vh - 64px)", // ヘッダーの高さを引いた高さ
+          overflow: "hidden", // 全体のオーバーフローを隠す
+        }}
+      >
+        {/* 左側 (ArtworkDisplay) */}
+        <Box
+          sx={{
+            flex: "0 0 60%", // 左側を 65% に固定
+            height: "100%",
+            overflow: "hidden", // スクロールを無効化
+            paddingRight: "24px", // 右側だけに余白を追加
+            boxSizing: "border-box",
+          }}
+        >
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ArtworkDisplay imageBase64={data.image} />
+          </Box>
+        </Box>
+
+        {/* 右側 (ArtworkDetails) */}
+        <Box
+          sx={{
+            flex: "1", // 残りの幅を占有
+            height: "100%",
+            overflowY: "auto", // 縦スクロールを有効化
+            overflowX: "hidden", // 横方向のスクロールを無効化
+            paddingRight: "16px",
+            boxSizing: "border-box",
+          }}
+        >
+          <Box sx={{ p: 4, mt: 0 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                backgroundColor: "#E3F2FD", // 薄い青色
+                color: "#0D47A1", // 濃い青色
+                borderRadius: "15px",
+                px: 2,
+                py: 0.5,
+                mb: 2, // 下に余白
+                width: "fit-content",
+              }}
+            >
+              <img
+                src="/teacher.svg"
+                alt="Teacher"
+                style={{ width: "20px", height: "20px" }}
               />
-              <Box style={{ height: "15vh" }}></Box>
+              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                AI先生からのコメント
+              </Typography>
             </Box>
-          </Grid>
-        </Grid>
+
+            <ArtworkTitle title={data.title}>
+              <></>
+            </ArtworkTitle>
+            <ArtworkDetails
+              title={data.title}
+              feature={data.feature}
+              advantage={data.advantage}
+              advice={data.advice}
+              image={data.image}
+              rating={data.rating}
+              inputValue={data.comment}
+              setRating={() => {}}
+              setInputValue={() => {}}
+              disable={true}
+            />
+            <Box style={{ height: "15vh" }}></Box>
+          </Box>
+        </Box>
       </Box>
     </>
   );
