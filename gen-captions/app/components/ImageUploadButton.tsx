@@ -100,7 +100,7 @@ function ImageUploadButton({
             <img
               src={hogeIcon.src}
               alt="Upload"
-              style={{ width: "60px" }} // アイコンのサイズ調整
+              style={{ width: "60px", marginTop: "8px" }} // 下に下げる
             />
             {/* タグのような「AI先生」を追加 */}
             <Typography
