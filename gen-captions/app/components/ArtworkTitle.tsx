@@ -1,15 +1,6 @@
 import React, { ReactNode } from "react";
 import { Typography, Box, IconButton, Skeleton } from "@mui/material";
-// import RefreshIcon from "@mui/icons-material/Refresh";
 
-// interface ChildComponentProps {
-//   title: string;
-// }
-
-// // プロップの型定義
-// interface ChildProps {
-//   children: ReactNode;
-// }
 interface ChildProps {
   title: string;
   children: ReactNode; // ReactNode 型を使用して任意のReact要素を受け入れる

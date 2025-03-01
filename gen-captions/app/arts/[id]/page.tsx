@@ -83,16 +83,9 @@ export default function Arts({ params }: { params: { id: number } }) {
               <></>
             </ArtworkTitle>
             <ArtworkDetails
-              title={data.title}
               feature={data.feature}
               advantage={data.advantage}
               advice={data.advice}
-              image={data.image}
-              rating={data.rating}
-              inputValue={data.comment}
-              setRating={() => {}}
-              setInputValue={() => {}}
-              disable={true}
             />
             <Box style={{ height: "2vh" }}></Box>
             {/* SNS 掲載 OK/NG 表示 */}
