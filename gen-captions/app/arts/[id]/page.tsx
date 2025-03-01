@@ -9,6 +9,8 @@ import ArtworkTitle from "../../components/ArtworkTitle";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import Header from "@/app/components/common/Header/Header";
 import TeacherBadge from "@/app/components/TeacherBadge";
+import InstructorBadge from "@/app/components/InstructorBadge";
+import GeininBadge from "@/app/components/GeininBadge";
 
 let theme = createTheme({
   typography: {
@@ -73,6 +75,8 @@ export default function Arts({ params }: { params: { id: number } }) {
         >
           <Box sx={{ p: 4, mt: 0 }}>
             <TeacherBadge />
+            <InstructorBadge />
+            <GeininBadge />
 
             <ArtworkTitle title={data.title}>
               <></>
