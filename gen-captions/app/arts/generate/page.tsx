@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Checkbox, FormControlLabel, IconButton } from "@mui/material";
+import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import ArtworkDisplay from "@/app/components/ArtworkDisplay";
 import ArtworkDetails from "@/app/components/common/ArtworkDetails/ArtworkDetails";
 import { useState } from "react";
@@ -32,7 +32,6 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
   const [rating, setRating] = useState(3);
   const [snsCheck, setSnsCheck] = useState(true);
-  const [isComplete, setIsComplete] = useState(false); // 🔽 完了フラグ
   const [character, setCharacter] = useState("");
 
   return (
@@ -96,16 +95,9 @@ export default function Home() {
                 <></>
               </ArtworkTitle>
               <ArtworkDetails
-                title={title}
                 feature={feature}
                 advantage={advantage}
                 advice={advice}
-                image={imageBase64}
-                rating={rating}
-                inputValue={inputValue}
-                setRating={setRating}
-                setInputValue={setInputValue}
-                disable={false}
               />
             </Box>
           </Box>
@@ -123,7 +115,6 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
-          setIsComplete={setIsComplete} // 🔽 完了フラグのセット関数を渡す
           sx={{ position: "fixed", bottom: "2rem", left: "1.5rem" }}
         />
 
@@ -138,7 +129,6 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
-          setIsComplete={setIsComplete} // 🔽 完了フラグのセット関数を渡す
           sx={{ position: "fixed", bottom: "2rem", left: "8.5rem" }}
         />
 
@@ -153,7 +143,6 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
-          setIsComplete={setIsComplete} // 🔽 完了フラグのセット関数を渡す
           sx={{ position: "fixed", bottom: "2rem", left: "15.5rem" }}
         />
 

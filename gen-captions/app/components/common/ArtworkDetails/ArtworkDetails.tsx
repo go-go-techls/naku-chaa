@@ -3,37 +3,16 @@ import { Typography, Skeleton } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 
 interface ChildComponentProps {
-  title: string;
   feature: string;
   advantage: string;
   advice: string;
-  image: string;
-  rating: number;
-  inputValue: string;
-  setRating: Dispatch<SetStateAction<number>>;
-  setInputValue: Dispatch<SetStateAction<string>>;
-  disable: boolean;
 }
 
 const ArtworkDetails = ({
-  title,
   feature,
   advantage,
   advice,
-  image,
-  rating,
-  inputValue,
-  setRating,
-  setInputValue,
-  disable,
 }: ChildComponentProps) => {
-  // `saved` の状態は保持するが、`done` が `true` のたびに `handleSave` を実行
-  const [saved, setSaved] = useState(false);
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
   return (
     <>
       <Typography mt={3} variant="h6" gutterBottom>

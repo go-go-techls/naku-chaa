@@ -4,25 +4,34 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Box, Pagination, Skeleton } from "@mui/material";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { DataItem } from "../api/arts/route";
 import { getArts } from "@/lib/getArts";
 import Header from "../components/common/Header/Header";
 
 function ImageGrid() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const pageFromURL = Number(searchParams.get("page")) || 1;
   const [data, setData] = useState<DataItem[]>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(pageFromURL);
   const pageSize = 14;
   const [total, setTotal] = useState<number>(1);
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-  };
+  useEffect(() => {
+    setPage(pageFromURL);
+  }, [pageFromURL]);
 
   useEffect(() => {
     getArts(setData, setTotal, page, pageSize);
     console.log("refreshed");
   }, [page]);
+
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    router.push(`?page=${value}`, { scroll: false });
+  };
 
   return (
     <>
@@ -43,14 +52,14 @@ function ImageGrid() {
           justifyContent="center"
           sx={{
             width: "100%",
-            maxWidth: "1100px", // iPad 横向きでも収まるように調整
+            maxWidth: "1100px",
             mx: "auto",
           }}
         >
-          <Grid item xs={12} sm={2.3} md={2.3} style={{ aspectRatio: "1/1" }}>
+          <Grid item xs={12} sm={2.4} md={2.4} style={{ aspectRatio: "1/1" }}>
             <Link href={`/`} passHref>
               <Paper
-                elevation={15}
+                elevation={3}
                 sx={{
                   display: "flex",
                   justifyContent: "center",
@@ -70,8 +79,8 @@ function ImageGrid() {
                 <Grid
                   item
                   xs={12}
-                  sm={2.3}
-                  md={2.3}
+                  sm={2.4}
+                  md={2.4}
                   style={{ aspectRatio: "1/1" }}
                   key={index}
                 >
@@ -87,14 +96,14 @@ function ImageGrid() {
                 <Grid
                   item
                   xs={12}
-                  sm={2.3}
-                  md={2.3}
+                  sm={2.4}
+                  md={2.4}
                   style={{ aspectRatio: "1/1" }}
                   key={index}
                 >
                   <Link href={`/arts/${src.id}`} passHref>
                     <Paper
-                      elevation={12}
+                      elevation={3}
                       sx={{
                         width: "100%",
                         height: "100%",
@@ -113,8 +122,14 @@ function ImageGrid() {
           count={total}
           page={page}
           onChange={handleChange}
-          size="small"
-          sx={{ mt: 2 }}
+          size="medium"
+          // sx={{ mt: 2 }}
+          sx={{
+            mt: 2.2,
+            "& .MuiPaginationItem-root": {
+              fontSize: "1.0rem", // Paginationのサイズ調整
+            },
+          }}
         />
       </Box>
     </>

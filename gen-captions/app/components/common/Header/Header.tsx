@@ -26,7 +26,7 @@ function Header() {
       <Link href="/arts" passHref>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="logo">
-            <Logo src="/logo.svg" alt="App Icon" />
+            <Logo src="/techls-color.svg" alt="App Icon" />
           </IconButton>
           <Typography
             component="div"

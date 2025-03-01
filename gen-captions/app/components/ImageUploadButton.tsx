@@ -27,7 +27,6 @@ interface ChildComponentProps {
   character: "teacher" | "geinin" | "instructor"; // キャラクターの種類
   setCharacter: Dispatch<SetStateAction<string>>;
   snsCheck: boolean;
-  setIsComplete: Dispatch<SetStateAction<boolean>>;
   sx?: SxProps<Theme>;
 }
 
@@ -73,7 +72,6 @@ function ImageUploadButton({
   character,
   setCharacter,
   snsCheck,
-  setIsComplete,
   sx = {},
 }: ChildComponentProps) {
   // キャラクターに応じた設定を取得
@@ -117,8 +115,6 @@ function ImageUploadButton({
           fetchData(base64Image, settings.promptAdvantage, setAdvantage),
           fetchData(base64Image, settings.promptAdvice, setAdvice),
         ]);
-        // 全ての fetch が完了したら完了フラグを true に設定
-        setIsComplete(true);
 
         const req: Data = {
           title,
