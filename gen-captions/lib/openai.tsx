@@ -4,7 +4,7 @@ export async function fetchData(
   base64Image: string,
   prompt: string,
   setData: Dispatch<SetStateAction<string>>
-) {
+): Promise<string> {
   const req = {
     prompt: prompt,
     images: [base64Image],
@@ -28,7 +28,7 @@ export async function fetchData(
       const { done, value } = await reader.read();
       if (done) {
         console.log(accumulatedResponse); // 最後に蓄積されたテキストをログに出力
-        break;
+        return accumulatedResponse; // ここで accumulatedResponse を return する
       }
 
       // 受信したバイナリーデータ (value) をテキストに変換する
@@ -41,18 +41,16 @@ export async function fetchData(
 
       for (const line of lines) {
         // 先頭の "data: " を削除してメッセージ本文 (JSON 文字列か "[DONE]" のいずれか) を抜き出す
-
         const jsonText = line.replace(/^data:\s*/, "");
 
         if (jsonText === "[DONE]") {
-          break;
+          return accumulatedResponse; // ストリームの終端を受信したら accumulatedResponse を返す
         } else if (jsonText) {
           try {
             const data = JSON.parse(jsonText);
             const content = data.choices[0].delta.content;
             if (content) {
               accumulatedResponse += content;
-
               setData(accumulatedResponse);
             }
           } catch (error) {
@@ -64,5 +62,6 @@ export async function fetchData(
   } catch (error) {
     console.error(error);
     setData("エラーです。もう一度試してみてください。");
+    return "エラーです。もう一度試してみてください。"; // エラー時も return する
   }
 }

@@ -14,6 +14,7 @@ import { fetchData } from "@/lib/openai";
 import teacherIcon from "@/public/teacher.svg";
 import geininIcon from "@/public/geinin.svg";
 import instructorIcon from "@/public/instructor.svg";
+import { Data, postResult } from "@/lib/postResult";
 
 interface ChildComponentProps {
   setImageBase64: Dispatch<SetStateAction<string>>;
@@ -108,7 +109,7 @@ function ImageUploadButton({
         setRating(3);
         setInputValue("");
 
-        await Promise.all([
+        const [title, feature, advantage, advice] = await Promise.all([
           fetchData(base64Image, settings.promptTitle, setTitle),
           fetchData(base64Image, settings.promptFeature, setFeature),
           fetchData(base64Image, settings.promptAdvantage, setAdvantage),
@@ -116,6 +117,19 @@ function ImageUploadButton({
         ]);
         // 全ての fetch が完了したら完了フラグを true に設定
         setIsComplete(true);
+
+        const req: Data = {
+          title: title,
+          feature: feature,
+          advantage: advantage,
+          advice: advice,
+          image: base64ImageDisplay,
+          rating: 3,
+          comment: "",
+          character: "teacher", // TODO
+          is_public_allowed: true, // TODO
+        };
+        await postResult(req);
       };
 
       reader.readAsDataURL(compressedFile);

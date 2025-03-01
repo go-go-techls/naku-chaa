@@ -14,7 +14,6 @@ interface ChildComponentProps {
   setRating: Dispatch<SetStateAction<number>>;
   setInputValue: Dispatch<SetStateAction<string>>;
   disable: boolean;
-  isComplete: boolean;
 }
 
 const ArtworkDetails = ({
@@ -28,7 +27,6 @@ const ArtworkDetails = ({
   setRating,
   setInputValue,
   disable,
-  isComplete,
 }: ChildComponentProps) => {
   // `saved` の状態は保持するが、`done` が `true` のたびに `handleSave` を実行
   const [saved, setSaved] = useState(false);
@@ -36,31 +34,6 @@ const ArtworkDetails = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
-
-  const handleSave = async () => {
-    const req: Data = {
-      title: title,
-      feature: feature,
-      advantage: advantage,
-      advice: advice,
-      image: image,
-      rating: rating,
-      comment: inputValue,
-      character: "teacher", // TODO
-      is_public_allowed: true, // TODO
-    };
-    await postResult(req);
-    setSaved(true);
-  };
-
-  const done = title && feature && advantage && advice;
-
-  // `done` が `true` のたびに `handleSave` を実行する
-  useEffect(() => {
-    if (isComplete) {
-      handleSave();
-    }
-  }, [isComplete]); // done のみを依存に設定
 
   return (
     <>

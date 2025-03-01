@@ -101,7 +101,6 @@ export default function Home() {
                 setRating={setRating}
                 setInputValue={setInputValue}
                 disable={false}
-                isComplete={isComplete}
               />
             </Box>
           </Box>
