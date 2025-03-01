@@ -59,7 +59,7 @@ function ImageGrid() {
           <Grid item xs={12} sm={2.4} md={2.4} style={{ aspectRatio: "1/1" }}>
             <Link href={`/`} passHref>
               <Paper
-                elevation={15}
+                elevation={3}
                 sx={{
                   display: "flex",
                   justifyContent: "center",
@@ -103,7 +103,7 @@ function ImageGrid() {
                 >
                   <Link href={`/arts/${src.id}`} passHref>
                     <Paper
-                      elevation={12}
+                      elevation={3}
                       sx={{
                         width: "100%",
                         height: "100%",
@@ -122,8 +122,14 @@ function ImageGrid() {
           count={total}
           page={page}
           onChange={handleChange}
-          size="small"
-          sx={{ mt: 2 }}
+          size="medium"
+          // sx={{ mt: 2 }}
+          sx={{
+            mt: 2.2,
+            "& .MuiPaginationItem-root": {
+              fontSize: "1.0rem", // Paginationのサイズ調整
+            },
+          }}
         />
       </Box>
     </>
