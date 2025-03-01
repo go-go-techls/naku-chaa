@@ -14,6 +14,8 @@ export type DataItem = {
   image: string;
   rating: number;
   comment: string;
+  character: string;
+  is_public_allowed: boolean;
 };
 
 // GETリクエストを処理するAPI関数

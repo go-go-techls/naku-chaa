@@ -46,6 +46,8 @@ const ArtworkDetails = ({
       image: image,
       rating: rating,
       comment: inputValue,
+      character: "teacher", // TODO
+      is_public_allowed: true, // TODO
     };
     await postResult(req);
     setSaved(true);

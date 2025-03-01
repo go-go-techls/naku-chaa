@@ -6,6 +6,8 @@ export type Data = {
   image: string;
   rating: number;
   comment: string;
+  character: string;
+  is_public_allowed: boolean;
 };
 
 export async function postResult(data: Data) {

@@ -19,12 +19,14 @@ datasource db {
 }
 
 model Art {
-  id        Int    @id @default(autoincrement())
-  title     String
-  feature   String
-  advantage String
-  advice    String
-  image     String
-  rating    Int
-  comment   String
+  id                Int     @id @default(autoincrement())
+  title             String
+  feature           String
+  advantage         String
+  advice            String
+  image             String
+  rating            Int
+  comment           String
+  character         String  @default("")
+  is_public_allowed Boolean @default(false)
 }
