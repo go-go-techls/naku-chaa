@@ -2,7 +2,7 @@
 import { DataItem } from "@/app/api/arts/route";
 import { getArt } from "@/lib/getArts";
 import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import ArtworkDisplay from "../../components/ArtworkDisplay";
 import ArtworkDetails from "../../components/common/ArtworkDetails/ArtworkDetails";
 import ArtworkTitle from "../../components/ArtworkTitle";
@@ -14,7 +14,7 @@ import GeininBadge from "@/app/components/GeininBadge";
 
 let theme = createTheme({
   typography: {
-    fontSize: 13,
+    fontSize: 14,
   },
 });
 theme = responsiveFontSizes(theme);
@@ -27,7 +27,7 @@ export default function Arts({ params }: { params: { id: number } }) {
   }, [params.id]); // IDが変わるたびにAPIが呼び出される
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Box sx={{ position: "relative", zIndex: 10 }}>
         <Header />
       </Box>
@@ -74,10 +74,11 @@ export default function Arts({ params }: { params: { id: number } }) {
           }}
         >
           <Box sx={{ p: 4, mt: 0 }}>
-            <TeacherBadge />
-            <InstructorBadge />
-            <GeininBadge />
-
+            {/* character の値によって表示するバッジを切り替え */}
+            {data.character === "teacher" && <TeacherBadge />}
+            {data.character === "instructor" && <InstructorBadge />}
+            {data.character === "geinin" && <GeininBadge />}
+            {/* character の値によって表示するバッジを切り替え */}
             <ArtworkTitle title={data.title}>
               <></>
             </ArtworkTitle>
@@ -93,10 +94,22 @@ export default function Arts({ params }: { params: { id: number } }) {
               setInputValue={() => {}}
               disable={true}
             />
-            <Box style={{ height: "15vh" }}></Box>
+            <Box style={{ height: "2vh" }}></Box>
+            {/* SNS 投稿 OK/NG 表示 */}
+            <Box
+              sx={{
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "gray",
+                textAlign: "right",
+                mt: 2,
+              }}
+            >
+              {data.is_public_allowed ? "📸 SNS 投稿 OK" : "🚫 SNS 投稿 NG"}
+            </Box>
           </Box>
         </Box>
       </Box>
-    </>
+    </ThemeProvider>
   );
 }

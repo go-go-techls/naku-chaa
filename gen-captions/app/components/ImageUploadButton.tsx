@@ -25,6 +25,7 @@ interface ChildComponentProps {
   setRating: Dispatch<SetStateAction<number>>;
   setInputValue: Dispatch<SetStateAction<string>>;
   character: "teacher" | "geinin" | "instructor"; // キャラクターの種類
+  snsCheck: boolean;
   setIsComplete: Dispatch<SetStateAction<boolean>>; // 🔽 追加
   sx?: SxProps<Theme>;
 }
@@ -69,6 +70,7 @@ function ImageUploadButton({
   setRating,
   setInputValue,
   character, // キャラクターの種類を受け取る
+  snsCheck,
   setIsComplete, // 🔽 追加
   sx = {},
 }: ChildComponentProps) {
@@ -126,8 +128,8 @@ function ImageUploadButton({
           image: base64ImageDisplay,
           rating: 3,
           comment: "",
-          character: "teacher", // TODO
-          is_public_allowed: true, // TODO
+          character: character, // TODO
+          is_public_allowed: snsCheck, // TODO
         };
         await postResult(req);
       };

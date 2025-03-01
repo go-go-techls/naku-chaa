@@ -15,7 +15,7 @@ import Header from "@/app/components/common/Header/Header";
 
 let theme = createTheme({
   typography: {
-    fontSize: 13,
+    fontSize: 14,
   },
 });
 theme = responsiveFontSizes(theme);
@@ -77,7 +77,7 @@ export default function Home() {
               boxSizing: "border-box",
             }}
           >
-            <Box sx={{ p: 4, mt: 4 }}>
+            <Box sx={{ p: 4, mt: 0 }}>
               <Box style={{ height: "2vh" }}></Box>
               <ArtworkTitle title={title}>
                 {/* <RefreshTitleButton
@@ -106,6 +106,7 @@ export default function Home() {
         {/* 画像アップロードボタン */}
         <ImageUploadButton
           character="teacher"
+          snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
           setFeature={setFeature}
@@ -119,6 +120,7 @@ export default function Home() {
 
         <ImageUploadButton
           character="geinin"
+          snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
           setFeature={setFeature}
@@ -132,6 +134,7 @@ export default function Home() {
 
         <ImageUploadButton
           character="instructor"
+          snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
           setFeature={setFeature}

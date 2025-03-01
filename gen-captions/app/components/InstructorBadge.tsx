@@ -10,7 +10,7 @@ const InstructorBadge = () => {
         gap: 1,
         backgroundColor: "#F1F8E9", // 薄い黄緑色
         color: "#33691E", // 濃い黄緑色
-        borderRadius: "15px",
+        borderRadius: "20px",
         px: 2,
         py: 0.5,
         mb: 2, // 下に余白
@@ -20,7 +20,7 @@ const InstructorBadge = () => {
       <img
         src="/instructor.svg"
         alt="Instructor"
-        style={{ width: "20px", height: "20px" }}
+        style={{ width: "30px", height: "30px" }}
       />
       <Typography variant="body1" sx={{ fontWeight: "bold" }}>
         熱血コーチからのコメント
