@@ -12,6 +12,9 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import Header from "@/app/components/common/Header/Header";
+import TeacherBadge from "@/app/components/TeacherBadge";
+import InstructorBadge from "@/app/components/InstructorBadge";
+import GeininBadge from "@/app/components/GeininBadge";
 
 let theme = createTheme({
   typography: {
@@ -30,6 +33,7 @@ export default function Home() {
   const [rating, setRating] = useState(3);
   const [snsCheck, setSnsCheck] = useState(true);
   const [isComplete, setIsComplete] = useState(false); // 🔽 完了フラグ
+  const [character, setCharacter] = useState("");
 
   return (
     <ThemeProvider theme={theme}>
@@ -78,7 +82,11 @@ export default function Home() {
             }}
           >
             <Box sx={{ p: 4, mt: 0 }}>
-              <Box style={{ height: "2vh" }}></Box>
+              {/* character の値によって表示するバッジを切り替え */}
+              {character === "" && <></>}
+              {character === "teacher" && <TeacherBadge />}
+              {character === "instructor" && <InstructorBadge />}
+              {character === "geinin" && <GeininBadge />}
               <ArtworkTitle title={title}>
                 {/* <RefreshTitleButton
                   imageBase64={imageBase64}
@@ -106,6 +114,7 @@ export default function Home() {
         {/* 画像アップロードボタン */}
         <ImageUploadButton
           character="teacher"
+          setCharacter={setCharacter}
           snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
@@ -120,6 +129,7 @@ export default function Home() {
 
         <ImageUploadButton
           character="geinin"
+          setCharacter={setCharacter}
           snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
@@ -134,6 +144,7 @@ export default function Home() {
 
         <ImageUploadButton
           character="instructor"
+          setCharacter={setCharacter}
           snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
