@@ -6,6 +6,8 @@ export type Data = {
   image: string;
   rating: number;
   comment: string;
+  character: string;
+  is_public_allowed: boolean;
 };
 
 export async function postResult(data: Data) {
@@ -23,7 +25,7 @@ export async function postResult(data: Data) {
     }
 
     const result = await response.json();
-    console.log("APIからのレスポンス:", result);
+    // console.log("APIからのレスポンス:", result);
     // 必要に応じて状態のリセットや通知など
   } catch (error) {
     console.error("APIからエラーが返されました:", error);

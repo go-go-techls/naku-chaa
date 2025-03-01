@@ -2,23 +2,19 @@
 import { DataItem } from "@/app/api/arts/route";
 import { getArt } from "@/lib/getArts";
 import { useEffect, useState } from "react";
-import { Box, Grid, IconButton } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import ArtworkDisplay from "../../components/ArtworkDisplay";
 import ArtworkDetails from "../../components/common/ArtworkDetails/ArtworkDetails";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArtworkTitle from "../../components/ArtworkTitle";
-// import RefreshTitle from "../../components/RefreshTitleButton";
-import Link from "next/link";
-import {
-  createTheme,
-  responsiveFontSizes,
-  ThemeProvider,
-} from "@mui/material/styles";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import Header from "@/app/components/common/Header/Header";
+import TeacherBadge from "@/app/components/TeacherBadge";
+import InstructorBadge from "@/app/components/InstructorBadge";
+import GeininBadge from "@/app/components/GeininBadge";
 
 let theme = createTheme({
   typography: {
-    fontSize: 13,
+    fontSize: 14,
   },
 });
 theme = responsiveFontSizes(theme);
@@ -31,59 +27,89 @@ export default function Arts({ params }: { params: { id: number } }) {
   }, [params.id]); // IDが変わるたびにAPIが呼び出される
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Box sx={{ position: "relative", zIndex: 10 }}>
         <Header />
       </Box>
-      <Box sx={{ flexGrow: 1 }}>
-        {/* <Link href="/arts" passHref>
-          <IconButton
-            aria-label="戻る"
-            size="large"
-            sx={{ position: "fixed", top: "1rem", left: "1rem" }}
-          >
-            <ArrowBackIosNewIcon />
-          </IconButton>
-        </Link> */}
 
-        <Grid
-          container
-          style={{ height: "100vh", width: "100vw" }}
-          alignItems="center"
-          justifyContent="center"
+      {/* Flexbox Layout */}
+      <Box
+        sx={{
+          display: "flex",
+          height: "calc(100vh - 64px)", // ヘッダーの高さを引いた高さ
+          overflow: "hidden", // 全体のオーバーフローを隠す
+        }}
+      >
+        {/* 左側 (ArtworkDisplay) */}
+        <Box
+          sx={{
+            flex: "0 0 60%", // 左側を 65% に固定
+            height: "100%",
+            overflow: "hidden", // スクロールを無効化
+            paddingRight: "24px", // 右側だけに余白を追加
+            boxSizing: "border-box",
+          }}
         >
-          <Grid item xs={12} md={7} style={{ height: "100vh" }}>
-            <ArtworkDisplay imageBase64={data.image} />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={5}
-            style={{ maxHeight: "100vh", overflow: "auto" }}
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <Box sx={{ p: 4, mt: 4 }}>
-              <Box style={{ height: "2vh" }}></Box>
-              <ArtworkTitle title={data.title}>
-                <></>
-                {/* <RefreshTitle imageBase64={data.image} setTitle={() => {}} /> */}
-              </ArtworkTitle>
-              <ArtworkDetails
-                title={data.title}
-                feature={data.feature}
-                advantage={data.advantage}
-                advice={data.advice}
-                image={data.image}
-                rating={data.rating}
-                inputValue={data.comment}
-                setRating={() => {}}
-                setInputValue={() => {}}
-                disable={true}
-              />
-              <Box style={{ height: "15vh" }}></Box>
+            <ArtworkDisplay imageBase64={data.image} from="id" />
+          </Box>
+        </Box>
+
+        {/* 右側 (ArtworkDetails) */}
+        <Box
+          sx={{
+            flex: "1", // 残りの幅を占有
+            height: "100%",
+            overflowY: "auto", // 縦スクロールを有効化
+            overflowX: "hidden", // 横方向のスクロールを無効化
+            paddingRight: "16px",
+            boxSizing: "border-box",
+          }}
+        >
+          <Box sx={{ p: 4, mt: 0 }}>
+            {/* character の値によって表示するバッジを切り替え */}
+            {data.character === "teacher" && <TeacherBadge />}
+            {data.character === "instructor" && <InstructorBadge />}
+            {data.character === "geinin" && <GeininBadge />}
+            {/* character の値によって表示するバッジを切り替え */}
+            <ArtworkTitle title={data.title}>
+              <></>
+            </ArtworkTitle>
+            <ArtworkDetails
+              title={data.title}
+              feature={data.feature}
+              advantage={data.advantage}
+              advice={data.advice}
+              image={data.image}
+              rating={data.rating}
+              inputValue={data.comment}
+              setRating={() => {}}
+              setInputValue={() => {}}
+              disable={true}
+            />
+            <Box style={{ height: "2vh" }}></Box>
+            {/* SNS 投稿 OK/NG 表示 */}
+            <Box
+              sx={{
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "gray",
+                textAlign: "right",
+                mt: 2,
+              }}
+            >
+              {data.is_public_allowed ? "📸 SNS 投稿 OK" : "🚫 SNS 投稿 NG"}
             </Box>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Box>
-    </>
+    </ThemeProvider>
   );
 }

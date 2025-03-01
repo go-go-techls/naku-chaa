@@ -1,5 +1,4 @@
 // app/routes/api/results.tsx
-import { v4 as uuidv4 } from "uuid";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,6 +13,8 @@ export type DataItem = {
   image: string;
   rating: number;
   comment: string;
+  character: string;
+  is_public_allowed: boolean;
 };
 
 // GETリクエストを処理するAPI関数
