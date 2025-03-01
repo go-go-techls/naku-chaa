@@ -165,7 +165,7 @@ export default function Home() {
               color="primary"
             />
           }
-          label="📸 SNS 投稿 OK"
+          label="📸 SNS 掲載 OK"
           sx={{
             position: "fixed",
             bottom: "3.5rem",

@@ -95,7 +95,7 @@ export default function Arts({ params }: { params: { id: number } }) {
               disable={true}
             />
             <Box style={{ height: "2vh" }}></Box>
-            {/* SNS 投稿 OK/NG 表示 */}
+            {/* SNS 掲載 OK/NG 表示 */}
             <Box
               sx={{
                 fontSize: 16,
@@ -105,7 +105,7 @@ export default function Arts({ params }: { params: { id: number } }) {
                 mt: 2,
               }}
             >
-              {data.is_public_allowed ? "📸 SNS 投稿 OK" : "🚫 SNS 投稿 NG"}
+              {data.is_public_allowed ? "📸 SNS 掲載 OK" : "🚫 SNS 掲載 NG"}
             </Box>
           </Box>
         </Box>
