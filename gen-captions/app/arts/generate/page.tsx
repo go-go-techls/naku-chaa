@@ -3,12 +3,9 @@
 import { Box, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import ArtworkDisplay from "@/app/components/ArtworkDisplay";
 import ArtworkDetails from "@/app/components/common/ArtworkDetails/ArtworkDetails";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useState } from "react";
 import ImageUploadButton from "@/app/components/ImageUploadButton";
 import ArtworkTitle from "@/app/components/ArtworkTitle";
-import RefreshTitleButton from "@/app/components/RefreshTitleButton";
-import Link from "next/link";
 import {
   createTheme,
   responsiveFontSizes,

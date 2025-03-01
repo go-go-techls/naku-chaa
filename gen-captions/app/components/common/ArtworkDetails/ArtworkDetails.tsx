@@ -1,7 +1,6 @@
-import React, { Dispatch, SetStateAction, useState, useEffect } from "react";
-import { Typography, Box, TextField, Skeleton } from "@mui/material";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { Typography, Skeleton } from "@mui/material";
 import ReactMarkdown from "react-markdown";
-import { Data, postResult } from "@/lib/postResult";
 
 interface ChildComponentProps {
   title: string;

@@ -1,6 +1,5 @@
 // app/routes/api/results.tsx
 import { NextResponse } from "next/server";
-import { DataItem } from "../route";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
