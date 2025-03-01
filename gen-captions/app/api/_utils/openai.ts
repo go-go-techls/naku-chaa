@@ -5,7 +5,7 @@ export const generate = async (
   const URL = "https://api.openai.com/v1/chat/completions";
   base64Image;
   const req = {
-    model: "gpt-4o",
+    model: "chatgpt-4o-latest",
     messages: [
       {
         role: "user",
