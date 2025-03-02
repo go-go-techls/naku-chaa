@@ -56,7 +56,7 @@ function ImageGrid() {
             mx: "auto",
           }}
         >
-          <Grid item xs={12} sm={2.4} md={2.4} style={{ aspectRatio: "1/1" }}>
+          <Grid item xs={4} sm={2.4} md={2.4} style={{ aspectRatio: "1/1" }}>
             <Link href={`/`} passHref>
               <Paper
                 elevation={3}
@@ -78,8 +78,8 @@ function ImageGrid() {
             ? Array.from(new Array(pageSize)).map((_, index) => (
                 <Grid
                   item
-                  xs={12}
-                  sm={2.4}
+                  xs={4} // 小さい画面で3列
+                  sm={2.4} // 中サイズ以上で5列
                   md={2.4}
                   style={{ aspectRatio: "1/1" }}
                   key={index}
@@ -95,8 +95,8 @@ function ImageGrid() {
             : data.map((src, index) => (
                 <Grid
                   item
-                  xs={12}
-                  sm={2.4}
+                  xs={4} // 小さい画面で3列
+                  sm={2.4} // 中サイズ以上で5列
                   md={2.4}
                   style={{ aspectRatio: "1/1" }}
                   key={index}
@@ -118,6 +118,7 @@ function ImageGrid() {
                 </Grid>
               ))}
         </Grid>
+
         <Pagination
           count={total}
           page={page}
