@@ -1,12 +1,17 @@
 import React, { ReactNode } from "react";
-import { Typography, Box, IconButton, Skeleton } from "@mui/material";
+import { Typography, Box, Skeleton } from "@mui/material";
 
-interface ChildProps {
+interface ArtworkTitleProps {
   title: string;
-  children: ReactNode; // ReactNode 型を使用して任意のReact要素を受け入れる
+  waitingForUser: boolean;
+  children?: ReactNode; // ReactNode 型を使用して任意のReact要素を受け入れる
 }
 
-const ArtworkTitle: React.FC<ChildProps> = ({ title, children }) => {
+const ArtworkTitle: React.FC<ArtworkTitleProps> = ({
+  title,
+  waitingForUser,
+  children,
+}) => {
   return (
     <Box display="flex" alignItems="center">
       {title ? (
@@ -14,7 +19,12 @@ const ArtworkTitle: React.FC<ChildProps> = ({ title, children }) => {
           {title}
         </Typography>
       ) : (
-        <Skeleton variant="text" height={60} width={400} />
+        <Skeleton
+          variant="text"
+          height={60}
+          width={400}
+          animation={waitingForUser ? "pulse" : "wave"} // waitingForUser=trueなら静的、falseならwave
+        />
       )}
       {children}
     </Box>

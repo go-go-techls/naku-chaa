@@ -25,8 +25,8 @@ interface ChildComponentProps {
   setRating: Dispatch<SetStateAction<number>>;
   setInputValue: Dispatch<SetStateAction<string>>;
   character: "teacher" | "geinin" | "instructor"; // キャラクターの種類
-  setCharacter: Dispatch<SetStateAction<string>>;
   snsCheck: boolean;
+  onClick?: () => void; // ここを追加
   sx?: SxProps<Theme>;
 }
 
@@ -70,8 +70,8 @@ function ImageUploadButton({
   setRating,
   setInputValue,
   character,
-  setCharacter,
   snsCheck,
+  onClick,
   sx = {},
 }: ChildComponentProps) {
   // キャラクターに応じた設定を取得
@@ -84,6 +84,8 @@ function ImageUploadButton({
     if (!file) {
       return;
     }
+    // ★ ここで input の値をリセットして、同じファイル選択でも再度トリガーされるようにする
+    event.target.value = "";
 
     try {
       const options = {
@@ -154,7 +156,7 @@ function ImageUploadButton({
             height: "84px",
             boxShadow: "0px 1px 10px 0px rgba(0,0,0,0.1)",
           }}
-          onClick={() => setCharacter(character)} // 🔽 クリック時にキャラクターをセット
+          onClick={onClick} // 🔽 クリック時にキャラクターをセット
         >
           <Box sx={{ textAlign: "center" }}>
             <img

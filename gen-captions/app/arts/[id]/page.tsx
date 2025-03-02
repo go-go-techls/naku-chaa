@@ -79,13 +79,14 @@ export default function Arts({ params }: { params: { id: number } }) {
             {data.character === "instructor" && <InstructorBadge />}
             {data.character === "geinin" && <GeininBadge />}
             {/* character の値によって表示するバッジを切り替え */}
-            <ArtworkTitle title={data.title}>
+            <ArtworkTitle title={data.title} waitingForUser={true}>
               <></>
             </ArtworkTitle>
             <ArtworkDetails
               feature={data.feature}
               advantage={data.advantage}
               advice={data.advice}
+              waitingForUser={true}
             />
             <Box style={{ height: "2vh" }}></Box>
             {/* SNS 掲載 OK/NG 表示 */}

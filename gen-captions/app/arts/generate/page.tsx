@@ -33,6 +33,7 @@ export default function Home() {
   const [rating, setRating] = useState(3);
   const [snsCheck, setSnsCheck] = useState(true);
   const [character, setCharacter] = useState("");
+  const [waitingForUser, setWaitingForUser] = useState(true); // ユーザー操作待ち
 
   return (
     <ThemeProvider theme={theme}>
@@ -86,7 +87,7 @@ export default function Home() {
               {character === "teacher" && <TeacherBadge />}
               {character === "instructor" && <InstructorBadge />}
               {character === "geinin" && <GeininBadge />}
-              <ArtworkTitle title={title}>
+              <ArtworkTitle title={title} waitingForUser={waitingForUser}>
                 {/* <RefreshTitleButton
                   imageBase64={imageBase64}
                   setTitle={setTitle}
@@ -98,6 +99,7 @@ export default function Home() {
                 feature={feature}
                 advantage={advantage}
                 advice={advice}
+                waitingForUser={waitingForUser}
               />
             </Box>
           </Box>
@@ -106,7 +108,6 @@ export default function Home() {
         {/* 画像アップロードボタン */}
         <ImageUploadButton
           character="teacher"
-          setCharacter={setCharacter}
           snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
@@ -115,12 +116,15 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
+          onClick={() => {
+            setCharacter("teacher");
+            setWaitingForUser(false);
+          }} // ここに直接書く
           sx={{ position: "fixed", bottom: "2rem", left: "1.5rem" }}
         />
 
         <ImageUploadButton
           character="geinin"
-          setCharacter={setCharacter}
           snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
@@ -129,12 +133,15 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
+          onClick={() => {
+            setCharacter("geinin");
+            setWaitingForUser(false);
+          }} // ここに直接書く
           sx={{ position: "fixed", bottom: "2rem", left: "8.5rem" }}
         />
 
         <ImageUploadButton
           character="instructor"
-          setCharacter={setCharacter}
           snsCheck={snsCheck}
           setImageBase64={setImageBase64}
           setTitle={setTitle}
@@ -143,6 +150,10 @@ export default function Home() {
           setAdvice={setAdvice}
           setRating={setRating}
           setInputValue={setInputValue}
+          onClick={() => {
+            setCharacter("instructor");
+            setWaitingForUser(false);
+          }} // ここに直接書く
           sx={{ position: "fixed", bottom: "2rem", left: "15.5rem" }}
         />
 
