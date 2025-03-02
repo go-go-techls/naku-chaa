@@ -1,27 +1,75 @@
 "use client";
 
-import { Box, Checkbox, FormControlLabel } from "@mui/material";
-import ArtworkDisplay from "@/app/components/ArtworkDisplay";
-import ArtworkDetails from "@/app/components/common/ArtworkDetails/ArtworkDetails";
-import { useState } from "react";
-import ImageUploadButton from "@/app/components/ImageUploadButton";
-import ArtworkTitle from "@/app/components/ArtworkTitle";
+import { Dispatch, SetStateAction } from "react";
+import { Box, Checkbox, FormControlLabel, useMediaQuery } from "@mui/material";
 import {
+  useTheme,
   createTheme,
   responsiveFontSizes,
   ThemeProvider,
 } from "@mui/material/styles";
+import { useState } from "react";
 import Header from "@/app/components/common/Header/Header";
+import ArtworkDisplay from "@/app/components/ArtworkDisplay";
+import ArtworkDetails from "@/app/components/common/ArtworkDetails/ArtworkDetails";
+import ImageUploadButton from "@/app/components/ImageUploadButton";
+import ArtworkTitle from "@/app/components/ArtworkTitle";
 import TeacherBadge from "@/app/components/TeacherBadge";
 import InstructorBadge from "@/app/components/InstructorBadge";
 import GeininBadge from "@/app/components/GeininBadge";
 
-let theme = createTheme({
-  typography: {
-    fontSize: 14,
-  },
-});
-theme = responsiveFontSizes(theme);
+const baseTheme = responsiveFontSizes(
+  createTheme({
+    typography: { fontSize: 14 },
+  })
+);
+
+const characters = [
+  { name: "teacher" },
+  { name: "geinin" },
+  { name: "instructor" },
+] as const;
+
+interface CharacterSelectionProps {
+  setCharacter: Dispatch<SetStateAction<string>>;
+  setWaitingForUser: Dispatch<SetStateAction<boolean>>;
+  setImageBase64: Dispatch<SetStateAction<string>>;
+  setTitle: Dispatch<SetStateAction<string>>;
+  setFeature: Dispatch<SetStateAction<string>>;
+  setAdvantage: Dispatch<SetStateAction<string>>;
+  setAdvice: Dispatch<SetStateAction<string>>;
+  snsCheck: boolean;
+}
+
+const CharacterSelection: React.FC<CharacterSelectionProps> = ({
+  setCharacter,
+  setWaitingForUser,
+  setImageBase64,
+  setTitle,
+  setFeature,
+  setAdvantage,
+  setAdvice,
+  snsCheck,
+}) => (
+  <Box sx={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
+    {characters.map(({ name }) => (
+      <ImageUploadButton
+        key={name}
+        character={name}
+        snsCheck={snsCheck}
+        setImageBase64={setImageBase64}
+        setTitle={setTitle}
+        setFeature={setFeature}
+        setAdvantage={setAdvantage}
+        setAdvice={setAdvice}
+        onClick={() => {
+          setCharacter(name);
+          setWaitingForUser(false);
+        }}
+      />
+    ))}
+  </Box>
+);
 
 export default function Home() {
   const [title, setTitle] = useState("");
@@ -29,13 +77,15 @@ export default function Home() {
   const [advantage, setAdvantage] = useState("");
   const [advice, setAdvice] = useState("");
   const [imageBase64, setImageBase64] = useState("");
-  const [inputValue, setInputValue] = useState("");
-  const [rating, setRating] = useState(3);
   const [snsCheck, setSnsCheck] = useState(true);
   const [character, setCharacter] = useState("");
+  const [waitingForUser, setWaitingForUser] = useState(true);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={baseTheme}>
       <Box sx={{ position: "relative", zIndex: 10 }}>
         <Header />
       </Box>
@@ -43,127 +93,95 @@ export default function Home() {
         <Box
           sx={{
             display: "flex",
-            height: "calc(100vh - 64px)", // ヘッダーの高さを引いた高さ
-            overflow: "hidden", // 全体のオーバーフローを隠す
+            flexDirection: isMobile ? "column" : "row",
+            height: isMobile ? "auto" : "calc(100vh - 64px)",
+            overflow: "hidden",
           }}
         >
-          {/* 左側 (ArtworkDisplay) */}
           <Box
             sx={{
-              flex: "0 0 60%", // 左側を 65% に固定
-              height: "100%",
-              overflow: "hidden", // スクロールを無効化
-              paddingRight: "24px", // 右側だけに余白を追加
-              boxSizing: "border-box",
+              flex: isMobile ? "none" : "0 0 60%",
+              width: isMobile ? "100%" : "auto",
+              height: isMobile ? "auto" : "100%",
+              position: "relative",
+              paddingRight: isMobile ? 0 : "24px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
+            <ArtworkDisplay imageBase64={imageBase64} from="generate" />
+
             <Box
               sx={{
-                height: "100%",
                 display: "flex",
-                justifyContent: "center",
+                flexDirection: isMobile ? "column" : "row",
+                justifyContent: isMobile ? "center" : "flex-start",
                 alignItems: "center",
+                gap: "1rem",
+                mt: isMobile ? 1 : "auto",
+                position: isMobile ? "static" : "absolute",
+                bottom: isMobile ? "auto" : "2rem",
+                left: isMobile ? "auto" : "1rem",
               }}
             >
-              <ArtworkDisplay imageBase64={imageBase64} from="generate" />
+              <CharacterSelection
+                {...{
+                  setCharacter,
+                  setWaitingForUser,
+                  setImageBase64,
+                  setTitle,
+                  setFeature,
+                  setAdvantage,
+                  setAdvice,
+                  snsCheck,
+                }}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={snsCheck}
+                    onChange={(e) => setSnsCheck(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label="📸 SNS 掲載 OK"
+                sx={{
+                  whiteSpace: "nowrap",
+                  "& .MuiFormControlLabel-label": { fontSize: "1.2rem" },
+                }}
+              />
             </Box>
           </Box>
 
-          {/* 右側 (ArtworkDetails) */}
           <Box
             sx={{
-              flex: "1", // 残りの幅を占有 (35%)
-              height: "100%",
-              overflowY: "auto", // 縦スクロールを有効化
-              overflowX: "hidden", // 横方向のスクロールを無効化
-              paddingRight: "16px",
-              boxSizing: "border-box",
+              flex: isMobile ? "none" : "1",
+              width: isMobile ? "100%" : "auto",
+              height: isMobile ? "auto" : "100%",
+              overflowY: isMobile ? "visible" : "auto",
+              paddingRight: isMobile ? 0 : "16px",
             }}
           >
-            <Box sx={{ p: 4, mt: 0 }}>
-              {/* character の値によって表示するバッジを切り替え */}
-              {character === "" && <></>}
-              {character === "teacher" && <TeacherBadge />}
-              {character === "instructor" && <InstructorBadge />}
-              {character === "geinin" && <GeininBadge />}
-              <ArtworkTitle title={title}>
-                {/* <RefreshTitleButton
-                  imageBase64={imageBase64}
-                  setTitle={setTitle}
-                  disabled={!title}
-                /> */}
-                <></>
-              </ArtworkTitle>
+            <Box sx={{ p: 4 }}>
+              {character && (
+                <>
+                  {character === "teacher" && <TeacherBadge />}
+                  {character === "instructor" && <InstructorBadge />}
+                  {character === "geinin" && <GeininBadge />}
+                </>
+              )}
+              <ArtworkTitle title={title} waitingForUser={waitingForUser} />
               <ArtworkDetails
                 feature={feature}
                 advantage={advantage}
                 advice={advice}
+                waitingForUser={waitingForUser}
               />
             </Box>
           </Box>
         </Box>
-
-        {/* 画像アップロードボタン */}
-        <ImageUploadButton
-          character="teacher"
-          setCharacter={setCharacter}
-          snsCheck={snsCheck}
-          setImageBase64={setImageBase64}
-          setTitle={setTitle}
-          setFeature={setFeature}
-          setAdvantage={setAdvantage}
-          setAdvice={setAdvice}
-          setRating={setRating}
-          setInputValue={setInputValue}
-          sx={{ position: "fixed", bottom: "2rem", left: "1.5rem" }}
-        />
-
-        <ImageUploadButton
-          character="geinin"
-          setCharacter={setCharacter}
-          snsCheck={snsCheck}
-          setImageBase64={setImageBase64}
-          setTitle={setTitle}
-          setFeature={setFeature}
-          setAdvantage={setAdvantage}
-          setAdvice={setAdvice}
-          setRating={setRating}
-          setInputValue={setInputValue}
-          sx={{ position: "fixed", bottom: "2rem", left: "8.5rem" }}
-        />
-
-        <ImageUploadButton
-          character="instructor"
-          setCharacter={setCharacter}
-          snsCheck={snsCheck}
-          setImageBase64={setImageBase64}
-          setTitle={setTitle}
-          setFeature={setFeature}
-          setAdvantage={setAdvantage}
-          setAdvice={setAdvice}
-          setRating={setRating}
-          setInputValue={setInputValue}
-          sx={{ position: "fixed", bottom: "2rem", left: "15.5rem" }}
-        />
-
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={snsCheck}
-              onChange={(e) => setSnsCheck(e.target.checked)}
-              color="primary"
-            />
-          }
-          label="📸 SNS 掲載 OK"
-          sx={{
-            position: "fixed",
-            bottom: "3.5rem",
-            left: "23.5rem",
-            "& .MuiFormControlLabel-label": {
-              fontSize: "1.2rem", // フォントサイズを変更
-            },
-          }}
-        />
       </Box>
     </ThemeProvider>
   );

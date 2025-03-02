@@ -6,12 +6,14 @@ interface ChildComponentProps {
   feature: string;
   advantage: string;
   advice: string;
+  waitingForUser: boolean;
 }
 
 const ArtworkDetails = ({
   feature,
   advantage,
   advice,
+  waitingForUser,
 }: ChildComponentProps) => {
   return (
     <>
@@ -23,7 +25,12 @@ const ArtworkDetails = ({
           <ReactMarkdown>{feature}</ReactMarkdown>
         </Typography>
       ) : (
-        <Skeleton variant="text" height={80} width="100%" />
+        <Skeleton
+          variant="text"
+          height={80}
+          width="100%"
+          animation={waitingForUser ? "pulse" : "wave"} // waitingForUser=trueなら静的、falseならwave
+        />
       )}
 
       <Typography mt={3} variant="h6" gutterBottom>
@@ -32,7 +39,12 @@ const ArtworkDetails = ({
       {advantage ? (
         <ReactMarkdown>{advantage}</ReactMarkdown>
       ) : (
-        <Skeleton variant="text" height={80} width="100%" />
+        <Skeleton
+          variant="text"
+          height={80}
+          width="100%"
+          animation={waitingForUser ? "pulse" : "wave"} // waitingForUser=trueなら静的、falseならwave
+        />
       )}
 
       <Typography mt={3} variant="h6" gutterBottom>
@@ -41,7 +53,12 @@ const ArtworkDetails = ({
       {advice ? (
         <ReactMarkdown>{advice}</ReactMarkdown>
       ) : (
-        <Skeleton variant="text" height={80} width="100%" />
+        <Skeleton
+          variant="text"
+          height={80}
+          width="100%"
+          animation={waitingForUser ? "pulse" : "wave"} // waitingForUser=trueなら静的、falseならwave
+        />
       )}
     </>
   );

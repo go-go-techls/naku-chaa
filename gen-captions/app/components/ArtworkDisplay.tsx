@@ -46,6 +46,7 @@ const ArtworkDisplay = ({ imageBase64, from }: ChildComponentProps) => {
         <Skeleton
           variant="rectangular"
           // animation="wave"
+          animation="pulse"
           style={{
             maxWidth: "100%",
             maxHeight: "100%",

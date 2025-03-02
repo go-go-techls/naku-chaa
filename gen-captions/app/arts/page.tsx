@@ -88,7 +88,7 @@ function ImageGrid() {
                     variant="rectangular"
                     width="100%"
                     height="100%"
-                    animation="wave"
+                    animation="pulse"
                   />
                 </Grid>
               ))
