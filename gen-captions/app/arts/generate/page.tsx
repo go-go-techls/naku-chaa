@@ -55,23 +55,59 @@ export default function Home() {
           {/* 左側 (ArtworkDisplay) */}
           <Box
             sx={{
-              flex: "0 0 60%", // 左側を 65% に固定
+              flex: "0 0 60%",
               height: "100%",
-              overflow: "hidden", // スクロールを無効化
-              paddingRight: "24px", // 右側だけに余白を追加
+              overflow: "hidden",
+              paddingRight: "24px",
               boxSizing: "border-box",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              position: "relative", // 相対位置基準を追加
             }}
           >
-            <Box
+            <ArtworkDisplay imageBase64={imageBase64} from="generate" />
+
+            {/* 画像アップロードボタンをこのBox内に配置 */}
+            {characters.map(({ name, left }) => (
+              <ImageUploadButton
+                key={name}
+                character={name}
+                snsCheck={snsCheck}
+                setImageBase64={setImageBase64}
+                setTitle={setTitle}
+                setFeature={setFeature}
+                setAdvantage={setAdvantage}
+                setAdvice={setAdvice}
+                onClick={() => {
+                  setCharacter(name);
+                  setWaitingForUser(false);
+                }}
+                sx={{
+                  position: "absolute", // fixed → absolute
+                  bottom: "2rem",
+                  left,
+                }}
+              />
+            ))}
+
+            {/* SNS 掲載許可チェックボックス */}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={snsCheck}
+                  onChange={(e) => setSnsCheck(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="📸 SNS 掲載 OK"
               sx={{
-                height: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                position: "absolute", // fixed → absolute
+                bottom: "3.5rem",
+                left: "23.5rem",
+                "& .MuiFormControlLabel-label": { fontSize: "1.2rem" },
               }}
-            >
-              <ArtworkDisplay imageBase64={imageBase64} from="generate" />
-            </Box>
+            />
           </Box>
 
           {/* 右側 (ArtworkDetails) */}
@@ -108,43 +144,6 @@ export default function Home() {
             </Box>
           </Box>
         </Box>
-
-        {characters.map(({ name, left }) => (
-          <ImageUploadButton
-            key={name}
-            character={name}
-            snsCheck={snsCheck}
-            setImageBase64={setImageBase64}
-            setTitle={setTitle}
-            setFeature={setFeature}
-            setAdvantage={setAdvantage}
-            setAdvice={setAdvice}
-            onClick={() => {
-              setCharacter(name);
-              setWaitingForUser(false);
-            }} // ここに直接書く
-            sx={{ position: "fixed", bottom: "2rem", left }}
-          />
-        ))}
-
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={snsCheck}
-              onChange={(e) => setSnsCheck(e.target.checked)}
-              color="primary"
-            />
-          }
-          label="📸 SNS 掲載 OK"
-          sx={{
-            position: "fixed",
-            bottom: "3.5rem",
-            left: "23.5rem",
-            "& .MuiFormControlLabel-label": {
-              fontSize: "1.2rem", // フォントサイズを変更
-            },
-          }}
-        />
       </Box>
     </ThemeProvider>
   );
