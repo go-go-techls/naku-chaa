@@ -15,6 +15,8 @@ import Header from "@/app/components/common/Header/Header";
 import TeacherBadge from "@/app/components/TeacherBadge";
 import InstructorBadge from "@/app/components/InstructorBadge";
 import GeininBadge from "@/app/components/GeininBadge";
+import { useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 let theme = createTheme({
   typography: {
@@ -38,6 +40,10 @@ export default function Home() {
     { name: "geinin" as const, left: "8.5rem" },
     { name: "instructor" as const, left: "15.5rem" },
   ];
+
+  // メインのコンポーネント内で useTheme & useMediaQuery を使用
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // 画面幅が `sm` (600px) 以下の場合
 
   return (
     <ThemeProvider theme={theme}>
@@ -63,51 +69,58 @@ export default function Home() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              position: "relative", // 相対位置基準を追加
+              position: "relative", // 相対位置基準
             }}
           >
             <ArtworkDisplay imageBase64={imageBase64} from="generate" />
 
-            {/* 画像アップロードボタンをこのBox内に配置 */}
-            {characters.map(({ name, left }) => (
-              <ImageUploadButton
-                key={name}
-                character={name}
-                snsCheck={snsCheck}
-                setImageBase64={setImageBase64}
-                setTitle={setTitle}
-                setFeature={setFeature}
-                setAdvantage={setAdvantage}
-                setAdvice={setAdvice}
-                onClick={() => {
-                  setCharacter(name);
-                  setWaitingForUser(false);
-                }}
+            {/* ボタンエリア（左寄せ） */}
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: "2rem",
+                left: "1rem", // 左側に詰める
+                display: "flex",
+                gap: "1rem", // ボタン同士の間隔
+                flexDirection: "row", // 横並び
+                alignItems: "center",
+              }}
+            >
+              {characters.map(({ name }) => (
+                <ImageUploadButton
+                  key={name}
+                  character={name}
+                  snsCheck={snsCheck}
+                  setImageBase64={setImageBase64}
+                  setTitle={setTitle}
+                  setFeature={setFeature}
+                  setAdvantage={setAdvantage}
+                  setAdvice={setAdvice}
+                  onClick={() => {
+                    setCharacter(name);
+                    setWaitingForUser(false);
+                  }}
+                />
+              ))}
+
+              {/* SNS 掲載許可チェックボックス */}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={snsCheck}
+                    onChange={(e) => setSnsCheck(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label="📸 SNS 掲載 OK"
                 sx={{
-                  position: "absolute", // fixed → absolute
-                  bottom: "2rem",
-                  left,
+                  whiteSpace: "nowrap",
+                  "& .MuiFormControlLabel-label": {
+                    fontSize: "1.2rem",
+                  },
                 }}
               />
-            ))}
-
-            {/* SNS 掲載許可チェックボックス */}
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={snsCheck}
-                  onChange={(e) => setSnsCheck(e.target.checked)}
-                  color="primary"
-                />
-              }
-              label="📸 SNS 掲載 OK"
-              sx={{
-                position: "absolute", // fixed → absolute
-                bottom: "3.5rem",
-                left: "23.5rem",
-                "& .MuiFormControlLabel-label": { fontSize: "1.2rem" },
-              }}
-            />
+            </Box>
           </Box>
 
           {/* 右側 (ArtworkDetails) */}
