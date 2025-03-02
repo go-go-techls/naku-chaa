@@ -29,8 +29,6 @@ export default function Home() {
   const [advantage, setAdvantage] = useState("");
   const [advice, setAdvice] = useState("");
   const [imageBase64, setImageBase64] = useState("");
-  const [inputValue, setInputValue] = useState("");
-  const [rating, setRating] = useState(3);
   const [snsCheck, setSnsCheck] = useState(true);
   const [character, setCharacter] = useState("");
   const [waitingForUser, setWaitingForUser] = useState(true); // ユーザー操作待ち
