@@ -35,6 +35,12 @@ export default function Home() {
   const [character, setCharacter] = useState("");
   const [waitingForUser, setWaitingForUser] = useState(true); // ユーザー操作待ち
 
+  const characters = [
+    { name: "teacher" as const, left: "1.5rem" },
+    { name: "geinin" as const, left: "8.5rem" },
+    { name: "instructor" as const, left: "15.5rem" },
+  ];
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ position: "relative", zIndex: 10 }}>
@@ -105,57 +111,23 @@ export default function Home() {
           </Box>
         </Box>
 
-        {/* 画像アップロードボタン */}
-        <ImageUploadButton
-          character="teacher"
-          snsCheck={snsCheck}
-          setImageBase64={setImageBase64}
-          setTitle={setTitle}
-          setFeature={setFeature}
-          setAdvantage={setAdvantage}
-          setAdvice={setAdvice}
-          setRating={setRating}
-          setInputValue={setInputValue}
-          onClick={() => {
-            setCharacter("teacher");
-            setWaitingForUser(false);
-          }} // ここに直接書く
-          sx={{ position: "fixed", bottom: "2rem", left: "1.5rem" }}
-        />
-
-        <ImageUploadButton
-          character="geinin"
-          snsCheck={snsCheck}
-          setImageBase64={setImageBase64}
-          setTitle={setTitle}
-          setFeature={setFeature}
-          setAdvantage={setAdvantage}
-          setAdvice={setAdvice}
-          setRating={setRating}
-          setInputValue={setInputValue}
-          onClick={() => {
-            setCharacter("geinin");
-            setWaitingForUser(false);
-          }} // ここに直接書く
-          sx={{ position: "fixed", bottom: "2rem", left: "8.5rem" }}
-        />
-
-        <ImageUploadButton
-          character="instructor"
-          snsCheck={snsCheck}
-          setImageBase64={setImageBase64}
-          setTitle={setTitle}
-          setFeature={setFeature}
-          setAdvantage={setAdvantage}
-          setAdvice={setAdvice}
-          setRating={setRating}
-          setInputValue={setInputValue}
-          onClick={() => {
-            setCharacter("instructor");
-            setWaitingForUser(false);
-          }} // ここに直接書く
-          sx={{ position: "fixed", bottom: "2rem", left: "15.5rem" }}
-        />
+        {characters.map(({ name, left }) => (
+          <ImageUploadButton
+            key={name}
+            character={name}
+            snsCheck={snsCheck}
+            setImageBase64={setImageBase64}
+            setTitle={setTitle}
+            setFeature={setFeature}
+            setAdvantage={setAdvantage}
+            setAdvice={setAdvice}
+            onClick={() => {
+              setCharacter(name);
+              setWaitingForUser(false);
+            }} // ここに直接書く
+            sx={{ position: "fixed", bottom: "2rem", left }}
+          />
+        ))}
 
         <FormControlLabel
           control={

@@ -22,8 +22,6 @@ interface ChildComponentProps {
   setFeature: Dispatch<SetStateAction<string>>;
   setAdvantage: Dispatch<SetStateAction<string>>;
   setAdvice: Dispatch<SetStateAction<string>>;
-  setRating: Dispatch<SetStateAction<number>>;
-  setInputValue: Dispatch<SetStateAction<string>>;
   character: "teacher" | "geinin" | "instructor"; // キャラクターの種類
   snsCheck: boolean;
   onClick?: () => void; // ここを追加
@@ -67,8 +65,6 @@ function ImageUploadButton({
   setFeature,
   setAdvantage,
   setAdvice,
-  setRating,
-  setInputValue,
   character,
   snsCheck,
   onClick,
@@ -108,8 +104,6 @@ function ImageUploadButton({
         setFeature("");
         setAdvantage("");
         setAdvice("");
-        setRating(3);
-        setInputValue("");
 
         const [title, feature, advantage, advice] = await Promise.all([
           fetchData(base64Image, settings.promptTitle, setTitle),
