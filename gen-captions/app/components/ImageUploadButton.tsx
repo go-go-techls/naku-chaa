@@ -32,7 +32,7 @@ interface ChildComponentProps {
 const characterSettings = {
   teacher: {
     icon: teacherIcon,
-    title: "AI先生",
+    title: "深読み先生",
     backgroundColor: "#CEDCE9",
     promptTitle: promptTitle.teacher,
     promptFeature: promptFeature.teacher,
