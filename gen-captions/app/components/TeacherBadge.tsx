@@ -23,7 +23,7 @@ const TeacherBadge = () => {
         style={{ width: "30px", height: "30px" }}
       />
       <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-        AI先生からのコメント
+        深読み先生からのコメント
       </Typography>
     </Box>
   );
