@@ -8,7 +8,7 @@
 # response=$(curl -X GET http://localhost:3000/api/results/27)
 # response=$(curl -X GET http://localhost:3000/api/results\?page\=1\&pageSize\=160)
 
-curl -u "${BASIC_AUTH_USER}:${BASIC_AUTH_PASSWORD}" -X GET http://localhost:3000/api/arts\?page\=1\&pageSize\=165 >temp.json
+curl -u "${BASIC_AUTH_USER}:${BASIC_AUTH_PASSWORD}" -X GET http://localhost:3000/api/arts\?page\=1\&pageSize\=100 >temp.json
 
 # echo $response | jq -r '.data[].title' | while read title; do
 #     echo "$title"
