@@ -41,5 +41,6 @@ next-env.d.ts
 prisma/dev.db
 
 # images
-scripts/images
+scripts/images*
 scripts/temp.json
+scripts/*.pdf
