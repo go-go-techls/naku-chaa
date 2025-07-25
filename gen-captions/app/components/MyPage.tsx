@@ -164,7 +164,7 @@ export default function MyPage() {
             <CardContent sx={{ textAlign: 'center' }}>
               <PersonIcon sx={{ fontSize: 48, color: '#3386E7', mb: 1 }} />
               <Typography variant="h4" component="div" gutterBottom>
-                {user.createdAt ? Math.ceil((new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24)) : '0'}
+                {user.createdAt ? Math.ceil((new Date().getTime() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24)) : '0'}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 利用日数

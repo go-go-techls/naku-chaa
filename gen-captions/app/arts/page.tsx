@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Box, Pagination, Skeleton } from "@mui/material";
@@ -10,7 +10,7 @@ import { DataItem } from "../api/arts/route";
 import { getArts } from "@/lib/getArts";
 import Header from "../components/common/Header/Header";
 
-function ImageGrid() {
+function ImageGridContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -134,6 +134,55 @@ function ImageGrid() {
         />
       </Box>
     </>
+  );
+}
+
+function ImageGrid() {
+  return (
+    <Suspense fallback={
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        sx={{ pb: 4 }}
+      >
+        <Box sx={{ position: "relative", zIndex: 10 }}>
+          <Header />
+        </Box>
+        <Grid
+          container
+          spacing={2}
+          p={2}
+          justifyContent="center"
+          sx={{
+            width: "100%",
+            maxWidth: "1100px",
+            mx: "auto",
+          }}
+        >
+          {Array.from(new Array(15)).map((_, index) => (
+            <Grid
+              item
+              xs={4}
+              sm={2.4}
+              md={2.4}
+              style={{ aspectRatio: "1/1" }}
+              key={index}
+            >
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height="100%"
+                animation="pulse"
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    }>
+      <ImageGridContent />
+    </Suspense>
   );
 }
 
