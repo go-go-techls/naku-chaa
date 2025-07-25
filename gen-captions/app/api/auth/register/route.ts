@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
       id: user.id,
       email: user.email,
       name: user.name || undefined,
+      role: user.role,
     });
 
     // レスポンス作成（パスワードを除外）
@@ -65,6 +66,7 @@ export async function POST(request: NextRequest) {
       id: user.id,
       email: user.email,
       name: user.name,
+      role: user.role,
     };
 
     // HttpOnly Cookieでトークンを設定

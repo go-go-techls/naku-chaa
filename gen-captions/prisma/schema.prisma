@@ -23,6 +23,7 @@ model User {
   email     String   @unique
   password  String
   name      String?
+  role      String   @default("user") // "user" または "admin"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   

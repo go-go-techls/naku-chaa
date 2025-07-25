@@ -17,12 +17,22 @@ export async function GET(request: Request, { params }: { params: { id: string }
   const numericId = parseInt(id);
 
   try {
-    // ログインユーザーの作品のみ取得
+    // 管理者の場合は全作品、一般ユーザーは自分の作品のみ取得
+    const whereCondition = user.role === 'admin' 
+      ? { id: numericId }
+      : { id: numericId, userId: user.userId };
+    
     const art = await prisma.art.findFirst({
-      where: {
-        id: numericId,
-        userId: user.userId,
-      },
+      where: whereCondition,
+      include: user.role === 'admin' ? {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          }
+        }
+      } : undefined,
     });
 
     if (art) {
@@ -59,12 +69,13 @@ export async function DELETE(
   const numericId = parseInt(id);
 
   try {
-    // まず、削除対象の作品がログインユーザーのものか確認
+    // 管理者の場合は全作品、一般ユーザーは自分の作品のみ削除可能
+    const whereCondition = user.role === 'admin' 
+      ? { id: numericId }
+      : { id: numericId, userId: user.userId };
+    
     const art = await prisma.art.findFirst({
-      where: {
-        id: numericId,
-        userId: user.userId,
-      },
+      where: whereCondition,
     });
 
     if (!art) {

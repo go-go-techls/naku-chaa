@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
         id: true,
         email: true,
         name: true,
+        role: true,
         createdAt: true,
         _count: {
           select: { arts: true },
@@ -40,6 +41,7 @@ export async function GET(request: NextRequest) {
         id: user.id,
         email: user.email,
         name: user.name,
+        role: user.role,
         createdAt: user.createdAt,
         artCount: user._count.arts,
       },

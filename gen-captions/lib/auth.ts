@@ -10,12 +10,14 @@ export interface User {
   id: string;
   email: string;
   name?: string;
+  role?: string;
 }
 
 // JWT トークンのペイロード型定義
 interface JWTPayload {
   userId: string;
   email: string;
+  role?: string;
   iat?: number;
   exp?: number;
 }
@@ -36,6 +38,7 @@ export function generateToken(user: User): string {
   const payload: JWTPayload = {
     userId: user.id,
     email: user.email,
+    role: user.role,
   };
   
   return jwt.sign(payload, JWT_SECRET, {

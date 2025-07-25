@@ -32,22 +32,29 @@ export async function GET(request: NextRequest) {
   const pageSize = Number(searchParams.get("pageSize")) || 10;
 
   try {
-    // ログインユーザーの作品のみ取得
+    // 管理者の場合は全作品、一般ユーザーは自分の作品のみ取得
+    const whereCondition = user.role === 'admin' ? {} : { userId: user.userId };
+    
     const arts = await prisma.art.findMany({
-      where: {
-        userId: user.userId,
-      },
+      where: whereCondition,
       skip: (page - 1) * pageSize,
       take: pageSize,
       orderBy: {
         id: "desc",
       },
+      include: user.role === 'admin' ? {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          }
+        }
+      } : undefined,
     });
     
     const total = await prisma.art.count({
-      where: {
-        userId: user.userId,
-      },
+      where: whereCondition,
     });
 
     return NextResponse.json({ data: arts, total, page, pageSize });
