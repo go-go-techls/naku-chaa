@@ -116,8 +116,8 @@ export default function MyPage() {
             <Typography variant="body2" color="text.secondary">
               ユーザーID
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              #{user.id}
+            <Typography variant="body1" gutterBottom sx={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
+              {user.id}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>

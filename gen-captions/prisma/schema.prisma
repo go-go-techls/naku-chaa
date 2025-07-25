@@ -19,7 +19,7 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   email     String   @unique
   password  String
   name      String?
@@ -44,6 +44,6 @@ model Art {
   createdAt         DateTime @default(now())
   
   // ユーザーとの関連（null許可でゲスト作成も可能）
-  userId    Int?
+  userId    String?
   user      User?    @relation("UserArts", fields: [userId], references: [id])
 }

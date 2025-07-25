@@ -7,14 +7,14 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-producti
 
 // ユーザー情報の型定義
 export interface User {
-  id: number;
+  id: string;
   email: string;
   name?: string;
 }
 
 // JWT トークンのペイロード型定義
 interface JWTPayload {
-  userId: number;
+  userId: string;
   email: string;
   iat?: number;
   exp?: number;
