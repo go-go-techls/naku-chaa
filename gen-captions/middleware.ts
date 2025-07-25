@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// ミドルウェアは全てのリクエストに対して実行される
+// ミドルウェアはユーザー登録関連のページとAPIに対して実行される
 export function middleware(req: NextRequest) {
+  // ユーザー登録ページとAPI以外はBasic認証をスキップ
+  const isRegisterPath = req.nextUrl.pathname === '/register' || 
+                        req.nextUrl.pathname.startsWith('/api/auth/register');
+  
+  if (!isRegisterPath) {
+    return NextResponse.next();
+  }
+
   const basicAuth = req.headers.get("authorization");
 
   // 認証ヘッダーが存在しない場合、認証を要求
@@ -41,5 +49,5 @@ export function middleware(req: NextRequest) {
 
 // ミドルウェアが適用されるパスを定義
 export const config = {
-  matcher: ["/(.*)", "/api/:path*"], // 全ページと API を対象にする
+  matcher: ["/register", "/api/auth/register"], // ユーザー登録ページとAPIを対象にする
 };
