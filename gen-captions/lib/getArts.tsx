@@ -1,6 +1,63 @@
 import { DataItem } from "@/app/api/arts/route";
 import { Dispatch, SetStateAction } from "react";
 
+// メモリベースのキャッシュ（メイン）
+class MemoryCache {
+  private cache = new Map<string, { data: any; timestamp: number }>();
+  private readonly maxSize = 100; // 最大100エントリ
+  private readonly ttl = 10 * 60 * 1000; // 10分に延長
+
+  set(key: string, data: any) {
+    // サイズ制限チェック
+    if (this.cache.size >= this.maxSize) {
+      // 最も古いエントリを削除
+      const oldestKey = this.cache.keys().next().value;
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
+    }
+
+    this.cache.set(key, {
+      data,
+      timestamp: Date.now()
+    });
+  }
+
+  get(key: string) {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+
+    // TTLチェック
+    if (Date.now() - entry.timestamp > this.ttl) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    return entry.data;
+  }
+
+  clear() {
+    this.cache.clear();
+  }
+}
+
+const memoryCache = new MemoryCache();
+
+// メモリキャッシュのみ使用するため、SessionStorageのチェックは不要
+
+// データを軽量化する関数
+const compressData = (data: any) => {
+  if (Array.isArray(data)) {
+    return data.map(item => ({
+      id: item.id,
+      title: item.title,
+      image: item.image,
+      // 必要最小限のデータのみ保存
+    }));
+  }
+  return data;
+};
+
 // ブラウザレベルのキャッシュ管理
 const createCacheKey = (id: number | string, page?: number, pageSize?: number) => {
   if (page !== undefined && pageSize !== undefined) {
@@ -12,37 +69,19 @@ const createCacheKey = (id: number | string, page?: number, pageSize?: number) =
 const getCachedData = (key: string) => {
   if (typeof window === 'undefined') return null;
   
-  try {
-    const cached = sessionStorage.getItem(key);
-    if (cached) {
-      const { data, timestamp } = JSON.parse(cached);
-      const isExpired = Date.now() - timestamp > 5 * 60 * 1000; // 5分
-      
-      if (!isExpired) {
-        return data;
-      } else {
-        sessionStorage.removeItem(key);
-      }
-    }
-  } catch (error) {
-    console.error("Cache read error:", error);
-  }
-  
-  return null;
+  // メモリキャッシュから直接取得
+  return memoryCache.get(key);
 };
 
 const setCachedData = (key: string, data: any) => {
   if (typeof window === 'undefined') return;
   
-  try {
-    sessionStorage.setItem(key, JSON.stringify({
-      data,
-      timestamp: Date.now()
-    }));
-  } catch (error) {
-    console.error("Cache write error:", error);
-  }
+  // メモリキャッシュのみを使用（SessionStorageは使わない）
+  memoryCache.set(key, data);
+  console.debug(`Data cached in memory: ${key}`);
 };
+
+// SessionStorageを使わないため、この関数は不要
 
 export const getArt = async (
   id: number,
@@ -126,10 +165,7 @@ export const getArts = async (
 export const clearArtsCache = () => {
   if (typeof window === 'undefined') return;
   
-  const keys = Object.keys(sessionStorage);
-  keys.forEach(key => {
-    if (key.startsWith('arts-') || key.startsWith('art-')) {
-      sessionStorage.removeItem(key);
-    }
-  });
+  // メモリキャッシュのみクリア
+  memoryCache.clear();
+  console.debug('Memory cache cleared');
 };
