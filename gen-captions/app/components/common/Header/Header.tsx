@@ -92,7 +92,9 @@ function Header() {
                 onClick={handleMenuClose}
               >
                 <MenuItem onClick={handleMenuClose}>
-                  マイページ
+                  <Link href="/mypage" passHref style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
+                    マイページ
+                  </Link>
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   ログアウト
@@ -101,38 +103,22 @@ function Header() {
             </>
           ) : (
             // 未ログイン
-            <>
-              <Link href="/login" passHref>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    borderColor: '#3386E7',
-                    color: '#3386E7',
-                    '&:hover': {
-                      borderColor: '#2563EB',
-                      bgcolor: 'rgba(51, 134, 231, 0.04)',
-                    },
-                  }}
-                >
-                  ログイン
-                </Button>
-              </Link>
-              <Link href="/register" passHref>
-                <Button
-                  variant="contained"
-                  size="small"
-                  sx={{
-                    bgcolor: '#3386E7',
-                    '&:hover': {
-                      bgcolor: '#2563EB',
-                    },
-                  }}
-                >
-                  新規登録
-                </Button>
-              </Link>
-            </>
+            <Link href="/login" passHref>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{
+                  borderColor: '#3386E7',
+                  color: '#3386E7',
+                  '&:hover': {
+                    borderColor: '#2563EB',
+                    bgcolor: 'rgba(51, 134, 231, 0.04)',
+                  },
+                }}
+              >
+                ログイン
+              </Button>
+            </Link>
           )}
         </Box>
       </Toolbar>

@@ -8,10 +8,9 @@ import {
   Button,
   Typography,
   Alert,
-  Link as MuiLink,
   CircularProgress,
+  Avatar,
 } from '@mui/material';
-import Link from 'next/link';
 import { useAuth } from '@/app/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
@@ -70,15 +69,30 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           maxWidth: 400,
         }}
       >
-        <Typography
-          variant="h5"
-          component="h1"
-          gutterBottom
-          textAlign="center"
-          sx={{ marginBottom: 3 }}
-        >
-          ログイン
-        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 3 }}>
+          <Avatar 
+            sx={{ 
+              bgcolor: 'transparent', 
+              marginBottom: 2, 
+              width: 56, 
+              height: 56 
+            }}
+          >
+            <img 
+              src="/techls-color.svg" 
+              alt="テックルズ" 
+              style={{ width: '100%', height: '100%' }}
+            />
+          </Avatar>
+          <Typography
+            variant="h5"
+            component="h1"
+            gutterBottom
+            textAlign="center"
+          >
+            ログイン
+          </Typography>
+        </Box>
 
         {error && (
           <Alert severity="error" sx={{ marginBottom: 2 }}>
@@ -122,17 +136,6 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
               'ログイン'
             )}
           </Button>
-
-          <Box textAlign="center">
-            <Typography variant="body2" color="text.secondary">
-              アカウントをお持ちでない方は{' '}
-              <Link href="/register" passHref>
-                <MuiLink component="span" sx={{ cursor: 'pointer' }}>
-                  新規登録
-                </MuiLink>
-              </Link>
-            </Typography>
-          </Box>
         </Box>
       </Paper>
     </Box>
