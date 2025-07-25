@@ -49,17 +49,20 @@ class ArtsCache {
     // メモリ使用量制限（最大100エントリ）
     if (this.cache.size > 100) {
       const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
+      if (firstKey) {
+        this.cache.delete(firstKey);
+      }
     }
   }
 
   // 特定ユーザーのキャッシュを削除
   invalidateUser(userId: string): void {
-    for (const [key] of this.cache) {
+    const keys = Array.from(this.cache.keys());
+    keys.forEach(key => {
       if (key.startsWith(`${userId}-`)) {
         this.cache.delete(key);
       }
-    }
+    });
   }
 
   // 全キャッシュをクリア
