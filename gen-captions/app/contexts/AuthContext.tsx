@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 
 // ユーザー情報の型定義
 interface User {
-  id: number;
+  id: string;
   email: string;
   name?: string;
   createdAt?: string;
@@ -117,6 +117,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       // クライアントサイドのCookieも削除
       Cookies.remove('auth-token');
+      // ログインページに遷移
+      window.location.href = '/login';
     }
   };
 
