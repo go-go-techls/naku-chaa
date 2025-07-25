@@ -16,6 +16,9 @@ export type DataItem = {
   is_public_allowed: boolean;
 };
 
+// キャッシュ設定を追加
+export const revalidate = 300; // 5分間キャッシュ
+
 // GETリクエストを処理するAPI関数
 export async function GET(request: NextRequest) {
   // ログインユーザーを取得
@@ -57,7 +60,12 @@ export async function GET(request: NextRequest) {
       where: whereCondition,
     });
 
-    return NextResponse.json({ data: arts, total, page, pageSize });
+    const response = NextResponse.json({ data: arts, total, page, pageSize });
+    
+    // キャッシュヘッダーを設定
+    response.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    
+    return response;
   } catch (error) {
     console.error("Error fetching arts:", error);
     return NextResponse.json(

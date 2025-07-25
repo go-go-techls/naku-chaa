@@ -19,13 +19,17 @@ function ImageGridContent() {
   const [page, setPage] = useState(pageFromURL);
   const pageSize = 14;
   const [total, setTotal] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setPage(pageFromURL);
   }, [pageFromURL]);
 
   useEffect(() => {
-    getArts(setData, setTotal, page, pageSize);
+    setIsLoading(true);
+    getArts(setData, setTotal, page, pageSize).finally(() => {
+      setIsLoading(false);
+    });
     console.log("refreshed");
   }, [page]);
 
@@ -74,7 +78,7 @@ function ImageGridContent() {
             </Link>
           </Grid>
 
-          {data.length === 0
+          {isLoading
             ? Array.from(new Array(pageSize)).map((_, index) => (
                 <Grid
                   item
