@@ -1,25 +1,27 @@
 export const generate = async (
   prompt: string,
-  base64Image: string
+  base64Images: string[]
 ): Promise<Response> => {
   const URL = "https://api.openai.com/v1/chat/completions";
-  base64Image;
+  
+  const imageContent = base64Images.map(base64Image => ({
+    type: "image_url" as const,
+    image_url: {
+      url: `data:image/jpeg;base64,${base64Image}`,
+    },
+  }));
+
   const req = {
-    model: "chatgpt-4o-latest",
+    model: "gpt-4o",
     messages: [
       {
         role: "user",
         content: [
           {
-            type: "text",
+            type: "text" as const,
             text: prompt,
           },
-          {
-            type: "image_url",
-            image_url: {
-              url: `data:image/jpeg;base64,${base64Image}`,
-            },
-          },
+          ...imageContent,
         ],
       },
     ],
@@ -29,7 +31,9 @@ export const generate = async (
 
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-  return await fetch(URL, {
+  console.log("OpenAI Request:", JSON.stringify(req, null, 2));
+
+  const response = await fetch(URL, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${OPENAI_API_KEY}`,
@@ -37,4 +41,11 @@ export const generate = async (
     },
     body: JSON.stringify(req),
   });
+
+  if (!response.ok) {
+    const errorData = await response.text();
+    console.error("OpenAI API Error:", response.status, response.statusText, errorData);
+  }
+
+  return response;
 };

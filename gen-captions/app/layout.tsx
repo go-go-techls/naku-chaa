@@ -1,5 +1,6 @@
 import * as React from "react";
 import "./globals.css";
+import { AuthProvider } from "./contexts/AuthContext";
 
 export const metadata = {
   title: "naku-chaa",
@@ -16,7 +17,11 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           rel="stylesheet"
         />
       </head>
-      <body>{props.children}</body>
+      <body>
+        <AuthProvider>
+          {props.children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }

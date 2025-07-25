@@ -21,7 +21,7 @@ const ArtworkDetails = ({
         あなたの作品の印象
       </Typography>
       {feature ? (
-        <Typography variant="body1" gutterBottom>
+        <Typography component="div" variant="body1" gutterBottom>
           <ReactMarkdown>{feature}</ReactMarkdown>
         </Typography>
       ) : (
@@ -37,7 +37,9 @@ const ArtworkDetails = ({
         あなたの作品の良いところ
       </Typography>
       {advantage ? (
-        <ReactMarkdown>{advantage}</ReactMarkdown>
+        <Typography component="div" variant="body1" gutterBottom>
+          <ReactMarkdown>{advantage}</ReactMarkdown>
+        </Typography>
       ) : (
         <Skeleton
           variant="text"
@@ -51,7 +53,9 @@ const ArtworkDetails = ({
         次の作品へのアドバイス
       </Typography>
       {advice ? (
-        <ReactMarkdown>{advice}</ReactMarkdown>
+        <Typography component="div" variant="body1" gutterBottom>
+          <ReactMarkdown>{advice}</ReactMarkdown>
+        </Typography>
       ) : (
         <Skeleton
           variant="text"
