@@ -21,6 +21,12 @@ export async function fetchData(
       body: JSON.stringify(req),
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("API Error:", response.status, response.statusText, errorText);
+      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    }
+
     const reader = response!.body!.getReader();
     let accumulatedResponse = ""; // response値を蓄積する変数
 
@@ -48,13 +54,15 @@ export async function fetchData(
         } else if (jsonText) {
           try {
             const data = JSON.parse(jsonText);
-            const content = data.choices[0].delta.content;
-            if (content) {
-              accumulatedResponse += content;
-              setData(accumulatedResponse);
+            if (data.choices && data.choices[0] && data.choices[0].delta) {
+              const content = data.choices[0].delta.content;
+              if (content) {
+                accumulatedResponse += content;
+                setData(accumulatedResponse);
+              }
             }
           } catch (error) {
-            console.error("Error parsing JSON:", error);
+            console.error("Error parsing JSON:", error, "JSON text:", jsonText);
           }
         }
       }

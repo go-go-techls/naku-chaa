@@ -49,12 +49,17 @@ export async function GET(request: NextRequest) {
 
 // POSTリクエストを処理するAPI関数
 export async function POST(req: Request) {
-  const data = await req.json();
-  console.log(data);
   try {
+    const data = await req.json();
+    console.log("Received data:", data);
+    
     const newArt: DataItem = await prisma.art.create({ data });
     return NextResponse.json(newArt);
   } catch (error) {
-    console.error("Error fetching arts:", error);
+    console.error("Error creating art:", error);
+    return NextResponse.json(
+      { error: "Failed to create art", details: (error as Error).message },
+      { status: 500 }
+    );
   }
 }

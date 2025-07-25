@@ -1,4 +1,5 @@
-import { StreamingTextResponse, Message } from "ai";
+import { streamText } from "ai";
+import type { Message } from "ai";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { ChatOllama } from "@langchain/community/chat_models/ollama";
 import { BytesOutputParser } from "@langchain/core/output_parsers";
@@ -42,5 +43,9 @@ export async function POST(req: Request) {
     )
   );
 
-  return new StreamingTextResponse(stream);
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+    },
+  });
 }
