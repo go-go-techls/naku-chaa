@@ -9,8 +9,8 @@ interface User {
   email: string;
   name?: string;
   role?: string;
+  avatar?: string;
   createdAt?: string;
-  artCount?: number;
 }
 
 // 認証コンテキストの型定義

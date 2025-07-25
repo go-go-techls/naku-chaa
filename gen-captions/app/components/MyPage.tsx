@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Container,
@@ -11,6 +11,7 @@ import {
   Card,
   CardContent,
   Chip,
+  Button,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
@@ -18,7 +19,52 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function MyPage() {
-  const { user } = useAuth();
+  const { user, loading, refreshUser } = useAuth();
+  const [artCount, setArtCount] = useState<number>(0);
+  const [loadingArts, setLoadingArts] = useState(true);
+
+  // マイページにアクセスした時にユーザー情報を確実に取得
+  useEffect(() => {
+    if (!loading && !user) {
+      refreshUser();
+    }
+  }, [loading, user, refreshUser]);
+
+  // 作品数を取得
+  useEffect(() => {
+    const fetchArtCount = async () => {
+      if (!user) return;
+      
+      try {
+        const response = await fetch('/api/arts/count', {
+          credentials: 'include',
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setArtCount(data.count);
+        }
+      } catch (error) {
+        console.error('Failed to fetch art count:', error);
+      } finally {
+        setLoadingArts(false);
+      }
+    };
+
+    if (user) {
+      fetchArtCount();
+    }
+  }, [user]);
+
+  if (loading) {
+    return (
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Typography variant="h6" textAlign="center">
+          読み込み中...
+        </Typography>
+      </Container>
+    );
+  }
 
   if (!user) {
     return (
@@ -47,17 +93,29 @@ export default function MyPage() {
       {/* ユーザー情報カード */}
       <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <Avatar 
-            sx={{ 
-              width: 80, 
-              height: 80, 
-              bgcolor: '#3386E7', 
-              mr: 3,
-              fontSize: '2rem'
-            }}
-          >
-            {(user.name || user.email).charAt(0).toUpperCase()}
-          </Avatar>
+          {user.avatar ? (
+            <Avatar 
+              src={user.avatar}
+              sx={{ 
+                width: 80, 
+                height: 80, 
+                mr: 3
+              }}
+              alt={user.name || user.email}
+            />
+          ) : (
+            <Avatar 
+              sx={{ 
+                width: 80, 
+                height: 80, 
+                bgcolor: '#3386E7', 
+                mr: 3,
+                fontSize: '2rem'
+              }}
+            >
+              {(user.name || user.email).charAt(0).toUpperCase()}
+            </Avatar>
+          )}
           <Box>
             <Typography variant="h5" component="h2" gutterBottom>
               {user.name || 'ユーザー'}
@@ -65,12 +123,22 @@ export default function MyPage() {
             <Typography variant="body1" color="text.secondary" gutterBottom>
               {user.email}
             </Typography>
-            <Chip 
-              icon={<CalendarTodayIcon />}
-              label={`登録日: ${formatDate(user.createdAt)}`}
-              variant="outlined"
-              size="small"
-            />
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+              <Chip 
+                icon={<CalendarTodayIcon />}
+                label={`登録日: ${user.createdAt ? formatDate(user.createdAt) : '不明'}`}
+                variant="outlined"
+                size="small"
+              />
+              {user.role === 'admin' && (
+                <Chip 
+                  label="管理者"
+                  color="primary"
+                  size="small"
+                  sx={{ bgcolor: '#3386E7', color: 'white' }}
+                />
+              )}
+            </Box>
           </Box>
         </Box>
       </Paper>
@@ -82,7 +150,7 @@ export default function MyPage() {
             <CardContent sx={{ textAlign: 'center' }}>
               <ArtTrackIcon sx={{ fontSize: 48, color: '#3386E7', mb: 1 }} />
               <Typography variant="h4" component="div" gutterBottom>
-                {user.artCount || 0}
+                {loadingArts ? '...' : artCount}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 投稿した作品数
@@ -96,56 +164,15 @@ export default function MyPage() {
             <CardContent sx={{ textAlign: 'center' }}>
               <PersonIcon sx={{ fontSize: 48, color: '#3386E7', mb: 1 }} />
               <Typography variant="h4" component="div" gutterBottom>
-                メンバー
+                {user.createdAt ? Math.ceil((new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24)) : '0'}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                アカウント種別
+                利用日数
               </Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-
-      {/* プロフィール詳細 */}
-      <Paper elevation={2} sx={{ p: 3, mt: 3 }}>
-        <Typography variant="h6" component="h3" gutterBottom>
-          アカウント情報
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body2" color="text.secondary">
-              ユーザーID
-            </Typography>
-            <Typography variant="body1" gutterBottom sx={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
-              {user.id}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body2" color="text.secondary">
-              メールアドレス
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {user.email}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body2" color="text.secondary">
-              表示名
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {user.name || '未設定'}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body2" color="text.secondary">
-              登録日時
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {formatDate(user.createdAt)}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Paper>
     </Container>
   );
 }

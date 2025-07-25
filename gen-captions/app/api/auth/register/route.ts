@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { hashPassword, generateToken, isValidEmail, isValidPassword } from '@/lib/auth';
+import { generateAvatar } from '@/lib/avatar';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
@@ -53,20 +54,29 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // ユーザー作成後にアバターを生成して更新
+    const avatar = generateAvatar(user.id);
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: { avatar },
+    });
+
     // JWT トークン生成
     const token = generateToken({
-      id: user.id,
-      email: user.email,
-      name: user.name || undefined,
-      role: user.role,
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name || undefined,
+      role: updatedUser.role,
     });
 
     // レスポンス作成（パスワードを除外）
     const userResponse = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      role: updatedUser.role,
+      avatar: updatedUser.avatar,
+      createdAt: updatedUser.createdAt,
     };
 
     // HttpOnly Cookieでトークンを設定

@@ -57,6 +57,8 @@ export async function POST(request: NextRequest) {
       email: user.email,
       name: user.name,
       role: user.role,
+      avatar: user.avatar,
+      createdAt: user.createdAt,
     };
 
     // HttpOnly Cookieでトークンを設定

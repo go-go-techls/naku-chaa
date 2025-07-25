@@ -23,6 +23,7 @@ model User {
   email     String   @unique
   password  String
   name      String?
+  avatar    String?  // アバター画像のURL
   role      String   @default("user") // "user" または "admin"
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

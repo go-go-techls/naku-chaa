@@ -22,10 +22,8 @@ export async function GET(request: NextRequest) {
         email: true,
         name: true,
         role: true,
+        avatar: true,
         createdAt: true,
-        _count: {
-          select: { arts: true },
-        },
       },
     });
 
@@ -42,8 +40,8 @@ export async function GET(request: NextRequest) {
         email: user.email,
         name: user.name,
         role: user.role,
+        avatar: user.avatar,
         createdAt: user.createdAt,
-        artCount: user._count.arts,
       },
     });
 
