@@ -18,6 +18,18 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // 作品との関連
+  arts      Art[]    @relation("UserArts")
+}
+
 model Art {
   id                Int     @id @default(autoincrement())
   title             String
@@ -29,4 +41,9 @@ model Art {
   comment           String
   character         String  @default("")
   is_public_allowed Boolean @default(false)
+  createdAt         DateTime @default(now())
+  
+  // ユーザーとの関連（null許可でゲスト作成も可能）
+  userId    Int?
+  user      User?    @relation("UserArts", fields: [userId], references: [id])
 }
