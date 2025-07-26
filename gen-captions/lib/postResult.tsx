@@ -38,6 +38,9 @@ export async function postResult(data: Data) {
     if (newArtCreated === 'true' && typeof window !== 'undefined') {
       const timestamp = Date.now().toString();
       localStorage.setItem('newArtCreated', timestamp);
+      
+      // キャッシュをクリアして新しいデータが反映されるようにする
+      clearArtsCache(false);
     }
     
     // console.log("APIからのレスポンス:", result);
