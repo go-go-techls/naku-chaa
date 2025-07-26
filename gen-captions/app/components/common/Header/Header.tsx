@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import AppBar from "@mui/material/AppBar";
@@ -48,23 +48,62 @@ function Header() {
       }}
     >
       <Toolbar>
-        <Link href="/arts" passHref style={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+        <Link
+          href="/arts"
+          passHref
+          style={{ textDecoration: "none", color: "inherit", flexGrow: 1 }}
+        >
+          <Box
+            sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          >
             <Logo src="/techls-color.svg" alt="App Icon" />
             <Typography
               component="div"
               sx={{
                 fontFamily: '"Kosugi Maru", Arial, sans-serif',
-                fontSize: "1.25rem",
+                fontSize: "1.4rem",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                "@media (max-width: 600px)": {
+                  whiteSpace: "normal",
+                  lineHeight: 1.2,
+                  fontSize: "1.1rem",
+                },
+                "@media (max-width: 400px)": {
+                  fontSize: "1rem",
+                },
+                "@media (max-width: 350px)": {
+                  fontSize: "0.9rem",
+                },
               }}
             >
-              生成AIに作品をみてもらおう by テックルズ
+              <Box
+                component="span"
+                sx={{
+                  "@media (max-width: 600px)": {
+                    display: "block",
+                  },
+                }}
+              >
+                生成AIに作品をみてもらおう
+              </Box>
+              <Box
+                component="span"
+                sx={{
+                  "@media (max-width: 600px)": {
+                    display: "block",
+                  },
+                }}
+              >
+                {" by テックルズ"}
+              </Box>
             </Typography>
           </Box>
         </Link>
 
         {/* 認証状態に応じたUI */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {loading ? (
             // ロード中
             <Typography variant="body2" color="text.secondary">
@@ -73,19 +112,15 @@ function Header() {
           ) : user ? (
             // ログイン済み
             <>
-              <IconButton
-                size="small"
-                onClick={handleMenuOpen}
-                sx={{ p: 0 }}
-              >
+              <IconButton size="small" onClick={handleMenuOpen} sx={{ p: 0 }}>
                 {user.avatar ? (
-                  <Avatar 
-                    src={user.avatar} 
+                  <Avatar
+                    src={user.avatar}
                     sx={{ width: 36, height: 36 }}
                     alt={user.name || user.email}
                   />
                 ) : (
-                  <Avatar sx={{ width: 36, height: 36, bgcolor: '#3386E7' }}>
+                  <Avatar sx={{ width: 36, height: 36, bgcolor: "#3386E7" }}>
                     {(user.name || user.email).charAt(0).toUpperCase()}
                   </Avatar>
                 )}
@@ -96,10 +131,10 @@ function Header() {
                 onClose={handleMenuClose}
                 onClick={handleMenuClose}
               >
-                <MenuItem disabled sx={{ opacity: 1, cursor: 'default' }}>
+                <MenuItem disabled sx={{ opacity: 1, cursor: "default" }}>
                   <Box>
-                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      {user.name || 'ユーザー'}
+                    <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                      {user.name || "ユーザー"}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       {user.email}
@@ -107,13 +142,19 @@ function Header() {
                   </Box>
                 </MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                  <Link href="/mypage" passHref style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
+                  <Link
+                    href="/mypage"
+                    passHref
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                      width: "100%",
+                    }}
+                  >
                     マイページ
                   </Link>
                 </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  ログアウト
-                </MenuItem>
+                <MenuItem onClick={handleLogout}>ログアウト</MenuItem>
               </Menu>
             </>
           ) : (
@@ -123,11 +164,11 @@ function Header() {
                 variant="outlined"
                 size="small"
                 sx={{
-                  borderColor: '#3386E7',
-                  color: '#3386E7',
-                  '&:hover': {
-                    borderColor: '#2563EB',
-                    bgcolor: 'rgba(51, 134, 231, 0.04)',
+                  borderColor: "#3386E7",
+                  color: "#3386E7",
+                  "&:hover": {
+                    borderColor: "#2563EB",
+                    bgcolor: "rgba(51, 134, 231, 0.04)",
                   },
                 }}
               >
