@@ -20,7 +20,9 @@ export async function GET(
     const currentId = parseInt(params.id);
     
     // 管理者の場合は全作品、一般ユーザーは自分の作品のみ対象
-    const whereCondition = user.role === 'admin' ? {} : { userId: user.userId };
+    // テスト用: 管理者でも自分の作品のみ表示（本番では元に戻す）
+    const whereCondition = { userId: user.userId };
+    // const whereCondition = user.role === 'admin' ? {} : { userId: user.userId };
 
     // 前の作品（現在の作品より小さいIDで最大のもの）
     const prevArt = await prisma.art.findFirst({
