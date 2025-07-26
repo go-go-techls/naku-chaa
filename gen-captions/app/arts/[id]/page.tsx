@@ -80,11 +80,11 @@ export default function Arts({ params }: { params: { id: number } }) {
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
 
-    if (isLeftSwipe && nextId) {
-      router.push(`/arts/${nextId}`);
-    }
-    if (isRightSwipe && prevId) {
+    if (isLeftSwipe && prevId) {
       router.push(`/arts/${prevId}`);
+    }
+    if (isRightSwipe && nextId) {
+      router.push(`/arts/${nextId}`);
     }
   };
 
@@ -139,7 +139,16 @@ export default function Arts({ params }: { params: { id: number } }) {
             flexDirection: isMobile ? "column" : "row",
             height: isMobile ? "auto" : "calc(100vh - 64px)",
             overflow: "hidden",
+            position: "relative",
+            userSelect: "none",
           }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
         >
           <Box
             sx={{
@@ -153,77 +162,8 @@ export default function Arts({ params }: { params: { id: number } }) {
               boxSizing: "border-box",
               position: "relative",
             }}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
           >
-            {/* 次の画像ボタン */}
-            {nextId && (
-              <Tooltip title="次の画像 (←)">
-                <IconButton
-                  onClick={() => router.push(`/arts/${nextId}`)}
-                  sx={{
-                    position: "absolute",
-                    left: 16,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
-                    color: "white",
-                    zIndex: 10,
-                    backdropFilter: "blur(4px)",
-                    border: "1px solid rgba(255, 255, 255, 0.2)",
-                    width: 48,
-                    height: 48,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      border: "1px solid rgba(255, 255, 255, 0.4)",
-                    },
-                  }}
-                >
-                  <ArrowBackIosIcon sx={{ transform: "translateX(5px)" }} />
-                </IconButton>
-              </Tooltip>
-            )}
-
             <ArtworkDisplay imageBase64={data.image} from="id" />
-
-            {/* 前の画像ボタン */}
-            {prevId && (
-              <Tooltip title="前の画像 (→)">
-                <IconButton
-                  onClick={() => router.push(`/arts/${prevId}`)}
-                  sx={{
-                    position: "absolute",
-                    right: isMobile ? 16 : 40,
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
-                    color: "white",
-                    zIndex: 10,
-                    backdropFilter: "blur(4px)",
-                    border: "1px solid rgba(255, 255, 255, 0.2)",
-                    width: 48,
-                    height: 48,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      border: "1px solid rgba(255, 255, 255, 0.4)",
-                    },
-                  }}
-                >
-                  <ArrowForwardIosIcon />
-                </IconButton>
-              </Tooltip>
-            )}
           </Box>
           <Box
             sx={{
@@ -259,6 +199,69 @@ export default function Arts({ params }: { params: { id: number } }) {
               </Box>
             </Box>
           </Box>
+
+          {/* 画面端の矢印ボタン */}
+          {/* 前の画像ボタン（左端） */}
+          {prevId && (
+            <Tooltip title="前の画像 (→)">
+              <IconButton
+                onClick={() => router.push(`/arts/${prevId}`)}
+                sx={{
+                  position: "fixed",
+                  left: 16,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  color: "white",
+                  zIndex: 1000,
+                  backdropFilter: "blur(4px)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  width: 48,
+                  height: 48,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    border: "1px solid rgba(255, 255, 255, 0.4)",
+                  },
+                }}
+              >
+                <ArrowBackIosIcon sx={{ transform: "translateX(2px)" }} />
+              </IconButton>
+            </Tooltip>
+          )}
+
+          {/* 次の画像ボタン（右端） */}
+          {nextId && (
+            <Tooltip title="次の画像 (←)">
+              <IconButton
+                onClick={() => router.push(`/arts/${nextId}`)}
+                sx={{
+                  position: "fixed",
+                  right: 16,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  color: "white",
+                  zIndex: 1000,
+                  backdropFilter: "blur(4px)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  width: 48,
+                  height: 48,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    border: "1px solid rgba(255, 255, 255, 0.4)",
+                  },
+                }}
+              >
+                <ArrowForwardIosIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </Box>
       </Box>
     </ThemeProvider>
