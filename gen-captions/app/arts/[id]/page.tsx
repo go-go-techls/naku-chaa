@@ -7,6 +7,7 @@ import {
   useMediaQuery,
   IconButton,
   Tooltip,
+  Skeleton,
 } from "@mui/material";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -27,8 +28,9 @@ let theme = createTheme({
 });
 theme = responsiveFontSizes(theme);
 
-export default function Arts({ params }: { params: { id: number } }) {
+export default function Arts({ params }: { params: { id: string } }) {
   const [data, setData] = useState<DataItem>({} as DataItem);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [prevId, setPrevId] = useState<number | null>(null);
   const [nextId, setNextId] = useState<number | null>(null);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -40,12 +42,22 @@ export default function Arts({ params }: { params: { id: number } }) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsLoading(true);
+    setData({} as DataItem); // データをリセット
+    
     getArt(params.id, setData);
     getAdjacentArtIds(params.id).then((ids) => {
       setPrevId(ids.prevId);
       setNextId(ids.nextId);
     });
   }, [params.id]);
+
+  // データが読み込まれたらローディングを終了
+  useEffect(() => {
+    if (data.id) {
+      setIsLoading(false);
+    }
+  }, [data]);
 
   // キーボードナビゲーション
   useEffect(() => {
@@ -195,7 +207,19 @@ export default function Arts({ params }: { params: { id: number } }) {
                   mt: 2,
                 }}
               >
-                {data.is_public_allowed ? "📸 SNS 掲載 OK" : "🚫 SNS 掲載 NG"}
+                {isLoading ? (
+                  <Skeleton 
+                    variant="text" 
+                    width={120} 
+                    height={24}
+                    sx={{ 
+                      display: "inline-block",
+                      ml: "auto"
+                    }}
+                  />
+                ) : (
+                  data.is_public_allowed ? "📸 SNS 掲載 OK" : "🚫 SNS 掲載 NG"
+                )}
               </Box>
             </Box>
           </Box>

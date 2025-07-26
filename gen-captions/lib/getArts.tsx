@@ -7,6 +7,9 @@ class MemoryCache {
   private cache = new Map<string, { data: any; timestamp: number }>();
   private readonly maxSize = 15; // メモリ使用量削減のため15エントリに削減
   private readonly ttl = 3 * 60 * 1000; // 3分に短縮してメモリ効率化
+  
+  // 現在の一覧データを保持（状態管理用）
+  private currentArtsListData: DataItem[] = [];
 
   set(key: string, data: any) {
     // サイズ制限チェック
@@ -52,6 +55,16 @@ class MemoryCache {
 
   clear() {
     this.cache.clear();
+    this.currentArtsListData = [];
+  }
+  
+  // 一覧データの管理
+  setArtsList(data: DataItem[]) {
+    this.currentArtsListData = data;
+  }
+  
+  getArtFromList(id: number): DataItem | null {
+    return this.currentArtsListData.find(art => art.id === id) || null;
   }
 
   // メモリ使用量チェック（スマホ対応）
@@ -70,10 +83,6 @@ class MemoryCache {
 }
 
 const memoryCache = new MemoryCache();
-
-// メモリキャッシュのみ使用するため、SessionStorageのチェックは不要
-
-// 軽量化関数は不要（メモリキャッシュのため）
 
 // ブラウザレベルのキャッシュ管理
 const createCacheKey = (id: number | string, page?: number, pageSize?: number) => {
@@ -100,27 +109,34 @@ const setCachedData = (key: string, data: any) => {
   }
 };
 
-// SessionStorageを使わないため、この関数は不要
 
 export const getArt = async (
-  id: number,
+  id: number | string,
   setData: Dispatch<SetStateAction<DataItem>>
 ): Promise<void> => {
-  const cacheKey = createCacheKey(id);
+  // IDを数値に正規化
+  const numericId = Number(id);
+  const cacheKey = createCacheKey(numericId);
   
   // メモリ使用量チェック
   memoryCache.checkMemoryUsage();
   
+  // まず一覧データから取得を試行
+  const artFromList = memoryCache.getArtFromList(numericId);
+  if (artFromList) {
+    setData(artFromList);
+    return;
+  }
+  
   // キャッシュから取得を試行
   const cachedData = getCachedData(cacheKey);
   if (cachedData) {
-    // キャッシュヒット時の遅延を削除（シンプル化）
     setData(cachedData);
     return;
   }
 
   try {
-    const response = await fetch(`/api/arts/${id}`, {
+    const response = await fetch(`/api/arts/${numericId}`, {
       headers: {
         'Cache-Control': 'max-age=300' // 5分間キャッシュ
       }
@@ -157,10 +173,12 @@ export const getArts = async (
   if (!bypassCache) {
     const cachedData = getCachedData(cacheKey);
     if (cachedData) {
-      // キャッシュヒット時の遅延を削除（シンプル化）
       setData(cachedData.data);
       const total = Math.ceil(cachedData.total / pageSize);
       setTotal(total);
+      
+      // キャッシュヒット時も一覧データを保存
+      memoryCache.setArtsList(cachedData.data);
       return;
     }
   }
@@ -185,6 +203,9 @@ export const getArts = async (
     
     // キャッシュに保存
     setCachedData(cacheKey, { data: data.data, total: data.total });
+    
+    // 一覧データを保存（状態管理用）
+    memoryCache.setArtsList(data.data);
   } catch (error) {
     logError(error as Error, 'getArts');
     // エラー時は空配列を設定してクラッシュを防ぐ
@@ -210,12 +231,13 @@ export const clearArtsCache = (shouldReload = false) => {
 };
 
 // 隣接するアート作品のIDを取得する関数
-export const getAdjacentArtIds = async (currentId: number): Promise<{
+export const getAdjacentArtIds = async (currentId: number | string): Promise<{
   prevId: number | null;
   nextId: number | null;
 }> => {
+  const numericId = Number(currentId);
   try {
-    const response = await fetch(`/api/arts/${currentId}/adjacent`, {
+    const response = await fetch(`/api/arts/${numericId}/adjacent`, {
       headers: {
         'Cache-Control': 'max-age=300'
       }

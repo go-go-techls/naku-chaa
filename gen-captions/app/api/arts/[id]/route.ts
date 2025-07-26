@@ -18,11 +18,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
   try {
     // 管理者の場合は全作品、一般ユーザーは自分の作品のみ取得
-    // テスト用: 管理者でも自分の作品のみ表示（本番では元に戻す）
-    const whereCondition = { id: numericId, userId: user.userId };
-    // const whereCondition = user.role === 'admin' 
-    //   ? { id: numericId }
-    //   : { id: numericId, userId: user.userId };
+    const whereCondition = user.role === 'admin' 
+      ? { id: numericId }
+      : { id: numericId, userId: user.userId };
     
     const art = await prisma.art.findFirst({
       where: whereCondition,
