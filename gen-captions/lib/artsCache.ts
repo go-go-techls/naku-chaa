@@ -48,10 +48,8 @@ class ArtsCache {
     
     // メモリ使用量制限（最大100エントリ）
     if (this.cache.size > 100) {
-      const firstKey = this.cache.keys().next().value;
-      if (firstKey !== undefined) {
-        this.cache.delete(firstKey);
-      }
+      const firstKey = this.cache.keys().next().value as string;
+      this.cache.delete(firstKey);
     }
   }
 
