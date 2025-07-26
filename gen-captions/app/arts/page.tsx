@@ -1,113 +1,213 @@
 "use client";
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense, useCallback } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Box, Pagination, Skeleton } from "@mui/material";
+import { Box, Skeleton, CircularProgress, Typography } from "@mui/material";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { DataItem } from "../api/arts/route";
-import { getArts, clearArtsCache } from "@/lib/getArts";
+import { clearArtsCache, saveInfiniteScrollState, getInfiniteScrollState, clearInfiniteScrollState } from "@/lib/getArts";
 import Header from "../components/common/Header/Header";
 
 function ImageGridContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const pageFromURL = Number(searchParams.get("page")) || 1;
   const [data, setData] = useState<DataItem[]>([]);
-  const [page, setPage] = useState(pageFromURL);
-  const pageSize = 14;
-  const [total, setTotal] = useState<number>(1);
+  const [page, setPage] = useState(1);
+  const pageSize = 8; // スクロール可能な量を確保
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setPage(pageFromURL);
-  }, [pageFromURL]);
-
-  // コンポーネントマウント時とページ変更時の両方でチェック
-  useEffect(() => {
-    console.log('🎯 一覧ページ useEffect実行 - ページ:', page);
-    if (typeof window !== 'undefined') {
-      const newArtCreated = localStorage.getItem('newArtCreated');
-      console.log('一覧ページ - newArtCreatedフラグ:', newArtCreated);
-      
-      if (newArtCreated && newArtCreated !== 'null') {
-        console.log('一覧ページ - キャッシュクリア実行');
-        clearArtsCache(false);
-        localStorage.removeItem('newArtCreated');
+  // データを追加する関数
+  const addMoreData = useCallback(
+    (newData: DataItem[], totalCount: number) => {
+      setData((prev) => {
+        const existingIds = new Set(prev.map((item) => item.id));
+        const uniqueNewData = newData.filter(
+          (item) => !existingIds.has(item.id)
+        );
+        const updatedData = [...prev, ...uniqueNewData];
         
-        // 通常のデータ取得useEffectより先に実行されるように、直接実行
-        console.log('一覧ページ - キャッシュバイパスでデータ再取得');
-        setIsLoading(true);
-        getArts(setData, setTotal, page, pageSize, true).finally(() => {
-          setIsLoading(false);
-          console.log('一覧ページ - データ再取得完了');
-        });
-        return; // 通常のデータ取得を実行しないようにreturn
-      } else {
-        console.log('一覧ページ - newArtCreatedフラグなし、通常処理');
+        // hasMoreの判定をここで行う（setData内で最新の状態を使用）
+        setHasMore(updatedData.length < totalCount);
+        
+        return updatedData;
+      });
+    },
+    []
+  );
+
+  // データを読み込む関数
+  const loadData = useCallback(
+    async (pageNum: number, isRefresh = false) => {
+      try {
+        setError(null);
+        if (pageNum === 1) {
+          setIsLoading(true);
+        } else {
+          setIsLoadingMore(true);
+        }
+
+        const response = await fetch(
+          `/api/arts?page=${pageNum}&pageSize=${pageSize}`,
+          {
+            headers: {
+              "Cache-Control": "no-cache",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (pageNum === 1 || isRefresh) {
+          // 初回読み込みまたはリフレッシュの場合は置き換える
+          setData(result.data);
+          setHasMore(result.data.length < result.total);
+        } else {
+          // 追加読み込みの場合は追加する
+          addMoreData(result.data, result.total);
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "データの取得に失敗しました"
+        );
+      } finally {
+        setIsLoading(false);
+        setIsLoadingMore(false);
+      }
+    },
+    [addMoreData]
+  );
+
+  // 新しい作品が作成された場合の処理
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const newArtCreated = localStorage.getItem("newArtCreated");
+
+      if (newArtCreated && newArtCreated !== "null") {
+        clearArtsCache(false);
+        clearInfiniteScrollState(); // 無限スクロール状態もクリア
+        localStorage.removeItem("newArtCreated");
+        // データを最初から再読み込み
+        setPage(1);
+        loadData(1, true);
       }
     }
-  }, [page, pageSize]);
-  
-  // 初回マウント時の確認
-  useEffect(() => {
-    console.log('🎯 初回マウント時のフラグ確認');
-    if (typeof window !== 'undefined') {
-      const newArtCreated = localStorage.getItem('newArtCreated');
-      console.log('初回マウント - newArtCreatedフラグ:', newArtCreated);
-    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // キーボードナビゲーション
+  // スクロール検知機能
+  const loadMore = useCallback(() => {
+    if (!isLoadingMore && hasMore && !error) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      loadData(nextPage);
+    }
+  }, [isLoadingMore, hasMore, error, page, loadData]);
+
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // 入力フィールドやテキストエリアにフォーカスがある場合はスキップ
-      if (event.target instanceof HTMLInputElement || 
-          event.target instanceof HTMLTextAreaElement ||
-          isLoading) {
-        return;
-      }
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.body.offsetHeight;
+      const distanceFromBottom = documentHeight - (scrollY + windowHeight);
       
-      if (event.key === 'ArrowLeft' && page > 1) {
-        event.preventDefault();
-        router.push(`?page=${page - 1}`, { scroll: false });
-      } else if (event.key === 'ArrowRight' && page < total) {
-        event.preventDefault();
-        router.push(`?page=${page + 1}`, { scroll: false });
-      } else if (event.key === 'Home') {
-        event.preventDefault();
-        router.push(`?page=1`, { scroll: false });
-      } else if (event.key === 'End') {
-        event.preventDefault();
-        router.push(`?page=${total}`, { scroll: false });
-      } else if (event.key >= '1' && event.key <= '9') {
-        // 数字キー1-9でページ移動
-        const targetPage = parseInt(event.key);
-        if (targetPage <= total) {
-          event.preventDefault();
-          router.push(`?page=${targetPage}`, { scroll: false });
-        }
+      console.log('スクロールデバッグ:', {
+        scrollY,
+        windowHeight,
+        documentHeight,
+        distanceFromBottom,
+        shouldLoadMore: distanceFromBottom <= 1000,
+        isLoadingMore,
+        hasMore,
+        error: !!error
+      });
+      
+      // ページの底から500px手前でトリガー
+      if (distanceFromBottom <= 500) {
+        console.log('無限スクロールをトリガーします');
+        loadMore();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [page, total, isLoading, router]);
+    // スクロールイベントをスロットリング（100ms間隔）
+    let timeoutId: NodeJS.Timeout;
+    const throttledHandleScroll = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleScroll, 100);
+    };
 
+    window.addEventListener("scroll", throttledHandleScroll);
+    return () => {
+      window.removeEventListener("scroll", throttledHandleScroll);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [loadMore]);
+
+  // 初回データ読み込み（状態復元を含む）
   useEffect(() => {
-    console.log('🎯 通常のデータ取得 useEffect実行 - ページ:', page);
-    setIsLoading(true);
-    getArts(setData, setTotal, page, pageSize).finally(() => {
+    const savedState = getInfiniteScrollState();
+    if (savedState && savedState.data.length > 0) {
+      // 保存された状態を復元
+      setData(savedState.data);
+      setPage(savedState.page);
+      setHasMore(savedState.hasMore);
       setIsLoading(false);
-      console.log('🎯 通常のデータ取得完了');
-    });
-    console.log("refreshed");
-  }, [page]);
+      
+      // スクロール位置を復元（少し遅延させる）
+      setTimeout(() => {
+        window.scrollTo(0, savedState.scrollPosition);
+      }, 100);
+    } else {
+      // 通常の初回読み込み
+      loadData(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    router.push(`?page=${value}`, { scroll: false });
+  // 状態変更時に自動保存
+  useEffect(() => {
+    if (data.length > 0 && !isLoading) {
+      const scrollPosition = window.scrollY;
+      saveInfiniteScrollState(data, page, hasMore, scrollPosition);
+    }
+  }, [data, page, hasMore, isLoading]);
+
+  // ページを離れる前に状態を保存
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (data.length > 0) {
+        const scrollPosition = window.scrollY;
+        saveInfiniteScrollState(data, page, hasMore, scrollPosition);
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && data.length > 0) {
+        const scrollPosition = window.scrollY;
+        saveInfiniteScrollState(data, page, hasMore, scrollPosition);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [data, page, hasMore]);
+
+  // エラー表示とリトライ機能
+  const handleRetry = () => {
+    setError(null);
+    setPage(1);
+    setData([]);
+    loadData(1, true);
   };
 
   return (
@@ -151,63 +251,97 @@ function ImageGridContent() {
             </Link>
           </Grid>
 
-          {isLoading
-            ? Array.from(new Array(pageSize)).map((_, index) => (
-                <Grid
-                  item
-                  xs={4} // 小さい画面で3列
-                  sm={2.4} // 中サイズ以上で5列
-                  md={2.4}
-                  style={{ aspectRatio: "1/1" }}
-                  key={index}
-                >
-                  <Skeleton
-                    variant="rectangular"
-                    width="100%"
-                    height="100%"
-                    animation="pulse"
+          {/* エラー状態の表示 */}
+          {error && (
+            <Grid item xs={12}>
+              <Box sx={{ textAlign: "center", py: 4 }}>
+                <Typography color="error" sx={{ mb: 2 }}>
+                  {error}
+                </Typography>
+                <button onClick={handleRetry}>再試行</button>
+              </Box>
+            </Grid>
+          )}
+
+          {/* 初回ローディング時のスケルトン */}
+          {isLoading &&
+            data.length === 0 &&
+            !error &&
+            Array.from(new Array(8)).map((_, index) => (
+              <Grid
+                item
+                xs={4} // 小さい画面で3列
+                sm={2.4} // 中サイズ以上で5列
+                md={2.4}
+                style={{ aspectRatio: "1/1" }}
+                key={index}
+              >
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height="100%"
+                  animation="pulse"
+                />
+              </Grid>
+            ))}
+
+          {/* データの表示 */}
+          {!error &&
+            data.map((src, index) => (
+              <Grid
+                item
+                xs={4} // 小さい画面で3列
+                sm={2.4} // 中サイズ以上で5列
+                md={2.4}
+                style={{ aspectRatio: "1/1" }}
+                key={index}
+              >
+                <Link href={`/arts/${src.id}`} passHref>
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      backgroundImage: `url(${src.image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      overflow: "hidden",
+                      padding: 1,
+                    }}
                   />
-                </Grid>
-              ))
-            : data.map((src, index) => (
-                <Grid
-                  item
-                  xs={4} // 小さい画面で3列
-                  sm={2.4} // 中サイズ以上で5列
-                  md={2.4}
-                  style={{ aspectRatio: "1/1" }}
-                  key={index}
-                >
-                  <Link href={`/arts/${src.id}`} passHref>
-                    <Paper
-                      elevation={3}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        backgroundImage: `url(${src.image})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        overflow: "hidden",
-                        padding: 1,
-                      }}
-                    />
-                  </Link>
-                </Grid>
-              ))}
+                </Link>
+              </Grid>
+            ))}
         </Grid>
 
-        <Pagination
-          count={total}
-          page={page}
-          onChange={handleChange}
-          size="medium"
-          sx={{
-            mt: 2.2,
-            "& .MuiPaginationItem-root": {
-              fontSize: "1.0rem",
-            },
-          }}
-        />
+        {/* 追加ローディング表示 */}
+        {isLoadingMore && (
+          <Box sx={{ textAlign: "center", py: 4 }}>
+            <CircularProgress />
+            <Typography sx={{ mt: 2 }}>読み込み中...</Typography>
+          </Box>
+        )}
+
+
+        {/* 全て読み込み完了メッセージ */}
+        {!hasMore && data.length > 0 && !error && (
+          <Box sx={{ textAlign: "center", py: 4 }}>
+            <Typography color="text.secondary">
+              全ての作品を表示しました
+            </Typography>
+          </Box>
+        )}
+
+        {/* データが0件の場合 */}
+        {!isLoading && data.length === 0 && !error && (
+          <Box sx={{ textAlign: "center", py: 4 }}>
+            <Typography color="text.secondary">作品がありません</Typography>
+          </Box>
+        )}
+
+        {/* スクロール用の最小限の余白 */}
+        <Box sx={{ height: "20vh" }} />
+
       </Box>
     </>
   );
@@ -215,48 +349,50 @@ function ImageGridContent() {
 
 function ImageGrid() {
   return (
-    <Suspense fallback={
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        sx={{ pb: 4 }}
-      >
-        <Box sx={{ position: "relative", zIndex: 10 }}>
-          <Header />
-        </Box>
-        <Grid
-          container
-          spacing={2}
-          p={2}
+    <Suspense
+      fallback={
+        <Box
+          display="flex"
+          flexDirection="column"
           justifyContent="center"
-          sx={{
-            width: "100%",
-            maxWidth: "1100px",
-            mx: "auto",
-          }}
+          alignItems="center"
+          sx={{ pb: 4 }}
         >
-          {Array.from(new Array(15)).map((_, index) => (
-            <Grid
-              item
-              xs={4}
-              sm={2.4}
-              md={2.4}
-              style={{ aspectRatio: "1/1" }}
-              key={index}
-            >
-              <Skeleton
-                variant="rectangular"
-                width="100%"
-                height="100%"
-                animation="pulse"
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    }>
+          <Box sx={{ position: "relative", zIndex: 10 }}>
+            <Header />
+          </Box>
+          <Grid
+            container
+            spacing={2}
+            p={2}
+            justifyContent="center"
+            sx={{
+              width: "100%",
+              maxWidth: "1100px",
+              mx: "auto",
+            }}
+          >
+            {Array.from(new Array(15)).map((_, index) => (
+              <Grid
+                item
+                xs={4}
+                sm={2.4}
+                md={2.4}
+                style={{ aspectRatio: "1/1" }}
+                key={index}
+              >
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height="100%"
+                  animation="pulse"
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      }
+    >
       <ImageGridContent />
     </Suspense>
   );

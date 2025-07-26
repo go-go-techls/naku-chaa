@@ -2,11 +2,22 @@ import { DataItem } from "@/app/api/arts/route";
 import { Dispatch, SetStateAction } from "react";
 import { logError } from './errorHandler';
 
+// 無限スクロール状態の型定義
+export interface InfiniteScrollState {
+  data: DataItem[];
+  page: number;
+  hasMore: boolean;
+  scrollPosition: number;
+  timestamp: number;
+}
+
 // メモリベースのキャッシュ（メイン）
 class MemoryCache {
   private cache = new Map<string, { data: any; timestamp: number }>();
+  private scrollState: InfiniteScrollState | null = null;
   private readonly maxSize = 15; // メモリ使用量削減のため15エントリに削減
   private readonly ttl = 3 * 60 * 1000; // 3分に短縮してメモリ効率化
+  private readonly scrollStateTtl = 10 * 60 * 1000; // スクロール状態は10分間保持
 
   set(key: string, data: any) {
     // サイズ制限チェック
@@ -52,6 +63,35 @@ class MemoryCache {
 
   clear() {
     this.cache.clear();
+  }
+
+  // 無限スクロール状態の保存
+  saveScrollState(data: DataItem[], page: number, hasMore: boolean, scrollPosition: number) {
+    this.scrollState = {
+      data,
+      page,
+      hasMore,
+      scrollPosition,
+      timestamp: Date.now()
+    };
+  }
+
+  // 無限スクロール状態の取得
+  getScrollState(): InfiniteScrollState | null {
+    if (!this.scrollState) return null;
+    
+    // TTLチェック
+    if (Date.now() - this.scrollState.timestamp > this.scrollStateTtl) {
+      this.scrollState = null;
+      return null;
+    }
+    
+    return this.scrollState;
+  }
+
+  // 無限スクロール状態のクリア
+  clearScrollState() {
+    this.scrollState = null;
   }
 
   // メモリ使用量チェック（スマホ対応）
@@ -233,4 +273,20 @@ export const getAdjacentArtIds = async (currentId: number): Promise<{
   }
   
   return { prevId: null, nextId: null };
+};
+
+// 無限スクロール状態管理のエクスポート関数
+export const saveInfiniteScrollState = (data: DataItem[], page: number, hasMore: boolean, scrollPosition: number) => {
+  if (typeof window === 'undefined') return;
+  memoryCache.saveScrollState(data, page, hasMore, scrollPosition);
+};
+
+export const getInfiniteScrollState = (): InfiniteScrollState | null => {
+  if (typeof window === 'undefined') return null;
+  return memoryCache.getScrollState();
+};
+
+export const clearInfiniteScrollState = () => {
+  if (typeof window === 'undefined') return;
+  memoryCache.clearScrollState();
 };
