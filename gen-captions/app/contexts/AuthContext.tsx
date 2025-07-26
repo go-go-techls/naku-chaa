@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import Cookies from 'js-cookie';
+import { clearArtsCache } from '@/lib/getArts';
 
 // ユーザー情報の型定義
 interface User {
@@ -68,6 +69,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json();
 
       if (response.ok) {
+        // ログイン成功時にキャッシュをクリア（前のユーザーのデータを削除）
+        clearArtsCache(false);
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('newArtCreated');
+        }
         setUser(data.user);
         return { success: true };
       } else {
@@ -118,6 +124,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(null);
       // クライアントサイドのCookieも削除
       Cookies.remove('auth-token');
+      // キャッシュをクリア
+      clearArtsCache(false);
+      // localStorageもクリア
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('newArtCreated');
+        // 他のユーザー情報関連のlocalStorageがあれば追加でクリア
+      }
       // ログインページに遷移
       window.location.href = '/login';
     }

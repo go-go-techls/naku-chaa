@@ -35,8 +35,18 @@ export async function GET(request: NextRequest) {
   const pageSize = Number(searchParams.get("pageSize")) || 10;
 
   try {
+    // デバッグ: ユーザー情報をログ出力
+    console.log('一覧取得API - ユーザー情報:', { 
+      userId: user.userId, 
+      email: user.email, 
+      role: user.role 
+    });
+    
     // 管理者の場合は全作品、一般ユーザーは自分の作品のみ取得
-    const whereCondition = user.role === 'admin' ? {} : { userId: user.userId };
+    // テスト用: 管理者でも自分の作品のみ表示（本番では元に戻す）
+    const whereCondition = { userId: user.userId };
+    // const whereCondition = user.role === 'admin' ? {} : { userId: user.userId };
+    console.log('一覧取得API - フィルタ条件:', whereCondition);
     
     const arts = await prisma.art.findMany({
       where: whereCondition,
@@ -59,6 +69,9 @@ export async function GET(request: NextRequest) {
     const total = await prisma.art.count({
       where: whereCondition,
     });
+
+    // デバッグ: 取得したデータのuserIdをログ出力
+    console.log('一覧取得API - 取得した作品のuserID:', arts.map(art => ({ id: art.id, userId: art.userId })));
 
     const response = NextResponse.json({ data: arts, total, page, pageSize });
     
