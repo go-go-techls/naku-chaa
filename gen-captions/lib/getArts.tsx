@@ -45,18 +45,7 @@ const memoryCache = new MemoryCache();
 
 // メモリキャッシュのみ使用するため、SessionStorageのチェックは不要
 
-// データを軽量化する関数
-const compressData = (data: any) => {
-  if (Array.isArray(data)) {
-    return data.map(item => ({
-      id: item.id,
-      title: item.title,
-      image: item.image,
-      // 必要最小限のデータのみ保存
-    }));
-  }
-  return data;
-};
+// 軽量化関数は不要（メモリキャッシュのため）
 
 // ブラウザレベルのキャッシュ管理
 const createCacheKey = (id: number | string, page?: number, pageSize?: number) => {

@@ -25,6 +25,42 @@ function ImageGridContent() {
     setPage(pageFromURL);
   }, [pageFromURL]);
 
+  // キーボードナビゲーション
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // 入力フィールドやテキストエリアにフォーカスがある場合はスキップ
+      if (event.target instanceof HTMLInputElement || 
+          event.target instanceof HTMLTextAreaElement ||
+          isLoading) {
+        return;
+      }
+      
+      if (event.key === 'ArrowLeft' && page > 1) {
+        event.preventDefault();
+        router.push(`?page=${page - 1}`, { scroll: false });
+      } else if (event.key === 'ArrowRight' && page < total) {
+        event.preventDefault();
+        router.push(`?page=${page + 1}`, { scroll: false });
+      } else if (event.key === 'Home') {
+        event.preventDefault();
+        router.push(`?page=1`, { scroll: false });
+      } else if (event.key === 'End') {
+        event.preventDefault();
+        router.push(`?page=${total}`, { scroll: false });
+      } else if (event.key >= '1' && event.key <= '9') {
+        // 数字キー1-9でページ移動
+        const targetPage = parseInt(event.key);
+        if (targetPage <= total) {
+          event.preventDefault();
+          router.push(`?page=${targetPage}`, { scroll: false });
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [page, total, isLoading, router]);
+
   useEffect(() => {
     setIsLoading(true);
     getArts(setData, setTotal, page, pageSize).finally(() => {
@@ -128,11 +164,10 @@ function ImageGridContent() {
           page={page}
           onChange={handleChange}
           size="medium"
-          // sx={{ mt: 2 }}
           sx={{
             mt: 2.2,
             "& .MuiPaginationItem-root": {
-              fontSize: "1.0rem", // Paginationのサイズ調整
+              fontSize: "1.0rem",
             },
           }}
         />
