@@ -1,3 +1,5 @@
+import { clearArtsCache } from "./getArts";
+
 export type Data = {
   title: string;
   feature: string;
@@ -25,6 +27,10 @@ export async function postResult(data: Data) {
     }
 
     const result = await response.json();
+    
+    // 新しい作品が作成されたのでキャッシュをクリア
+    clearArtsCache();
+    
     // console.log("APIからのレスポンス:", result);
     // 必要に応じて状態のリセットや通知など
   } catch (error) {
