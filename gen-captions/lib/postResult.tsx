@@ -28,8 +28,13 @@ export async function postResult(data: Data) {
 
     const result = await response.json();
     
-    // 新しい作品が作成されたのでキャッシュをクリア
-    clearArtsCache();
+    // レスポンスヘッダーをチェックして新しい作品が作成されたか確認
+    const newArtCreated = response.headers.get('X-New-Art-Created');
+    
+    if (newArtCreated === 'true' && typeof window !== 'undefined') {
+      const timestamp = Date.now().toString();
+      localStorage.setItem('newArtCreated', timestamp);
+    }
     
     // console.log("APIからのレスポンス:", result);
     // 必要に応じて状態のリセットや通知など
