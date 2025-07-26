@@ -3,8 +3,8 @@ export const generate = async (
   base64Images: string[]
 ): Promise<Response> => {
   const URL = "https://api.openai.com/v1/chat/completions";
-  
-  const imageContent = base64Images.map(base64Image => ({
+
+  const imageContent = base64Images.map((base64Image) => ({
     type: "image_url" as const,
     image_url: {
       url: `data:image/jpeg;base64,${base64Image}`,
@@ -12,7 +12,7 @@ export const generate = async (
   }));
 
   const req = {
-    model: "gpt-4o",
+    model: "chatgpt-4o-latest",
     messages: [
       {
         role: "user",
@@ -44,7 +44,12 @@ export const generate = async (
 
   if (!response.ok) {
     const errorData = await response.text();
-    console.error("OpenAI API Error:", response.status, response.statusText, errorData);
+    console.error(
+      "OpenAI API Error:",
+      response.status,
+      response.statusText,
+      errorData
+    );
   }
 
   return response;
