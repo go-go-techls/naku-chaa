@@ -4,8 +4,8 @@ import { Dispatch, SetStateAction } from "react";
 // メモリベースのキャッシュ（メイン）
 class MemoryCache {
   private cache = new Map<string, { data: any; timestamp: number }>();
-  private readonly maxSize = 100; // 最大100エントリ
-  private readonly ttl = 10 * 60 * 1000; // 10分に延長
+  private readonly maxSize = 20; // スマホ対応で最大20エントリに削減
+  private readonly ttl = 5 * 60 * 1000; // 5分に短縮
 
   set(key: string, data: any) {
     // サイズ制限チェック
@@ -17,8 +17,17 @@ class MemoryCache {
       }
     }
 
+    // 画像データを含む個別作品のキャッシュは軽量化
+    let cacheData = data;
+    if (key.startsWith('art-') && data.image) {
+      // 画像データが非常に大きい場合のみキャッシュしない
+      if (data.image.length > 500000) { // 500KB以上の場合
+        return; // キャッシュしない
+      }
+    }
+
     this.cache.set(key, {
-      data,
+      data: cacheData,
       timestamp: Date.now()
     });
   }
@@ -38,6 +47,18 @@ class MemoryCache {
 
   clear() {
     this.cache.clear();
+  }
+
+  // メモリ使用量チェック（スマホ対応）
+  checkMemoryUsage() {
+    if (typeof window !== 'undefined' && 'performance' in window && 'memory' in (window.performance as any)) {
+      const memory = (window.performance as any).memory;
+      if (memory.usedJSHeapSize > memory.jsHeapSizeLimit * 0.8) {
+        // メモリ使用量が80%を超えた場合、キャッシュをクリア
+        this.clear();
+        console.warn('メモリ使用量が高いため、キャッシュをクリアしました');
+      }
+    }
   }
 }
 
@@ -78,6 +99,9 @@ export const getArt = async (
 ): Promise<void> => {
   const cacheKey = createCacheKey(id);
   
+  // メモリ使用量チェック
+  memoryCache.checkMemoryUsage();
+  
   // キャッシュから取得を試行
   const cachedData = getCachedData(cacheKey);
   if (cachedData) {
@@ -95,7 +119,9 @@ export const getArt = async (
     });
     
     if (!response.ok) {
-      throw new Error("Failed to fetch data");
+      const errorText = await response.text();
+      console.error(`API error: ${response.status} ${response.statusText}`, errorText);
+      throw new Error(`Failed to fetch art: ${response.status}`);
     }
     
     const data = await response.json();
@@ -104,7 +130,9 @@ export const getArt = async (
     // キャッシュに保存
     setCachedData(cacheKey, data);
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching art data:", error);
+    // エラー時は空のデータを設定
+    setData({} as DataItem);
   }
 };
 
@@ -138,7 +166,9 @@ export const getArts = async (
     });
     
     if (!response.ok) {
-      throw new Error("Failed to fetch data");
+      const errorText = await response.text();
+      console.error(`API error: ${response.status} ${response.statusText}`, errorText);
+      throw new Error(`Failed to fetch data: ${response.status}`);
     }
     
     const data = await response.json();
@@ -149,7 +179,10 @@ export const getArts = async (
     // キャッシュに保存
     setCachedData(cacheKey, { data: data.data, total: data.total });
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching arts data:", error);
+    // エラー時は空配列を設定してクラッシュを防ぐ
+    setData([]);
+    setTotal(1);
   }
 };
 
