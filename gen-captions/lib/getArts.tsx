@@ -157,6 +157,9 @@ export const clearArtsCache = () => {
   // メモリキャッシュのみクリア
   memoryCache.clear();
   console.debug('Memory cache cleared');
+  
+  // ページをリロードして確実にキャッシュをクリア
+  window.location.reload();
 };
 
 // 隣接するアート作品のIDを取得する関数

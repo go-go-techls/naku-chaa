@@ -201,11 +201,11 @@ export default function Arts({ params }: { params: { id: number } }) {
           </Box>
 
           {/* 画面端の矢印ボタン */}
-          {/* 前の画像ボタン（左端） */}
-          {prevId && (
-            <Tooltip title="前の画像 (→)">
+          {/* 次の画像ボタン（左端） */}
+          {nextId && (
+            <Tooltip title="次の画像 (←)">
               <IconButton
-                onClick={() => router.push(`/arts/${prevId}`)}
+                onClick={() => router.push(`/arts/${nextId}`)}
                 sx={{
                   position: "fixed",
                   left: 16,
@@ -232,11 +232,11 @@ export default function Arts({ params }: { params: { id: number } }) {
             </Tooltip>
           )}
 
-          {/* 次の画像ボタン（右端） */}
-          {nextId && (
-            <Tooltip title="次の画像 (←)">
+          {/* 前の画像ボタン（右端） */}
+          {prevId && (
+            <Tooltip title="前の画像 (→)">
               <IconButton
-                onClick={() => router.push(`/arts/${nextId}`)}
+                onClick={() => router.push(`/arts/${prevId}`)}
                 sx={{
                   position: "fixed",
                   right: 16,
