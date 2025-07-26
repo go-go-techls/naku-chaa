@@ -97,7 +97,13 @@ export async function POST(request: Request) {
     };
     
     const newArt: DataItem = await prisma.art.create({ data: artData });
-    return NextResponse.json(newArt);
+    
+    // レスポンスヘッダーにキャッシュ無効化の指示を追加
+    const response = NextResponse.json(newArt);
+    response.headers.set('X-Cache-Control', 'no-cache');
+    response.headers.set('X-New-Art-Created', 'true');
+    
+    return response;
   } catch (error) {
     console.error("Error creating art:", error);
     return NextResponse.json(

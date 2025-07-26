@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { DataItem } from "../api/arts/route";
-import { getArts } from "@/lib/getArts";
+import { getArts, clearArtsCache } from "@/lib/getArts";
 import Header from "../components/common/Header/Header";
 
 function ImageGridContent() {
@@ -24,6 +24,24 @@ function ImageGridContent() {
   useEffect(() => {
     setPage(pageFromURL);
   }, [pageFromURL]);
+
+  // 新しい作品が作成された場合はキャッシュをクリアして再取得
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const newArtCreated = localStorage.getItem('newArtCreated');
+      
+      if (newArtCreated && newArtCreated !== 'null') {
+        clearArtsCache(false);
+        localStorage.removeItem('newArtCreated');
+        
+        // キャッシュクリア後、強制的にデータを再取得（キャッシュバイパス）
+        setIsLoading(true);
+        getArts(setData, setTotal, page, pageSize, true).then(() => {
+          setIsLoading(false);
+        });
+      }
+    }
+  }, [page, pageSize]);
 
   // キーボードナビゲーション
   useEffect(() => {

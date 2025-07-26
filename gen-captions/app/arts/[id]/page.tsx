@@ -227,7 +227,7 @@ export default function Arts({ params }: { params: { id: number } }) {
                   },
                 }}
               >
-                <ArrowBackIosIcon sx={{ transform: "translateX(2px)" }} />
+                <ArrowBackIosIcon />
               </IconButton>
             </Tooltip>
           )}
@@ -258,7 +258,7 @@ export default function Arts({ params }: { params: { id: number } }) {
                   },
                 }}
               >
-                <ArrowForwardIosIcon />
+                <ArrowForwardIosIcon sx={{ transform: "translateX(2px)" }} />
               </IconButton>
             </Tooltip>
           )}

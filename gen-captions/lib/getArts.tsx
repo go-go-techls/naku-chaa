@@ -112,19 +112,22 @@ export const getArts = async (
   setData: Dispatch<SetStateAction<DataItem[]>>,
   setTotal: Dispatch<SetStateAction<number>>,
   page = 1,
-  pageSize = 11
+  pageSize = 11,
+  bypassCache = false
 ): Promise<void> => {
   const cacheKey = createCacheKey('list', page, pageSize);
   
-  // キャッシュから取得を試行
-  const cachedData = getCachedData(cacheKey);
-  if (cachedData) {
-    // キャッシュヒット時も短い遅延でスケルトンを表示
-    await new Promise(resolve => setTimeout(resolve, 200));
-    setData(cachedData.data);
-    const total = Math.ceil(cachedData.total / pageSize);
-    setTotal(total);
-    return;
+  // キャッシュから取得を試行（bypassCacheがtrueの場合はスキップ）
+  if (!bypassCache) {
+    const cachedData = getCachedData(cacheKey);
+    if (cachedData) {
+      // キャッシュヒット時も短い遅延でスケルトンを表示
+      await new Promise(resolve => setTimeout(resolve, 200));
+      setData(cachedData.data);
+      const total = Math.ceil(cachedData.total / pageSize);
+      setTotal(total);
+      return;
+    }
   }
 
   try {
@@ -151,15 +154,17 @@ export const getArts = async (
 };
 
 // キャッシュをクリアする関数（新しい作品作成時などに使用）
-export const clearArtsCache = () => {
+export const clearArtsCache = (shouldReload = false) => {
   if (typeof window === 'undefined') return;
   
   // メモリキャッシュのみクリア
   memoryCache.clear();
   console.debug('Memory cache cleared');
   
-  // ページをリロードして確実にキャッシュをクリア
-  window.location.reload();
+  // リロードが必要な場合のみ実行
+  if (shouldReload) {
+    window.location.reload();
+  }
 };
 
 // 隣接するアート作品のIDを取得する関数
