@@ -1,11 +1,12 @@
 import { DataItem } from "@/app/api/arts/route";
 import { Dispatch, SetStateAction } from "react";
+import { logError } from './errorHandler';
 
 // メモリベースのキャッシュ（メイン）
 class MemoryCache {
   private cache = new Map<string, { data: any; timestamp: number }>();
-  private readonly maxSize = 20; // スマホ対応で最大20エントリに削減
-  private readonly ttl = 5 * 60 * 1000; // 5分に短縮
+  private readonly maxSize = 15; // メモリ使用量削減のため15エントリに削減
+  private readonly ttl = 3 * 60 * 1000; // 3分に短縮してメモリ効率化
 
   set(key: string, data: any) {
     // サイズ制限チェック
@@ -21,8 +22,12 @@ class MemoryCache {
     let cacheData = data;
     if (key.startsWith('art-') && data.image) {
       // 画像データが非常に大きい場合のみキャッシュしない
-      if (data.image.length > 500000) { // 500KB以上の場合
-        return; // キャッシュしない
+      const IMAGE_SIZE_LIMIT = 300000; // 300KBに削減
+      if (data.image.length > IMAGE_SIZE_LIMIT) {
+        if (process.env.NODE_ENV === 'development') {
+          console.debug(`Large image not cached: ${data.image.length} bytes`);
+        }
+        return;
       }
     }
 
@@ -56,7 +61,9 @@ class MemoryCache {
       if (memory.usedJSHeapSize > memory.jsHeapSizeLimit * 0.8) {
         // メモリ使用量が80%を超えた場合、キャッシュをクリア
         this.clear();
-        console.warn('メモリ使用量が高いため、キャッシュをクリアしました');
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('メモリ使用量が高いため、キャッシュをクリアしました');
+        }
       }
     }
   }
@@ -88,7 +95,9 @@ const setCachedData = (key: string, data: any) => {
   
   // メモリキャッシュのみを使用（SessionStorageは使わない）
   memoryCache.set(key, data);
-  console.debug(`Data cached in memory: ${key}`);
+  if (process.env.NODE_ENV === 'development') {
+    console.debug(`Data cached in memory: ${key}`);
+  }
 };
 
 // SessionStorageを使わないため、この関数は不要
@@ -129,7 +138,7 @@ export const getArt = async (
     // キャッシュに保存
     setCachedData(cacheKey, data);
   } catch (error) {
-    console.error("Error fetching art data:", error);
+    logError(error as Error, 'getArt');
     // エラー時は空のデータを設定
     setData({} as DataItem);
   }
@@ -177,7 +186,7 @@ export const getArts = async (
     // キャッシュに保存
     setCachedData(cacheKey, { data: data.data, total: data.total });
   } catch (error) {
-    console.error("Error fetching arts data:", error);
+    logError(error as Error, 'getArts');
     // エラー時は空配列を設定してクラッシュを防ぐ
     setData([]);
     setTotal(1);
@@ -190,7 +199,9 @@ export const clearArtsCache = (shouldReload = false) => {
   
   // メモリキャッシュのみクリア
   memoryCache.clear();
-  console.debug('Memory cache cleared');
+  if (process.env.NODE_ENV === 'development') {
+    console.debug('Memory cache cleared');
+  }
   
   // リロードが必要な場合のみ実行
   if (shouldReload) {
@@ -218,7 +229,7 @@ export const getAdjacentArtIds = async (currentId: number): Promise<{
       };
     }
   } catch (error) {
-    console.error('Failed to fetch adjacent art IDs:', error);
+    logError(error as Error, 'getAdjacentArtIds');
   }
   
   return { prevId: null, nextId: null };
