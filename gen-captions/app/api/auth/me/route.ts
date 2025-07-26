@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       user: {
         id: user.id,
         email: user.email,
@@ -46,6 +46,11 @@ export async function GET(request: NextRequest) {
         createdAt: user.createdAt,
       },
     });
+    // キャッシュを無効化
+    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+    return response;
 
   } catch (error) {
     console.error('Get user error:', error);
