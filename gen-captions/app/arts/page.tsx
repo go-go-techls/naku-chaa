@@ -25,23 +25,40 @@ function ImageGridContent() {
     setPage(pageFromURL);
   }, [pageFromURL]);
 
-  // 新しい作品が作成された場合はキャッシュをクリアして再取得
+  // コンポーネントマウント時とページ変更時の両方でチェック
   useEffect(() => {
+    console.log('🎯 一覧ページ useEffect実行 - ページ:', page);
     if (typeof window !== 'undefined') {
       const newArtCreated = localStorage.getItem('newArtCreated');
+      console.log('一覧ページ - newArtCreatedフラグ:', newArtCreated);
       
       if (newArtCreated && newArtCreated !== 'null') {
+        console.log('一覧ページ - キャッシュクリア実行');
         clearArtsCache(false);
         localStorage.removeItem('newArtCreated');
         
-        // キャッシュクリア後、強制的にデータを再取得（キャッシュバイパス）
+        // 通常のデータ取得useEffectより先に実行されるように、直接実行
+        console.log('一覧ページ - キャッシュバイパスでデータ再取得');
         setIsLoading(true);
-        getArts(setData, setTotal, page, pageSize, true).then(() => {
+        getArts(setData, setTotal, page, pageSize, true).finally(() => {
           setIsLoading(false);
+          console.log('一覧ページ - データ再取得完了');
         });
+        return; // 通常のデータ取得を実行しないようにreturn
+      } else {
+        console.log('一覧ページ - newArtCreatedフラグなし、通常処理');
       }
     }
   }, [page, pageSize]);
+  
+  // 初回マウント時の確認
+  useEffect(() => {
+    console.log('🎯 初回マウント時のフラグ確認');
+    if (typeof window !== 'undefined') {
+      const newArtCreated = localStorage.getItem('newArtCreated');
+      console.log('初回マウント - newArtCreatedフラグ:', newArtCreated);
+    }
+  }, []);
 
   // キーボードナビゲーション
   useEffect(() => {
@@ -80,9 +97,11 @@ function ImageGridContent() {
   }, [page, total, isLoading, router]);
 
   useEffect(() => {
+    console.log('🎯 通常のデータ取得 useEffect実行 - ページ:', page);
     setIsLoading(true);
     getArts(setData, setTotal, page, pageSize).finally(() => {
       setIsLoading(false);
+      console.log('🎯 通常のデータ取得完了');
     });
     console.log("refreshed");
   }, [page]);
