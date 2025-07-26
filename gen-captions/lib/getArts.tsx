@@ -105,8 +105,7 @@ export const getArt = async (
   // キャッシュから取得を試行
   const cachedData = getCachedData(cacheKey);
   if (cachedData) {
-    // キャッシュヒット時も短い遅延でローディング状態を表示
-    await new Promise(resolve => setTimeout(resolve, 150));
+    // キャッシュヒット時の遅延を削除（シンプル化）
     setData(cachedData);
     return;
   }
@@ -149,8 +148,7 @@ export const getArts = async (
   if (!bypassCache) {
     const cachedData = getCachedData(cacheKey);
     if (cachedData) {
-      // キャッシュヒット時も短い遅延でスケルトンを表示
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // キャッシュヒット時の遅延を削除（シンプル化）
       setData(cachedData.data);
       const total = Math.ceil(cachedData.total / pageSize);
       setTotal(total);
