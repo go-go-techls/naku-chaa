@@ -27,7 +27,7 @@ let theme = createTheme({
 });
 theme = responsiveFontSizes(theme);
 
-export default function Arts({ params }: { params: { id: number } }) {
+export default function Arts({ params }: { params: { id: string } }) {
   const [data, setData] = useState<DataItem>({} as DataItem);
   const [prevId, setPrevId] = useState<number | null>(null);
   const [nextId, setNextId] = useState<number | null>(null);
