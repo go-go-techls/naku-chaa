@@ -21,7 +21,12 @@ export async function GET(request: NextRequest) {
       where: whereCondition,
     });
 
-    return NextResponse.json({ count });
+    const response = NextResponse.json({ count });
+    // キャッシュを無効化
+    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+    return response;
   } catch (error) {
     console.error("Error counting arts:", error);
     return NextResponse.json(

@@ -16,8 +16,7 @@ export type DataItem = {
   is_public_allowed: boolean;
 };
 
-// キャッシュ設定を追加
-export const revalidate = 300; // 5分間キャッシュ
+// バックエンドキャッシュは不要（ユーザーごとに異なるデータのため）
 
 // GETリクエストを処理するAPI関数
 export async function GET(request: NextRequest) {
@@ -109,11 +108,13 @@ export async function GET(request: NextRequest) {
 
     const response = NextResponse.json({ data: arts, total, page, pageSize });
 
-    // キャッシュヘッダーを設定
+    // バックエンドキャッシュを無効化（ユーザーごとに異なるデータのため）
     response.headers.set(
       "Cache-Control",
-      "public, s-maxage=300, stale-while-revalidate=600"
+      "no-cache, no-store, must-revalidate"
     );
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
 
     return response;
   } catch (error) {
@@ -147,10 +148,13 @@ export async function POST(request: Request) {
 
     const newArt: DataItem = await prisma.art.create({ data: artData });
 
-    // レスポンスヘッダーにキャッシュ無効化の指示を追加
+    // レスポンスヘッダーを設定
     const response = NextResponse.json(newArt);
-    response.headers.set("X-Cache-Control", "no-cache");
     response.headers.set("X-New-Art-Created", "true");
+    // キャッシュを無効化
+    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
 
     return response;
   } catch (error) {
