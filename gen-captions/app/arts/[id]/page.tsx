@@ -34,6 +34,11 @@ export default function Arts({ params }: { params: { id: number } }) {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const router = useRouter();
 
+  // スワイプ用の状態（タッチ・マウス共通）
+  const [swipeStart, setSwipeStart] = useState<number | null>(null);
+  const [swipeEnd, setSwipeEnd] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+
   useEffect(() => {
     getArt(params.id, setData);
     getAdjacentArtIds(params.id).then((ids) => {
@@ -66,6 +71,62 @@ export default function Arts({ params }: { params: { id: number } }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [prevId, nextId, router]);
 
+  // スワイプ機能（タッチ・マウス共通）
+  const minSwipeDistance = 50;
+
+  const handleSwipeNavigation = () => {
+    if (!swipeStart || !swipeEnd) return;
+    const distance = swipeStart - swipeEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && nextId) {
+      router.push(`/arts/${nextId}`);
+    }
+    if (isRightSwipe && prevId) {
+      router.push(`/arts/${prevId}`);
+    }
+  };
+
+  // タッチイベント
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setSwipeEnd(null);
+    setSwipeStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setSwipeEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    handleSwipeNavigation();
+  };
+
+  // マウスイベント
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setSwipeEnd(null);
+    setSwipeStart(e.clientX);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    setSwipeEnd(e.clientX);
+  };
+
+  const handleMouseUp = () => {
+    if (isDragging) {
+      handleSwipeNavigation();
+      setIsDragging(false);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      setIsDragging(false);
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ position: "relative", zIndex: 10 }}>
@@ -92,6 +153,13 @@ export default function Arts({ params }: { params: { id: number } }) {
               boxSizing: "border-box",
               position: "relative",
             }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
           >
             {/* 次の画像ボタン */}
             {nextId && (
