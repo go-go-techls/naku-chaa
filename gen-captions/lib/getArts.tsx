@@ -158,3 +158,29 @@ export const clearArtsCache = () => {
   memoryCache.clear();
   console.debug('Memory cache cleared');
 };
+
+// 隣接するアート作品のIDを取得する関数
+export const getAdjacentArtIds = async (currentId: number): Promise<{
+  prevId: number | null;
+  nextId: number | null;
+}> => {
+  try {
+    const response = await fetch(`/api/arts/${currentId}/adjacent`, {
+      headers: {
+        'Cache-Control': 'max-age=300'
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return {
+        prevId: data.prevId,
+        nextId: data.nextId
+      };
+    }
+  } catch (error) {
+    console.error('Failed to fetch adjacent art IDs:', error);
+  }
+  
+  return { prevId: null, nextId: null };
+};
