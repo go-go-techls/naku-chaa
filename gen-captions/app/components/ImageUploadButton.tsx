@@ -135,11 +135,11 @@ function ImageUploadButton({
             console.log('🎯 postResult呼び出し完了');
           } catch (postError) {
             console.error('🚨 postResult エラー:', postError);
-            alert('作品の保存に失敗しました: ' + postError.message);
+            alert('作品の保存に失敗しました: ' + (postError instanceof Error ? postError.message : String(postError)));
           }
         } catch (aiError) {
           console.error('🚨 AI処理エラー:', aiError);
-          alert('AI処理中にエラーが発生しました: ' + aiError.message);
+          alert('AI処理中にエラーが発生しました: ' + (aiError instanceof Error ? aiError.message : String(aiError)));
         }
       };
 
