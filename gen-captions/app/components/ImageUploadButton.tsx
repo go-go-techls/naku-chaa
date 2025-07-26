@@ -105,25 +105,42 @@ function ImageUploadButton({
         setAdvantage("");
         setAdvice("");
 
-        const [title, feature, advantage, advice] = await Promise.all([
-          fetchData(base64Image, settings.promptTitle, setTitle),
-          fetchData(base64Image, settings.promptFeature, setFeature),
-          fetchData(base64Image, settings.promptAdvantage, setAdvantage),
-          fetchData(base64Image, settings.promptAdvice, setAdvice),
-        ]);
+        try {
+          const [title, feature, advantage, advice] = await Promise.all([
+            fetchData(base64Image, settings.promptTitle, setTitle),
+            fetchData(base64Image, settings.promptFeature, setFeature),
+            fetchData(base64Image, settings.promptAdvantage, setAdvantage),
+            fetchData(base64Image, settings.promptAdvice, setAdvice),
+          ]);
 
-        const req: Data = {
-          title,
-          feature,
-          advantage,
-          advice,
-          image: base64ImageDisplay,
-          rating: 3,
-          comment: "",
-          character,
-          is_public_allowed: snsCheck,
-        };
-        await postResult(req);
+          console.log('🎯 AI処理完了、postResult呼び出し準備');
+          console.log('取得したデータ:', { title, feature, advantage, advice });
+          console.log('character:', character, 'snsCheck:', snsCheck);
+
+          const req: Data = {
+            title,
+            feature,
+            advantage,
+            advice,
+            image: base64ImageDisplay,
+            rating: 3,
+            comment: "",
+            character,
+            is_public_allowed: snsCheck,
+          };
+          
+          console.log('🎯 postResult呼び出し直前');
+          try {
+            await postResult(req);
+            console.log('🎯 postResult呼び出し完了');
+          } catch (postError) {
+            console.error('🚨 postResult エラー:', postError);
+            alert('作品の保存に失敗しました: ' + postError.message);
+          }
+        } catch (aiError) {
+          console.error('🚨 AI処理エラー:', aiError);
+          alert('AI処理中にエラーが発生しました: ' + aiError.message);
+        }
       };
 
       reader.readAsDataURL(compressedFile);

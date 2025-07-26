@@ -13,7 +13,9 @@ export type Data = {
 };
 
 export async function postResult(data: Data) {
-  console.log('作品保存開始。画像サイズ:', data.image.length, 'bytes');
+  if (process.env.NODE_ENV === 'development') {
+    console.log('作品保存開始。画像サイズ:', data.image.length, 'bytes');
+  }
   try {
     const response = await fetch("/api/arts", {
       method: "POST",
@@ -30,16 +32,12 @@ export async function postResult(data: Data) {
     }
 
     const result = await response.json();
-    console.log('作品保存成功:', result);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('作品保存成功:', result);
+    }
     
-    // レスポンスヘッダーをチェックして新しい作品が作成されたか確認
-    const newArtCreated = response.headers.get('X-New-Art-Created');
-    
-    if (newArtCreated === 'true' && typeof window !== 'undefined') {
-      const timestamp = Date.now().toString();
-      localStorage.setItem('newArtCreated', timestamp);
-      
-      // キャッシュをクリアして新しいデータが反映されるようにする
+    // 作品保存成功時は必ずキャッシュクリア
+    if (typeof window !== 'undefined') {
       clearArtsCache(false);
     }
     
