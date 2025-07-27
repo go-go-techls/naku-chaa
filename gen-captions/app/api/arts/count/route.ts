@@ -5,7 +5,7 @@ import { getUserFromRequest } from "@/lib/auth";
 // 作品数を取得するAPI
 export async function GET(request: NextRequest) {
   // ログインユーザーを取得
-  const user = getUserFromRequest(request);
+  const user = await getUserFromRequest(request);
   if (!user) {
     return NextResponse.json(
       { error: "認証が必要です。" },

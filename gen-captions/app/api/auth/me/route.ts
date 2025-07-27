@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     // JWTトークンからユーザー情報を取得
-    const tokenPayload = getUserFromRequest(request);
+    const tokenPayload = await getUserFromRequest(request);
     
     if (!tokenPayload) {
       return NextResponse.json(
