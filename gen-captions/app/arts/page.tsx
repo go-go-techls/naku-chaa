@@ -2,7 +2,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Box, Pagination, Skeleton, Fab, Tooltip } from "@mui/material";
+import { Box, Pagination, Skeleton, Fab } from "@mui/material";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import AddIcon from "@mui/icons-material/Add";
@@ -188,6 +188,16 @@ function ImageGridContent() {
             width: "100%",
             maxWidth: "1100px",
             mx: "auto",
+            // タブレット用に画像グリッドを10%縮小
+            "@media (min-width: 768px) and (max-width: 1024px)": {
+              maxWidth: "990px",
+              px: 4,
+            },
+            // 大型タブレット用
+            "@media (min-width: 1025px) and (max-width: 1200px)": {
+              maxWidth: "1000px",
+              px: 3,
+            },
           }}
         >
 
@@ -284,49 +294,47 @@ function ImageGridContent() {
           }
         }}
       >
-        <Tooltip title="新しい作品をみてもらう" placement="left">
-          <Fab
-            variant="extended"
-            aria-label="新しい作品をみてもらう"
-            sx={{
-              background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)",
-              color: "#64748b",
-              border: "1px solid rgba(148, 163, 184, 0.2)",
-              boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06)",
-              backdropFilter: "blur(12px)",
-              borderRadius: "28px",
-              px: 4,
-              py: 2,
-              fontSize: "1.1rem",
-              fontWeight: 600,
-              minWidth: "140px",
-              height: "56px",
-              animation: "pulse 3s ease-in-out infinite",
-              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              "&:hover": {
-                transform: "translateY(-3px) scale(1.05)",
-                background: "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%)",
-                boxShadow: "0px 6px 24px rgba(0,0,0,0.08), 0px 2px 6px rgba(0,0,0,0.1)",
-                color: "#475569",
-                border: "1px solid rgba(148, 163, 184, 0.4)",
-                animation: "glow 1.5s ease-in-out infinite",
-              },
-              "&:active": {
-                transform: "translateY(-1px) scale(1.02)",
-              },
-            }}
-            component={Link}
-            href="/"
-          >
-            <AddIcon sx={{ 
-              mr: 2, 
-              fontSize: "24px",
-              color: "#64748b",
-              transition: "all 0.3s ease"
-            }} />
-            みてもらう
-          </Fab>
-        </Tooltip>
+        <Fab
+          variant="extended"
+          aria-label="新しい作品をみてもらう"
+          sx={{
+            background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)",
+            color: "#64748b",
+            border: "1px solid rgba(148, 163, 184, 0.2)",
+            boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06)",
+            backdropFilter: "blur(12px)",
+            borderRadius: "28px",
+            px: 4,
+            py: 2,
+            fontSize: "1.1rem",
+            fontWeight: 600,
+            minWidth: "140px",
+            height: "56px",
+            animation: "pulse 3s ease-in-out infinite",
+            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            "&:hover": {
+              transform: "translateY(-3px) scale(1.05)",
+              background: "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%)",
+              boxShadow: "0px 6px 24px rgba(0,0,0,0.08), 0px 2px 6px rgba(0,0,0,0.1)",
+              color: "#475569",
+              border: "1px solid rgba(148, 163, 184, 0.4)",
+              animation: "glow 1.5s ease-in-out infinite",
+            },
+            "&:active": {
+              transform: "translateY(-1px) scale(1.02)",
+            },
+          }}
+          component={Link}
+          href="/"
+        >
+          <AddIcon sx={{ 
+            mr: 2, 
+            fontSize: "24px",
+            color: "#64748b",
+            transition: "all 0.3s ease"
+          }} />
+          みてもらう
+        </Fab>
       </Box>
     </>
   );
@@ -354,6 +362,16 @@ function ImageGrid() {
             width: "100%",
             maxWidth: "1100px",
             mx: "auto",
+            // タブレット用に画像グリッドを10%縮小
+            "@media (min-width: 768px) and (max-width: 1024px)": {
+              maxWidth: "990px",
+              px: 4,
+            },
+            // 大型タブレット用
+            "@media (min-width: 1025px) and (max-width: 1200px)": {
+              maxWidth: "1000px",
+              px: 3,
+            },
           }}
         >
           {Array.from(new Array(15)).map((_, index) => (
