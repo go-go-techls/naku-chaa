@@ -212,25 +212,20 @@ export default function Arts({ params }: { params: { id: string } }) {
               >
                 {isLoading ? (
                   <>
-                    <Skeleton 
-                      variant="text" 
-                      width={120} 
-                      height={24}
-                      sx={{ 
-                        display: "inline-block",
-                        ml: "auto",
-                        mb: 1
-                      }}
-                    />
-                    <Skeleton 
-                      variant="text" 
-                      width={160} 
-                      height={20}
-                      sx={{ 
-                        display: "inline-block",
-                        ml: "auto"
-                      }}
-                    />
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
+                      <Skeleton 
+                        variant="text" 
+                        width={120} 
+                        height={24}
+                      />
+                    </Box>
+                    <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                      <Skeleton 
+                        variant="text" 
+                        width={120} 
+                        height={20}
+                      />
+                    </Box>
                   </>
                 ) : (
                   <>
