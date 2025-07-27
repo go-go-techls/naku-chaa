@@ -27,13 +27,13 @@ function ImageGridContent() {
 
   // コンポーネントマウント時とページ変更時の両方でチェック
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const newArtCreated = localStorage.getItem('newArtCreated');
-      
-      if (newArtCreated && newArtCreated !== 'null') {
+    if (typeof window !== "undefined") {
+      const newArtCreated = localStorage.getItem("newArtCreated");
+
+      if (newArtCreated && newArtCreated !== "null") {
         clearArtsCache(false);
-        localStorage.removeItem('newArtCreated');
-        
+        localStorage.removeItem("newArtCreated");
+
         // 通常のデータ取得useEffectより先に実行されるように、直接実行
         setIsLoading(true);
         getArts(setData, setTotal, page, pageSize, true).finally(() => {
@@ -43,31 +43,32 @@ function ImageGridContent() {
       }
     }
   }, [page, pageSize]);
-  
 
   // キーボードナビゲーション
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // 入力フィールドやテキストエリアにフォーカスがある場合はスキップ
-      if (event.target instanceof HTMLInputElement || 
-          event.target instanceof HTMLTextAreaElement ||
-          isLoading) {
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement ||
+        isLoading
+      ) {
         return;
       }
-      
-      if (event.key === 'ArrowLeft' && page > 1) {
+
+      if (event.key === "ArrowLeft" && page > 1) {
         event.preventDefault();
         router.push(`?page=${page - 1}`, { scroll: false });
-      } else if (event.key === 'ArrowRight' && page < total) {
+      } else if (event.key === "ArrowRight" && page < total) {
         event.preventDefault();
         router.push(`?page=${page + 1}`, { scroll: false });
-      } else if (event.key === 'Home') {
+      } else if (event.key === "Home") {
         event.preventDefault();
         router.push(`?page=1`, { scroll: false });
-      } else if (event.key === 'End') {
+      } else if (event.key === "End") {
         event.preventDefault();
         router.push(`?page=${total}`, { scroll: false });
-      } else if (event.key >= '1' && event.key <= '9') {
+      } else if (event.key >= "1" && event.key <= "9") {
         // 数字キー1-9でページ移動
         const targetPage = parseInt(event.key);
         if (targetPage <= total) {
@@ -77,8 +78,8 @@ function ImageGridContent() {
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [page, total, isLoading, router]);
 
   // スワイプナビゲーション
@@ -89,7 +90,7 @@ function ImageGridContent() {
 
     const handleTouchStart = (event: TouchEvent) => {
       if (isLoading) return;
-      
+
       startX = event.touches[0].clientX;
       startY = event.touches[0].clientY;
       isDragging = true;
@@ -97,18 +98,18 @@ function ImageGridContent() {
 
     const handleTouchMove = (event: TouchEvent) => {
       if (!isDragging || isLoading) return;
-      
+
       // 縦スクロールを優先するため、縦方向の移動が大きい場合はスワイプを無効化
       const currentX = event.touches[0].clientX;
       const currentY = event.touches[0].clientY;
       const diffX = Math.abs(currentX - startX);
       const diffY = Math.abs(currentY - startY);
-      
+
       if (diffY > diffX) {
         isDragging = false;
         return;
       }
-      
+
       // 横スワイプが検出された場合、縦スクロールを防ぐ
       if (diffX > 20) {
         event.preventDefault();
@@ -117,21 +118,21 @@ function ImageGridContent() {
 
     const handleTouchEnd = (event: TouchEvent) => {
       if (!isDragging || isLoading) return;
-      
+
       const endX = event.changedTouches[0].clientX;
       const endY = event.changedTouches[0].clientY;
       const diffX = startX - endX;
       const diffY = Math.abs(startY - endY);
-      
+
       // 縦方向の移動が大きい場合はスワイプを無視
       if (diffY > 100) {
         isDragging = false;
         return;
       }
-      
+
       // 最小スワイプ距離
       const minSwipeDistance = 50;
-      
+
       if (Math.abs(diffX) > minSwipeDistance) {
         if (diffX > 0 && page < total) {
           // 左スワイプ：次のページ
@@ -141,18 +142,18 @@ function ImageGridContent() {
           router.push(`?page=${page - 1}`, { scroll: false });
         }
       }
-      
+
       isDragging = false;
     };
 
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
 
     return () => {
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
   }, [page, total, isLoading, router]);
 
@@ -181,26 +182,28 @@ function ImageGridContent() {
       >
         <Grid
           container
-          spacing={2}
-          p={2}
+          spacing={1}
+          p={1}
           justifyContent="center"
           sx={{
             width: "100%",
-            maxWidth: "1100px",
             mx: "auto",
-            // タブレット用に画像グリッドを10%縮小
-            "@media (min-width: 768px) and (max-width: 1024px)": {
-              maxWidth: "990px",
-              px: 4,
+            // スマホ：画面いっぱいに表示
+            "@media (max-width: 599px)": {
+              px: 0.5,
+              spacing: 0.5,
             },
-            // 大型タブレット用
-            "@media (min-width: 1025px) and (max-width: 1200px)": {
-              maxWidth: "1000px",
-              px: 3,
+            // タブレット：少し余白を残す
+            "@media (min-width: 600px) and (max-width: 1024px)": {
+              px: 1,
+              maxWidth: "100%",
+            },
+            // デスクトップ
+            "@media (min-width: 1025px)": {
+              px: 2,
             },
           }}
         >
-
           {isLoading
             ? Array.from(new Array(pageSize)).map((_, index) => (
                 <Grid
@@ -246,16 +249,40 @@ function ImageGridContent() {
               ))}
         </Grid>
 
+        {/* コンテンツ下部にスペースを確保 */}
+        <Box sx={{ height: "80px" }} />
+      </Box>
+
+      {/* 固定フッター - ページネーション */}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "70%",
+          maxWidth: "600px",
+          backgroundColor: "rgba(255, 255, 255, 0.75)",
+          backdropFilter: "blur(10px)",
+          borderTop: "1px solid rgba(0, 0, 0, 0.1)",
+          borderRadius: "12px 12px 0 0",
+          zIndex: 1100,
+          display: "flex",
+          justifyContent: "center",
+          py: 0.6,
+          px: 1.2,
+        }}
+      >
         <Pagination
           count={total}
           page={page}
           onChange={handleChange}
           size="medium"
+          siblingCount={0}
+          boundaryCount={1}
           sx={{
-            mt: 2.2,
-            mb: { xs: 10, sm: 4 },
             "& .MuiPaginationItem-root": {
-              fontSize: { xs: "1.0rem", sm: "1.5rem" },
+              fontSize: { xs: "0.9rem", sm: "1.3rem" },
               minWidth: { xs: "32px", sm: "48px" },
               height: { xs: "32px", sm: "48px" },
               margin: { xs: "0 1px", sm: "0 4px" },
@@ -263,59 +290,66 @@ function ImageGridContent() {
           }}
         />
       </Box>
-      
-      <Box 
-        sx={{ 
-          position: "fixed", 
-          bottom: 24, 
-          right: 24, 
-          zIndex: 1000,
+
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 70, // フッターとの間に十分なスペースを確保
+          right: 24,
+          zIndex: 1200, // フッターより上に表示
           "@keyframes pulse": {
             "0%": {
               transform: "scale(1)",
-              boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06), 0 0 0 0 rgba(100, 116, 139, 0.4)"
+              boxShadow:
+                "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06), 0 0 0 0 rgba(100, 116, 139, 0.4)",
             },
             "70%": {
               transform: "scale(1.02)",
-              boxShadow: "0px 4px 16px rgba(0,0,0,0.06), 0px 2px 4px rgba(0,0,0,0.08), 0 0 0 8px rgba(100, 116, 139, 0)"
+              boxShadow:
+                "0px 4px 16px rgba(0,0,0,0.06), 0px 2px 4px rgba(0,0,0,0.08), 0 0 0 8px rgba(100, 116, 139, 0)",
             },
             "100%": {
               transform: "scale(1)",
-              boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06), 0 0 0 0 rgba(100, 116, 139, 0)"
-            }
+              boxShadow:
+                "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06), 0 0 0 0 rgba(100, 116, 139, 0)",
+            },
           },
           "@keyframes glow": {
-            "0%, 100%": { 
-              filter: "drop-shadow(0 0 5px rgba(100, 116, 139, 0.3))" 
+            "0%, 100%": {
+              filter: "drop-shadow(0 0 5px rgba(100, 116, 139, 0.3))",
             },
-            "50%": { 
-              filter: "drop-shadow(0 0 15px rgba(100, 116, 139, 0.6))" 
-            }
-          }
+            "50%": {
+              filter: "drop-shadow(0 0 15px rgba(100, 116, 139, 0.6))",
+            },
+          },
         }}
       >
         <Fab
           variant="extended"
           aria-label="新しい作品をみてもらう"
           sx={{
-            background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)",
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)",
             color: "#64748b",
             border: "1px solid rgba(148, 163, 184, 0.2)",
-            boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06)",
+            boxShadow:
+              "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06)",
             backdropFilter: "blur(12px)",
             borderRadius: "28px",
-            px: 4,
-            py: 2,
-            fontSize: "1.1rem",
+            px: 4.2,
+            py: 2.1,
+            fontSize: "1.15rem",
             fontWeight: 600,
-            minWidth: "140px",
-            height: "56px",
+            minWidth: "145px",
+            height: "58px",
             animation: "pulse 3s ease-in-out infinite",
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
             "&:hover": {
               transform: "translateY(-3px) scale(1.05)",
-              background: "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%)",
-              boxShadow: "0px 6px 24px rgba(0,0,0,0.08), 0px 2px 6px rgba(0,0,0,0.1)",
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%)",
+              boxShadow:
+                "0px 6px 24px rgba(0,0,0,0.08), 0px 2px 6px rgba(0,0,0,0.1)",
               color: "#475569",
               border: "1px solid rgba(148, 163, 184, 0.4)",
               animation: "glow 1.5s ease-in-out infinite",
@@ -327,12 +361,14 @@ function ImageGridContent() {
           component={Link}
           href="/"
         >
-          <AddIcon sx={{ 
-            mr: 2, 
-            fontSize: "24px",
-            color: "#64748b",
-            transition: "all 0.3s ease"
-          }} />
+          <AddIcon
+            sx={{
+              mr: 2,
+              fontSize: "25px",
+              color: "#64748b",
+              transition: "all 0.3s ease",
+            }}
+          />
           みてもらう
         </Fab>
       </Box>
@@ -342,58 +378,66 @@ function ImageGridContent() {
 
 function ImageGrid() {
   return (
-    <Suspense fallback={
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        sx={{ pb: 4 }}
-      >
-        <Box sx={{ position: "relative", zIndex: 10 }}>
-          <Header />
-        </Box>
-        <Grid
-          container
-          spacing={2}
-          p={2}
+    <Suspense
+      fallback={
+        <Box
+          display="flex"
+          flexDirection="column"
           justifyContent="center"
-          sx={{
-            width: "100%",
-            maxWidth: "1100px",
-            mx: "auto",
-            // タブレット用に画像グリッドを10%縮小
-            "@media (min-width: 768px) and (max-width: 1024px)": {
-              maxWidth: "990px",
-              px: 4,
-            },
-            // 大型タブレット用
-            "@media (min-width: 1025px) and (max-width: 1200px)": {
-              maxWidth: "1000px",
-              px: 3,
-            },
-          }}
+          alignItems="center"
+          sx={{ pb: 4 }}
         >
-          {Array.from(new Array(15)).map((_, index) => (
-            <Grid
-              item
-              xs={4}
-              sm={2.4}
-              md={2.4}
-              style={{ aspectRatio: "1/1" }}
-              key={index}
-            >
-              <Skeleton
-                variant="rectangular"
-                width="100%"
-                height="100%"
-                animation="pulse"
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    }>
+          <Box sx={{ position: "relative", zIndex: 10 }}>
+            <Header />
+          </Box>
+          <Grid
+            container
+            spacing={1}
+            p={1}
+            justifyContent="center"
+            sx={{
+              width: "100%",
+              mx: "auto",
+              // スマホ：画面いっぱいに表示
+              "@media (max-width: 599px)": {
+                px: 0.5,
+                spacing: 0.5,
+              },
+              // タブレット：少し余白を残す
+              "@media (min-width: 600px) and (max-width: 1024px)": {
+                px: 1,
+                maxWidth: "100%",
+              },
+              // デスクトップ
+              "@media (min-width: 1025px)": {
+                px: 2,
+              },
+            }}
+          >
+            {Array.from(new Array(15)).map((_, index) => (
+              <Grid
+                item
+                xs={4}
+                sm={2.4}
+                md={2.4}
+                style={{ aspectRatio: "1/1" }}
+                key={index}
+              >
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height="100%"
+                  animation="pulse"
+                />
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* コンテンツ下部にスペースを確保 */}
+          <Box sx={{ height: "80px" }} />
+        </Box>
+      }
+    >
       <ImageGridContent />
     </Suspense>
   );

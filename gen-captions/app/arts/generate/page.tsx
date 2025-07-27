@@ -82,7 +82,9 @@ export default function Home() {
   const [waitingForUser, setWaitingForUser] = useState(true);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTabletOrMobile = useMediaQuery("(max-width: 1199px)");
+  const isPortrait = useMediaQuery("(orientation: portrait)");
+  const shouldUseVerticalLayout = isTabletOrMobile && isPortrait;
 
   return (
     <ThemeProvider theme={baseTheme}>
@@ -93,18 +95,18 @@ export default function Home() {
         <Box
           sx={{
             display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            height: isMobile ? "auto" : "calc(100vh - 64px)",
+            flexDirection: shouldUseVerticalLayout ? "column" : "row",
+            height: shouldUseVerticalLayout ? "auto" : "calc(100vh - 64px)",
             overflow: "hidden",
           }}
         >
           <Box
             sx={{
-              flex: isMobile ? "none" : "0 0 60%",
-              width: isMobile ? "100%" : "auto",
-              height: isMobile ? "auto" : "100%",
+              flex: shouldUseVerticalLayout ? "none" : "0 0 60%",
+              width: shouldUseVerticalLayout ? "100%" : "auto",
+              height: shouldUseVerticalLayout ? "auto" : "100%",
               position: "relative",
-              paddingRight: isMobile ? 0 : "24px",
+              paddingRight: shouldUseVerticalLayout ? 0 : "24px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -116,14 +118,14 @@ export default function Home() {
             <Box
               sx={{
                 display: "flex",
-                flexDirection: isMobile ? "column" : "row",
-                justifyContent: isMobile ? "center" : "flex-start",
+                flexDirection: shouldUseVerticalLayout ? "column" : "row",
+                justifyContent: shouldUseVerticalLayout ? "center" : "flex-start",
                 alignItems: "center",
                 gap: "1rem",
-                mt: isMobile ? 1 : "auto",
-                position: isMobile ? "static" : "absolute",
-                bottom: isMobile ? "auto" : "2rem",
-                left: isMobile ? "auto" : "1rem",
+                mt: shouldUseVerticalLayout ? 1 : "auto",
+                position: shouldUseVerticalLayout ? "static" : "absolute",
+                bottom: shouldUseVerticalLayout ? "auto" : "2rem",
+                left: shouldUseVerticalLayout ? "auto" : "1rem",
               }}
             >
               <CharacterSelection
@@ -157,11 +159,11 @@ export default function Home() {
 
           <Box
             sx={{
-              flex: isMobile ? "none" : "1",
-              width: isMobile ? "100%" : "auto",
-              height: isMobile ? "auto" : "100%",
-              overflowY: isMobile ? "visible" : "auto",
-              paddingRight: isMobile ? 0 : "16px",
+              flex: shouldUseVerticalLayout ? "none" : "1",
+              width: shouldUseVerticalLayout ? "100%" : "auto",
+              height: shouldUseVerticalLayout ? "auto" : "100%",
+              overflowY: shouldUseVerticalLayout ? "visible" : "auto",
+              paddingRight: shouldUseVerticalLayout ? 0 : "16px",
             }}
           >
             <Box sx={{ p: 4 }}>

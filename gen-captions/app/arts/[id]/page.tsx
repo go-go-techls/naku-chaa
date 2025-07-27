@@ -33,7 +33,9 @@ export default function Arts({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [prevId, setPrevId] = useState<number | null>(null);
   const [nextId, setNextId] = useState<number | null>(null);
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTabletOrMobile = useMediaQuery("(max-width: 1199px)");
+  const isPortrait = useMediaQuery("(orientation: portrait)");
+  const shouldUseVerticalLayout = isTabletOrMobile && isPortrait;
   const router = useRouter();
 
   // スワイプ用の状態（タッチ・マウス共通）
@@ -148,8 +150,8 @@ export default function Arts({ params }: { params: { id: string } }) {
         <Box
           sx={{
             display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            height: isMobile ? "auto" : "calc(100vh - 64px)",
+            flexDirection: shouldUseVerticalLayout ? "column" : "row",
+            height: shouldUseVerticalLayout ? "auto" : "calc(100vh - 64px)",
             overflow: "hidden",
             position: "relative",
             userSelect: "none",
@@ -164,13 +166,13 @@ export default function Arts({ params }: { params: { id: string } }) {
         >
           <Box
             sx={{
-              flex: isMobile ? "none" : "0 0 60%",
-              width: isMobile ? "100%" : "auto",
-              height: isMobile ? "auto" : "100%",
+              flex: shouldUseVerticalLayout ? "none" : "0 0 60%",
+              width: shouldUseVerticalLayout ? "100%" : "auto",
+              height: shouldUseVerticalLayout ? "auto" : "100%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              paddingRight: isMobile ? 0 : "24px",
+              paddingRight: shouldUseVerticalLayout ? 0 : "24px",
               boxSizing: "border-box",
               position: "relative",
             }}
@@ -179,11 +181,12 @@ export default function Arts({ params }: { params: { id: string } }) {
           </Box>
           <Box
             sx={{
-              flex: "1",
-              height: "100%",
-              overflowY: "auto",
+              flex: shouldUseVerticalLayout ? "none" : "1",
+              width: shouldUseVerticalLayout ? "100%" : "auto",
+              height: shouldUseVerticalLayout ? "auto" : "100%",
+              overflowY: shouldUseVerticalLayout ? "visible" : "auto",
               overflowX: "hidden",
-              paddingRight: "16px",
+              paddingRight: shouldUseVerticalLayout ? 0 : "16px",
               boxSizing: "border-box",
             }}
           >
