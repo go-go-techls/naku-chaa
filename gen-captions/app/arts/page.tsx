@@ -2,10 +2,10 @@
 import React, { useEffect, useState, Suspense } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Box, Pagination, Skeleton } from "@mui/material";
+import { Box, Pagination, Skeleton, Fab, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddIcon from "@mui/icons-material/Add";
 import { DataItem } from "../api/arts/route";
 import { getArts, clearArtsCache } from "@/lib/getArts";
 import Header from "../components/common/Header/Header";
@@ -17,7 +17,7 @@ function ImageGridContent() {
   const pageFromURL = Number(searchParams.get("page")) || 1;
   const [data, setData] = useState<DataItem[]>([]);
   const [page, setPage] = useState(pageFromURL);
-  const pageSize = 14;
+  const pageSize = 15;
   const [total, setTotal] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -81,6 +81,81 @@ function ImageGridContent() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [page, total, isLoading, router]);
 
+  // スワイプナビゲーション
+  useEffect(() => {
+    let startX = 0;
+    let startY = 0;
+    let isDragging = false;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (isLoading) return;
+      
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+      isDragging = true;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!isDragging || isLoading) return;
+      
+      // 縦スクロールを優先するため、縦方向の移動が大きい場合はスワイプを無効化
+      const currentX = event.touches[0].clientX;
+      const currentY = event.touches[0].clientY;
+      const diffX = Math.abs(currentX - startX);
+      const diffY = Math.abs(currentY - startY);
+      
+      if (diffY > diffX) {
+        isDragging = false;
+        return;
+      }
+      
+      // 横スワイプが検出された場合、縦スクロールを防ぐ
+      if (diffX > 20) {
+        event.preventDefault();
+      }
+    };
+
+    const handleTouchEnd = (event: TouchEvent) => {
+      if (!isDragging || isLoading) return;
+      
+      const endX = event.changedTouches[0].clientX;
+      const endY = event.changedTouches[0].clientY;
+      const diffX = startX - endX;
+      const diffY = Math.abs(startY - endY);
+      
+      // 縦方向の移動が大きい場合はスワイプを無視
+      if (diffY > 100) {
+        isDragging = false;
+        return;
+      }
+      
+      // 最小スワイプ距離
+      const minSwipeDistance = 50;
+      
+      if (Math.abs(diffX) > minSwipeDistance) {
+        if (diffX > 0 && page < total) {
+          // 左スワイプ：次のページ
+          router.push(`?page=${page + 1}`, { scroll: false });
+        } else if (diffX < 0 && page > 1) {
+          // 右スワイプ：前のページ
+          router.push(`?page=${page - 1}`, { scroll: false });
+        }
+      }
+      
+      isDragging = false;
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [page, total, isLoading, router]);
+
   useEffect(() => {
     setIsLoading(true);
     getArts(setData, setTotal, page, pageSize).finally(() => {
@@ -115,31 +190,14 @@ function ImageGridContent() {
             mx: "auto",
           }}
         >
-          <Grid item xs={4} sm={2.4} md={2.4} style={{ aspectRatio: "1/1" }}>
-            <Link href={`/`} passHref>
-              <Paper
-                elevation={3}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
-                  height: "100%",
-                  padding: 1,
-                }}
-              >
-                <AddCircleOutlineIcon fontSize="large" color="action" />
-              </Paper>
-            </Link>
-          </Grid>
 
           {isLoading
             ? Array.from(new Array(pageSize)).map((_, index) => (
                 <Grid
                   item
-                  xs={4} // 小さい画面で3列
-                  sm={2.4} // 中サイズ以上で5列
-                  md={2.4}
+                  xs={4} // スマホで3列
+                  sm={4} // iPadポートレートで3列
+                  md={2.4} // iPadランドスケープ・デスクトップで5列
                   style={{ aspectRatio: "1/1" }}
                   key={index}
                 >
@@ -154,9 +212,9 @@ function ImageGridContent() {
             : data.map((src, index) => (
                 <Grid
                   item
-                  xs={4} // 小さい画面で3列
-                  sm={2.4} // 中サイズ以上で5列
-                  md={2.4}
+                  xs={4} // スマホで3列
+                  sm={4} // iPadポートレートで3列
+                  md={2.4} // iPadランドスケープ・デスクトップで5列
                   style={{ aspectRatio: "1/1" }}
                   key={index}
                 >
@@ -185,11 +243,90 @@ function ImageGridContent() {
           size="medium"
           sx={{
             mt: 2.2,
+            mb: { xs: 10, sm: 4 },
             "& .MuiPaginationItem-root": {
-              fontSize: "1.0rem",
+              fontSize: { xs: "1.0rem", sm: "1.5rem" },
+              minWidth: { xs: "32px", sm: "48px" },
+              height: { xs: "32px", sm: "48px" },
+              margin: { xs: "0 1px", sm: "0 4px" },
             },
           }}
         />
+      </Box>
+      
+      <Box 
+        sx={{ 
+          position: "fixed", 
+          bottom: 24, 
+          right: 24, 
+          zIndex: 1000,
+          "@keyframes pulse": {
+            "0%": {
+              transform: "scale(1)",
+              boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06), 0 0 0 0 rgba(100, 116, 139, 0.4)"
+            },
+            "70%": {
+              transform: "scale(1.02)",
+              boxShadow: "0px 4px 16px rgba(0,0,0,0.06), 0px 2px 4px rgba(0,0,0,0.08), 0 0 0 8px rgba(100, 116, 139, 0)"
+            },
+            "100%": {
+              transform: "scale(1)",
+              boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06), 0 0 0 0 rgba(100, 116, 139, 0)"
+            }
+          },
+          "@keyframes glow": {
+            "0%, 100%": { 
+              filter: "drop-shadow(0 0 5px rgba(100, 116, 139, 0.3))" 
+            },
+            "50%": { 
+              filter: "drop-shadow(0 0 15px rgba(100, 116, 139, 0.6))" 
+            }
+          }
+        }}
+      >
+        <Tooltip title="新しい作品をみてもらう" placement="left">
+          <Fab
+            variant="extended"
+            aria-label="新しい作品をみてもらう"
+            sx={{
+              background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)",
+              color: "#64748b",
+              border: "1px solid rgba(148, 163, 184, 0.2)",
+              boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06)",
+              backdropFilter: "blur(12px)",
+              borderRadius: "28px",
+              px: 4,
+              py: 2,
+              fontSize: "1.1rem",
+              fontWeight: 600,
+              minWidth: "140px",
+              height: "56px",
+              animation: "pulse 3s ease-in-out infinite",
+              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              "&:hover": {
+                transform: "translateY(-3px) scale(1.05)",
+                background: "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%)",
+                boxShadow: "0px 6px 24px rgba(0,0,0,0.08), 0px 2px 6px rgba(0,0,0,0.1)",
+                color: "#475569",
+                border: "1px solid rgba(148, 163, 184, 0.4)",
+                animation: "glow 1.5s ease-in-out infinite",
+              },
+              "&:active": {
+                transform: "translateY(-1px) scale(1.02)",
+              },
+            }}
+            component={Link}
+            href="/"
+          >
+            <AddIcon sx={{ 
+              mr: 2, 
+              fontSize: "24px",
+              color: "#64748b",
+              transition: "all 0.3s ease"
+            }} />
+            みてもらう
+          </Fab>
+        </Tooltip>
       </Box>
     </>
   );

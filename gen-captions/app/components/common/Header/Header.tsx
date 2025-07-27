@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
+import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useAuth } from "@/app/contexts/AuthContext";
@@ -106,9 +107,12 @@ function Header() {
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {loading ? (
             // ロード中
-            <Typography variant="body2" color="text.secondary">
-              読み込み中...
-            </Typography>
+            <Skeleton
+              variant="circular"
+              width={36}
+              height={36}
+              animation="pulse"
+            />
           ) : user ? (
             // ログイン済み
             <>

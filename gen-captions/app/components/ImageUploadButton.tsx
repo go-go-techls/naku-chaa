@@ -150,7 +150,33 @@ function ImageUploadButton({
   };
 
   return (
-    <Box sx={{ textAlign: "center" }}>
+    <Box 
+      sx={{ 
+        textAlign: "center",
+        "@keyframes gentlePulse": {
+          "0%": {
+            transform: "scale(1)",
+            boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06), 0 0 0 0 rgba(100, 116, 139, 0.4)"
+          },
+          "70%": {
+            transform: "scale(1.02)",
+            boxShadow: "0px 4px 16px rgba(0,0,0,0.06), 0px 2px 4px rgba(0,0,0,0.08), 0 0 0 6px rgba(100, 116, 139, 0)"
+          },
+          "100%": {
+            transform: "scale(1)",
+            boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06), 0 0 0 0 rgba(100, 116, 139, 0)"
+          }
+        },
+        "@keyframes softGlow": {
+          "0%, 100%": { 
+            filter: "drop-shadow(0 0 3px rgba(100, 116, 139, 0.2))" 
+          },
+          "50%": { 
+            filter: "drop-shadow(0 0 8px rgba(100, 116, 139, 0.4))" 
+          }
+        }
+      }}
+    >
       <label htmlFor={`upload-button-${character}`}>
         <input
           style={{ display: "none" }}
@@ -163,29 +189,50 @@ function ImageUploadButton({
           component="span"
           sx={{
             ...sx,
-            width: "84px",
-            height: "84px",
-            boxShadow: "0px 1px 10px 0px rgba(0,0,0,0.1)",
+            width: "96px",
+            height: "96px",
+            background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)",
+            border: "1px solid rgba(148, 163, 184, 0.2)",
+            boxShadow: "0px 2px 12px rgba(0,0,0,0.04), 0px 1px 2px rgba(0,0,0,0.06)",
+            backdropFilter: "blur(12px)",
+            animation: "gentlePulse 3s ease-in-out infinite",
+            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            "&:hover": {
+              transform: "translateY(-3px) scale(1.05)",
+              background: "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%)",
+              boxShadow: "0px 6px 24px rgba(0,0,0,0.08), 0px 2px 6px rgba(0,0,0,0.1)",
+              border: "1px solid rgba(148, 163, 184, 0.3)",
+              animation: "softGlow 1.5s ease-in-out infinite",
+            },
+            "&:active": {
+              transform: "translateY(-1px) scale(1.02)",
+            },
           }}
-          onClick={onClick} // 🔽 クリック時にキャラクターをセット
+          onClick={onClick}
         >
           <Box sx={{ textAlign: "center" }}>
             <img
               src={settings.icon.src}
               alt="Upload"
-              style={{ marginTop: "8px" }}
+              style={{ 
+                marginTop: "8px",
+                transition: "all 0.3s ease"
+              }}
             />
             <Typography
               variant="caption"
               sx={{
                 display: "inline-block",
-                mt: 0,
-                px: 1,
-                py: 0.2,
-                backgroundColor: settings.backgroundColor,
-                color: "#555",
-                borderRadius: "10px",
+                mt: 0.5,
+                px: 1.5,
+                py: 0.3,
+                background: `linear-gradient(135deg, ${settings.backgroundColor}dd 0%, ${settings.backgroundColor}bb 100%)`,
+                color: "#64748b",
+                borderRadius: "12px",
                 fontSize: "0.8rem",
+                fontWeight: 500,
+                boxShadow: "0px 1px 4px rgba(0,0,0,0.06)",
+                backdropFilter: "blur(8px)",
               }}
             >
               {settings.title}
