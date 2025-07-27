@@ -81,6 +81,81 @@ function ImageGridContent() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [page, total, isLoading, router]);
 
+  // スワイプナビゲーション
+  useEffect(() => {
+    let startX = 0;
+    let startY = 0;
+    let isDragging = false;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (isLoading) return;
+      
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+      isDragging = true;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!isDragging || isLoading) return;
+      
+      // 縦スクロールを優先するため、縦方向の移動が大きい場合はスワイプを無効化
+      const currentX = event.touches[0].clientX;
+      const currentY = event.touches[0].clientY;
+      const diffX = Math.abs(currentX - startX);
+      const diffY = Math.abs(currentY - startY);
+      
+      if (diffY > diffX) {
+        isDragging = false;
+        return;
+      }
+      
+      // 横スワイプが検出された場合、縦スクロールを防ぐ
+      if (diffX > 20) {
+        event.preventDefault();
+      }
+    };
+
+    const handleTouchEnd = (event: TouchEvent) => {
+      if (!isDragging || isLoading) return;
+      
+      const endX = event.changedTouches[0].clientX;
+      const endY = event.changedTouches[0].clientY;
+      const diffX = startX - endX;
+      const diffY = Math.abs(startY - endY);
+      
+      // 縦方向の移動が大きい場合はスワイプを無視
+      if (diffY > 100) {
+        isDragging = false;
+        return;
+      }
+      
+      // 最小スワイプ距離
+      const minSwipeDistance = 50;
+      
+      if (Math.abs(diffX) > minSwipeDistance) {
+        if (diffX > 0 && page < total) {
+          // 左スワイプ：次のページ
+          router.push(`?page=${page + 1}`, { scroll: false });
+        } else if (diffX < 0 && page > 1) {
+          // 右スワイプ：前のページ
+          router.push(`?page=${page - 1}`, { scroll: false });
+        }
+      }
+      
+      isDragging = false;
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [page, total, isLoading, router]);
+
   useEffect(() => {
     setIsLoading(true);
     getArts(setData, setTotal, page, pageSize).finally(() => {
@@ -120,9 +195,9 @@ function ImageGridContent() {
             ? Array.from(new Array(pageSize)).map((_, index) => (
                 <Grid
                   item
-                  xs={4} // 小さい画面で3列
-                  sm={2.4} // 中サイズ以上で5列
-                  md={2.4}
+                  xs={4} // スマホで3列
+                  sm={4} // iPadポートレートで3列
+                  md={2.4} // iPadランドスケープ・デスクトップで5列
                   style={{ aspectRatio: "1/1" }}
                   key={index}
                 >
@@ -137,9 +212,9 @@ function ImageGridContent() {
             : data.map((src, index) => (
                 <Grid
                   item
-                  xs={4} // 小さい画面で3列
-                  sm={2.4} // 中サイズ以上で5列
-                  md={2.4}
+                  xs={4} // スマホで3列
+                  sm={4} // iPadポートレートで3列
+                  md={2.4} // iPadランドスケープ・デスクトップで5列
                   style={{ aspectRatio: "1/1" }}
                   key={index}
                 >
@@ -168,8 +243,12 @@ function ImageGridContent() {
           size="medium"
           sx={{
             mt: 2.2,
+            mb: { xs: 10, sm: 4 },
             "& .MuiPaginationItem-root": {
-              fontSize: "1.0rem",
+              fontSize: { xs: "1.0rem", sm: "1.5rem" },
+              minWidth: { xs: "32px", sm: "48px" },
+              height: { xs: "32px", sm: "48px" },
+              margin: { xs: "0 1px", sm: "0 4px" },
             },
           }}
         />
