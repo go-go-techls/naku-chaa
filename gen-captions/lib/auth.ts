@@ -1,5 +1,6 @@
 import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import { sha256 } from '@noble/hashes/sha256';
+import bcrypt from 'bcryptjs';
 import { SignJWT, jwtVerify } from 'jose';
 import { NextRequest } from 'next/server';
 
@@ -37,21 +38,28 @@ export async function hashPassword(password: string): Promise<string> {
   return btoa(String.fromCharCode.apply(null, Array.from(combined)));
 }
 
-// パスワード検証
+// パスワード検証（bcryptjsと@noble/hashesの両方に対応）
 export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
   try {
-    // Base64デコード
-    const combined = new Uint8Array(atob(hashedPassword).split('').map(c => c.charCodeAt(0)));
-    
-    // saltとhashを分離
-    const salt = combined.slice(0, 32);
-    const storedHash = combined.slice(32);
-    
-    // 入力されたパスワードをハッシュ化
-    const inputHash = pbkdf2(sha256, password, salt, { c: 100000, dkLen: 32 });
-    
-    // ハッシュを比較
-    return storedHash.every((byte, index) => byte === inputHash[index]);
+    // bcryptjsハッシュかどうかをチェック（$2a$, $2b$, $2y$で始まる）
+    if (hashedPassword.startsWith('$2a$') || hashedPassword.startsWith('$2b$') || hashedPassword.startsWith('$2y$')) {
+      // 既存のbcryptjsハッシュを検証
+      return bcrypt.compare(password, hashedPassword);
+    } else {
+      // @noble/hashesの新形式を検証
+      // Base64デコード
+      const combined = new Uint8Array(atob(hashedPassword).split('').map(c => c.charCodeAt(0)));
+      
+      // saltとhashを分離
+      const salt = combined.slice(0, 32);
+      const storedHash = combined.slice(32);
+      
+      // 入力されたパスワードをハッシュ化
+      const inputHash = pbkdf2(sha256, password, salt, { c: 100000, dkLen: 32 });
+      
+      // ハッシュを比較
+      return storedHash.every((byte, index) => byte === inputHash[index]);
+    }
   } catch (error) {
     console.error('Password verification error:', error);
     return false;

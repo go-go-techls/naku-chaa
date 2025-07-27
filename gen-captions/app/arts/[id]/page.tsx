@@ -211,17 +211,40 @@ export default function Arts({ params }: { params: { id: string } }) {
                 }}
               >
                 {isLoading ? (
-                  <Skeleton 
-                    variant="text" 
-                    width={120} 
-                    height={24}
-                    sx={{ 
-                      display: "inline-block",
-                      ml: "auto"
-                    }}
-                  />
+                  <>
+                    <Skeleton 
+                      variant="text" 
+                      width={120} 
+                      height={24}
+                      sx={{ 
+                        display: "inline-block",
+                        ml: "auto",
+                        mb: 1
+                      }}
+                    />
+                    <Skeleton 
+                      variant="text" 
+                      width={160} 
+                      height={20}
+                      sx={{ 
+                        display: "inline-block",
+                        ml: "auto"
+                      }}
+                    />
+                  </>
                 ) : (
-                  data.is_public_allowed ? "📸 SNS 掲載 OK" : "🚫 SNS 掲載 NG"
+                  <>
+                    <Box sx={{ mb: 1 }}>
+                      {data.is_public_allowed ? "📸 SNS 掲載 OK" : "🚫 SNS 掲載 NG"}
+                    </Box>
+                    <Box sx={{ fontSize: 14, fontWeight: "normal" }}>
+                      📅 {new Date(data.createdAt).toLocaleDateString('ja-JP', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </Box>
+                  </>
                 )}
               </Box>
             </Box>

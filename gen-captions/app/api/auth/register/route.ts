@@ -3,6 +3,8 @@ import { hashPassword, generateToken, isValidEmail, isValidPassword } from '@/li
 import { generateAvatar } from '@/lib/avatar';
 import { prisma } from '@/lib/prisma';
 
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
