@@ -21,7 +21,7 @@ export type DataItem = {
 // GETリクエストを処理するAPI関数
 export async function GET(request: NextRequest) {
   // ログインユーザーを取得
-  const user = getUserFromRequest(request);
+  const user = await getUserFromRequest(request);
   // デバッグログは開発環境のみ
   if (process.env.NODE_ENV === 'development') {
     console.log(
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
 // POSTリクエストを処理するAPI関数
 export async function POST(request: Request) {
   // ログインユーザーを取得
-  const user = getUserFromRequest(request as NextRequest);
+  const user = await getUserFromRequest(request as NextRequest);
   if (!user) {
     return NextResponse.json({ error: "認証が必要です。" }, { status: 401 });
   }

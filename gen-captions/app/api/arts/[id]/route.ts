@@ -5,7 +5,7 @@ import { getUserFromRequest } from "@/lib/auth";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   // ログインユーザーを取得
-  const user = getUserFromRequest(request as NextRequest);
+  const user = await getUserFromRequest(request as NextRequest);
   if (!user) {
     return NextResponse.json(
       { error: "認証が必要です。" },
@@ -62,7 +62,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   // ログインユーザーを取得
-  const user = getUserFromRequest(request as NextRequest);
+  const user = await getUserFromRequest(request as NextRequest);
   if (!user) {
     return NextResponse.json(
       { error: "認証が必要です。" },

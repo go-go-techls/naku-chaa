@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
 // ミドルウェアはすべてのリクエストに対して実行される
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
   
   // パブリックなパス（認証不要）
@@ -81,10 +81,8 @@ export function middleware(req: NextRequest) {
   }
   
   // トークンの有効性を確認
-  try {
-    verifyToken(token);
-    return NextResponse.next();
-  } catch (error) {
+  const user = await verifyToken(token);
+  if (!user) {
     // APIの場合は401を返す
     if (pathname.startsWith('/api')) {
       return NextResponse.json(
@@ -95,6 +93,8 @@ export function middleware(req: NextRequest) {
     // ページの場合はログインページにリダイレクト
     return NextResponse.redirect(new URL('/login', req.url));
   }
+  
+  return NextResponse.next();
 }
 
 // ミドルウェアが適用されるパスを定義

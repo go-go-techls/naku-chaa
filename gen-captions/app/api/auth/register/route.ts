@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     });
 
     // JWT トークン生成
-    const token = generateToken({
+    const token = await generateToken({
       id: updatedUser.id,
       email: updatedUser.email,
       name: updatedUser.name || undefined,
