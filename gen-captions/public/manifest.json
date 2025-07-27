@@ -1,0 +1,74 @@
+{
+  "name": "AIにみてもらおう by テックルズ",
+  "short_name": "AIにみてもらおう",
+  "description": "生成AIにあなたの作品を見てもらって、感想やアドバイスをもらえるサービスです",
+  "start_url": "/arts",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3386E7",
+  "orientation": "portrait-primary",
+  "categories": [
+    "art",
+    "creativity",
+    "ai"
+  ],
+  "lang": "ja",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/techls-color.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "360x640",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "作品を見てもらう",
+      "short_name": "投稿",
+      "description": "新しい作品をAIに評価してもらう",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/techls-color.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "作品一覧",
+      "short_name": "一覧",
+      "description": "これまでの作品を見る",
+      "url": "/arts",
+      "icons": [
+        {
+          "src": "/techls-color.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
