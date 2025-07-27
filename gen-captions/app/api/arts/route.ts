@@ -14,6 +14,7 @@ export type DataItem = {
   comment: string;
   character: string;
   is_public_allowed: boolean;
+  createdAt: Date;
 };
 
 // バックエンドキャッシュは不要（ユーザーごとに異なるデータのため）
