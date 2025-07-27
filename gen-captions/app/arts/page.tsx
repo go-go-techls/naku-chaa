@@ -2,7 +2,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { Box, Pagination, Skeleton, Fab, Tooltip, Typography } from "@mui/material";
+import { Box, Pagination, Skeleton, Fab, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import AddIcon from "@mui/icons-material/Add";
