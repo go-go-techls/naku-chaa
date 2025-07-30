@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { hashPassword, generateToken, isValidEmail, isValidPassword } from '@/lib/auth';
+import { hashPassword, generateToken, isValidEmail, isValidPassword, validateRequestInput } from '@/lib/auth';
 import { generateAvatar } from '@/lib/avatar';
 import { prisma } from '@/lib/prisma';
 
@@ -9,6 +9,15 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, password, name } = body;
+
+    // 共通の入力検証
+    const validation = validateRequestInput(request, { email, password, name });
+    if (!validation.isValid) {
+      return NextResponse.json(
+        { error: validation.error },
+        { status: 400 }
+      );
+    }
 
     // バリデーション
     if (!email || !password) {
