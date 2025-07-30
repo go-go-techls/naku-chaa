@@ -7,21 +7,45 @@ import {
   Paper,
   Typography,
   Avatar,
-  Grid,
+  Grid2,
   Card,
   CardContent,
   Chip,
   Button,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Alert,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import LockIcon from '@mui/icons-material/Lock';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function MyPage() {
   const { user, loading, refreshUser } = useAuth();
   const [artCount, setArtCount] = useState<number>(0);
   const [loadingArts, setLoadingArts] = useState(true);
+  
+  // パスワード変更フォーム関連の状態
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
+  const [passwordChangeMessage, setPasswordChangeMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   // マイページにアクセスした時にユーザー情報を確実に取得
   useEffect(() => {
@@ -84,6 +108,98 @@ export default function MyPage() {
     });
   };
 
+  // パスワード変更処理
+  const handlePasswordChange = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordChangeMessage({
+        type: 'error',
+        text: 'すべての項目を入力してください',
+      });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordChangeMessage({
+        type: 'error',
+        text: '新しいパスワードが一致しません',
+      });
+      return;
+    }
+
+    if (newPassword.length < 8 || !/^(?=.*[A-Za-z])(?=.*\d)/.test(newPassword)) {
+      setPasswordChangeMessage({
+        type: 'error',
+        text: 'パスワードは8文字以上で、文字と数字を含む必要があります',
+      });
+      return;
+    }
+
+    setPasswordChangeLoading(true);
+    setPasswordChangeMessage(null);
+
+    try {
+      const response = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setPasswordChangeMessage({
+          type: 'success',
+          text: data.message,
+        });
+        // フォームをリセット
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        
+        // トークンがリフレッシュされた場合、ユーザー情報を再取得
+        if (data.tokenRefreshed) {
+          await refreshUser();
+        }
+        
+        // 3秒後にダイアログを閉じる
+        setTimeout(() => {
+          setPasswordDialogOpen(false);
+          setPasswordChangeMessage(null);
+        }, 3000);
+      } else {
+        setPasswordChangeMessage({
+          type: 'error',
+          text: data.error,
+        });
+      }
+    } catch (error) {
+      setPasswordChangeMessage({
+        type: 'error',
+        text: 'パスワード変更処理中にエラーが発生しました',
+      });
+    } finally {
+      setPasswordChangeLoading(false);
+    }
+  };
+
+  // ダイアログを閉じる時の処理
+  const handleClosePasswordDialog = () => {
+    setPasswordDialogOpen(false);
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordChangeMessage(null);
+    setShowCurrentPassword(false);
+    setShowNewPassword(false);
+    setShowConfirmPassword(false);
+  };
+
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 4 }}>
@@ -123,29 +239,57 @@ export default function MyPage() {
             <Typography variant="body1" color="text.secondary" gutterBottom>
               {user.email}
             </Typography>
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
               <Chip 
                 icon={<CalendarTodayIcon />}
                 label={`登録日: ${user.createdAt ? formatDate(user.createdAt) : '不明'}`}
                 variant="outlined"
                 size="small"
+                sx={{ 
+                  fontSize: { xs: '0.7rem', sm: '0.8125rem' },
+                  height: { xs: 28, sm: 32 }
+                }}
               />
               {user.role === 'admin' && (
                 <Chip 
                   label="管理者"
                   color="primary"
                   size="small"
-                  sx={{ bgcolor: '#3386E7', color: 'white' }}
+                  sx={{ 
+                    bgcolor: '#3386E7', 
+                    color: 'white',
+                    fontSize: { xs: '0.7rem', sm: '0.8125rem' },
+                    height: { xs: 28, sm: 32 }
+                  }}
                 />
               )}
             </Box>
           </Box>
         </Box>
+        
+        {/* パスワード変更ボタン */}
+        <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button
+            variant="outlined"
+            startIcon={<LockIcon />}
+            onClick={() => setPasswordDialogOpen(true)}
+            sx={{ 
+              borderColor: '#3386E7',
+              color: '#3386E7',
+              '&:hover': {
+                borderColor: '#2563EB',
+                backgroundColor: 'rgba(51, 134, 231, 0.04)',
+              }
+            }}
+          >
+            パスワード変更
+          </Button>
+        </Box>
       </Paper>
 
       {/* 統計情報 */}
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
+      <Grid2 container spacing={3}>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
               <ArtTrackIcon sx={{ fontSize: 48, color: '#3386E7', mb: 1 }} />
@@ -157,9 +301,9 @@ export default function MyPage() {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid2>
         
-        <Grid item xs={12} sm={6}>
+        <Grid2 size={{ xs: 12, sm: 6 }}>
           <Card>
             <CardContent sx={{ textAlign: 'center' }}>
               <PersonIcon sx={{ fontSize: 48, color: '#3386E7', mb: 1 }} />
@@ -171,8 +315,121 @@ export default function MyPage() {
               </Typography>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
+
+      {/* パスワード変更ダイアログ */}
+      <Dialog 
+        open={passwordDialogOpen} 
+        onClose={handleClosePasswordDialog}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <LockIcon sx={{ mr: 1, color: '#3386E7' }} />
+            パスワード変更
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {passwordChangeMessage && (
+            <Alert 
+              severity={passwordChangeMessage.type} 
+              sx={{ mb: 2 }}
+            >
+              {passwordChangeMessage.text}
+            </Alert>
+          )}
+          
+          <TextField
+            fullWidth
+            margin="normal"
+            label="現在のパスワード"
+            type={showCurrentPassword ? 'text' : 'password'}
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            disabled={passwordChangeLoading}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <IconButton
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    edge="end"
+                  >
+                    {showCurrentPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                ),
+              },
+            }}
+          />
+          
+          <TextField
+            fullWidth
+            margin="normal"
+            label="新しいパスワード"
+            type={showNewPassword ? 'text' : 'password'}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            disabled={passwordChangeLoading}
+            helperText="8文字以上で、文字と数字を含む必要があります"
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <IconButton
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    edge="end"
+                  >
+                    {showNewPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                ),
+              },
+            }}
+          />
+          
+          <TextField
+            fullWidth
+            margin="normal"
+            label="新しいパスワード（確認）"
+            type={showConfirmPassword ? 'text' : 'password'}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            disabled={passwordChangeLoading}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <IconButton
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    edge="end"
+                  >
+                    {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                ),
+              },
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            onClick={handleClosePasswordDialog}
+            disabled={passwordChangeLoading}
+          >
+            キャンセル
+          </Button>
+          <Button 
+            onClick={handlePasswordChange}
+            variant="contained"
+            disabled={passwordChangeLoading}
+            sx={{ 
+              bgcolor: '#3386E7',
+              '&:hover': {
+                bgcolor: '#2563EB',
+              }
+            }}
+          >
+            {passwordChangeLoading ? '変更中...' : 'パスワード変更'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
