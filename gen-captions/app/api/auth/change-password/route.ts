@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserFromRequest, verifyPassword, hashPassword, isValidPassword, generateToken } from '@/lib/auth';
+import { getUserFromRequest, verifyPassword, hashPassword, isValidPassword, generateToken, validateRequestInput } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
@@ -13,7 +13,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { currentPassword, newPassword } = await request.json();
+    const body = await request.json();
+    const { currentPassword, newPassword } = body;
+
+    // 共通の入力検証
+    const validation = validateRequestInput(request, { currentPassword, newPassword });
+    if (!validation.isValid) {
+      return NextResponse.json(
+        { error: validation.error },
+        { status: 400 }
+      );
+    }
 
     // バリデーション
     if (!currentPassword || !newPassword) {
@@ -22,6 +32,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
 
     if (!isValidPassword(newPassword)) {
       return NextResponse.json(
@@ -96,7 +107,13 @@ export async function POST(request: NextRequest) {
     return response;
 
   } catch (error) {
-    console.error('Password change error:', error);
+    // セキュリティのため、詳細なエラー情報はログのみに記録
+    console.error('Password change error:', {
+      userId: request.headers.get('user-id'),
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+    
     return NextResponse.json(
       { error: 'パスワード変更処理中にエラーが発生しました' },
       { status: 500 }

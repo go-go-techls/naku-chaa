@@ -130,3 +130,44 @@ export function isValidPassword(password: string): boolean {
   // 最低8文字、少なくとも1つの文字と1つの数字
   return password.length >= 8 && /^(?=.*[A-Za-z])(?=.*\d)/.test(password);
 }
+
+// 共通のリクエスト検証関数
+export function validateRequestInput(
+  request: { headers: { get: (name: string) => string | null } },
+  inputs: { [key: string]: any }
+): { isValid: boolean; error?: string } {
+  // Content-Type検証
+  const contentType = request.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    return { isValid: false, error: '不正なリクエスト形式です' };
+  }
+
+  // 各入力値の検証
+  for (const [key, value] of Object.entries(inputs)) {
+    // 必須フィールドのnull/undefined チェック
+    if (value === null || value === undefined) {
+      continue; // オプショナルフィールドは許可
+    }
+
+    // 文字列型チェック
+    if (typeof value !== 'string') {
+      return { isValid: false, error: '不正な入力値です' };
+    }
+
+    // DoS攻撃防止（フィールドごとの長さ制限）
+    const maxLengths: { [key: string]: number } = {
+      email: 255,
+      password: 1000,
+      currentPassword: 1000,
+      newPassword: 1000,
+      name: 100,
+    };
+
+    const maxLength = maxLengths[key] || 1000; // デフォルト1000文字
+    if (value.length > maxLength) {
+      return { isValid: false, error: '入力値が長すぎます' };
+    }
+  }
+
+  return { isValid: true };
+}
