@@ -29,7 +29,9 @@ model User {
   updatedAt DateTime @updatedAt
   
   // 作品との関連
-  arts      Art[]    @relation("UserArts")
+  arts      Art[]      @relation("UserArts")
+  // フィードバックとの関連
+  feedbacks Feedback[] @relation("UserFeedback")
 }
 
 model Art {
@@ -48,4 +50,14 @@ model Art {
   // ユーザーとの関連（null許可でゲスト作成も可能）
   userId    String?
   user      User?    @relation("UserArts", fields: [userId], references: [id])
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  
+  // ユーザーとの関連（ログイン済みの場合）
+  userId    String?
+  user      User?    @relation("UserFeedback", fields: [userId], references: [id])
 }

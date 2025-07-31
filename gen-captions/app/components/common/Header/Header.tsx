@@ -14,6 +14,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
 import { useAuth } from "@/app/contexts/AuthContext";
+import FeedbackForm from "@/app/components/FeedbackForm";
 
 // 画像をアイコンとして表示するためのスタイリング
 const Logo = styled("img")({
@@ -25,6 +26,7 @@ const Logo = styled("img")({
 function Header() {
   const { user, logout, loading } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [feedbackOpen, setFeedbackOpen] = React.useState(false);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -103,6 +105,7 @@ function Header() {
           </Box>
         </Link>
 
+
         {/* 認証状態に応じたUI */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           {loading ? (
@@ -158,6 +161,9 @@ function Header() {
                     マイページ
                   </Link>
                 </MenuItem>
+                <MenuItem onClick={() => { handleMenuClose(); setFeedbackOpen(true); }}>
+                  ご意見
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>ログアウト</MenuItem>
               </Menu>
             </>
@@ -182,6 +188,12 @@ function Header() {
           )}
         </Box>
       </Toolbar>
+
+      {/* フィードバックフォーム */}
+      <FeedbackForm
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
     </AppBar>
   );
 }
