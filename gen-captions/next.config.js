@@ -1,20 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-        port: '',
-        pathname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3000',
-        pathname: '**',
-      },
-    ],
     // 画像最適化の設定
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 300, // 5分間キャッシュ
