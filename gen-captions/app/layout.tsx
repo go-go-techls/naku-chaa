@@ -9,7 +9,6 @@ export const metadata = {
     "生成AIにあなたの作品を見てもらって、感想やアドバイスをもらえるサービスです",
   keywords: "生成AI, 作品評価, アート, クリエイティブ, AI, フィードバック",
   authors: [{ name: "テックルズ" }],
-  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -56,25 +55,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-        />
-
-        {/* Service Worker登録 */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
         />
       </head>
       <body>
