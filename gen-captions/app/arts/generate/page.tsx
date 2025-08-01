@@ -77,7 +77,8 @@ export default function Home() {
   const [advantage, setAdvantage] = useState("");
   const [advice, setAdvice] = useState("");
   const [imageBase64, setImageBase64] = useState("");
-  const [snsCheck, setSnsCheck] = useState(true);
+  const [snsCheck, setSnsCheck] = useState(false);
+  // const [snsCheck, setSnsCheck] = useState(true);
   const [character, setCharacter] = useState("");
   const [waitingForUser, setWaitingForUser] = useState(true);
 
@@ -119,7 +120,9 @@ export default function Home() {
               sx={{
                 display: "flex",
                 flexDirection: shouldUseVerticalLayout ? "column" : "row",
-                justifyContent: shouldUseVerticalLayout ? "center" : "flex-start",
+                justifyContent: shouldUseVerticalLayout
+                  ? "center"
+                  : "flex-start",
                 alignItems: "center",
                 gap: "1rem",
                 mt: shouldUseVerticalLayout ? 1 : "auto",
@@ -140,7 +143,7 @@ export default function Home() {
                   snsCheck,
                 }}
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={
                   <Checkbox
                     checked={snsCheck}
@@ -153,7 +156,7 @@ export default function Home() {
                   whiteSpace: "nowrap",
                   "& .MuiFormControlLabel-label": { fontSize: "1.2rem" },
                 }}
-              />
+              /> */}
             </Box>
           </Box>
 

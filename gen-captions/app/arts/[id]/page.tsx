@@ -46,7 +46,7 @@ export default function Arts({ params }: { params: { id: string } }) {
   useEffect(() => {
     setIsLoading(true);
     setData({} as DataItem); // データをリセット
-    
+
     getArt(params.id, setData);
     getAdjacentArtIds(params.id).then((ids) => {
       setPrevId(ids.prevId);
@@ -212,31 +212,30 @@ export default function Arts({ params }: { params: { id: string } }) {
               >
                 {isLoading ? (
                   <>
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 1 }}>
-                      <Skeleton 
-                        variant="text" 
-                        width={120} 
-                        height={24}
-                      />
-                    </Box>
+                    {/* <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        mb: 1,
+                      }}
+                    >
+                      <Skeleton variant="text" width={120} height={24} />
+                    </Box> */}
                     <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                      <Skeleton 
-                        variant="text" 
-                        width={120} 
-                        height={20}
-                      />
+                      <Skeleton variant="text" width={120} height={20} />
                     </Box>
                   </>
                 ) : (
                   <>
-                    <Box sx={{ mb: 1 }}>
+                    {/* <Box sx={{ mb: 1 }}>
                       {data.is_public_allowed ? "📸 SNS 掲載 OK" : "🚫 SNS 掲載 NG"}
-                    </Box>
+                    </Box> */}
                     <Box sx={{ fontSize: 14, fontWeight: "normal" }}>
-                      📅 {new Date(data.createdAt).toLocaleDateString('ja-JP', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
+                      📅{" "}
+                      {new Date(data.createdAt).toLocaleDateString("ja-JP", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
                       })}
                     </Box>
                   </>
