@@ -19,6 +19,7 @@
     "@mui/material-nextjs": "^6.5.0",
     "@noble/hashes": "^1.8.0",
     "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
+    "@vercel/analytics": "^1.5.0",
     "ai": "^4.3.19",
     "bcryptjs": "^3.0.2",
     "browser-image-compression": "^2.0.2",
