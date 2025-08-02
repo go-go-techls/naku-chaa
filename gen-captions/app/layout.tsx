@@ -9,11 +9,6 @@ export const metadata = {
     "生成AIにあなたの作品を見てもらって、感想やアドバイスをもらえるサービスです",
   keywords: "生成AI, 作品評価, アート, クリエイティブ, AI, フィードバック",
   authors: [{ name: "テックルズ" }],
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "AIにみてもらう",
-  },
   icons: {
     icon: "/favicon.ico",
     apple: "/techls-color.svg",
@@ -23,10 +18,6 @@ export const metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: "no",
-  viewportFit: "cover",
-  themeColor: "#3386E7",
 };
 
 export default function RootLayout(props: { children: React.ReactNode }) {
@@ -37,24 +28,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <link
           href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap"
           rel="stylesheet"
-        />
-        {/* PWA設定 */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#3386E7" />
-
-        {/* iOS Safari設定 */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="AIにみてもらおう" />
-        <link rel="apple-touch-icon" href="/techls-color.svg" />
-
-        {/* Android Chrome設定 */}
-        <meta name="mobile-web-app-capable" content="yes" />
-
-        {/* 全画面表示設定 */}
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
         />
       </head>
       <body>
