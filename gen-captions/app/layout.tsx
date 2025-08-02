@@ -2,6 +2,7 @@ import * as React from "react";
 import "./globals.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import ThemeRegistry from "./ThemeRegistry";
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
   title: "AIにみてもらおう by テックルズ",
@@ -34,6 +35,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <ThemeRegistry>
           <AuthProvider>{props.children}</AuthProvider>
         </ThemeRegistry>
+        <Analytics />
       </body>
     </html>
   );
