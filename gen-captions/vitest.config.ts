@@ -7,7 +7,14 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
-    setupFiles: ['./tests/setup.ts'],
+    setupFiles: ['./__tests__/setup/vitest.ts'],
+    include: [
+      '**/*.{test,spec}.{js,ts,tsx}',
+      'app/**/*.test.{js,ts,tsx}',
+      'components/**/*.test.{js,ts,tsx}',
+      'lib/**/*.test.{js,ts,tsx}',
+      '__tests__/**/*.{test,spec}.{js,ts,tsx}',
+    ],
   },
   resolve: {
     alias: {
