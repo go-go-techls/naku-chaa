@@ -15,6 +15,19 @@ export default defineConfig({
       'lib/**/*.test.{js,ts,tsx}',
       '__tests__/**/*.{test,spec}.{js,ts,tsx}',
     ],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'lcov'],
+      exclude: [
+        'node_modules/',
+        '__tests__/**',
+        'coverage/**',
+        '.next/**',
+        '*.config.*',
+        '**/*.d.ts',
+        'prisma/**',
+      ],
+    },
   },
   resolve: {
     alias: {

@@ -2,8 +2,6 @@ import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vites
 import { NextRequest } from 'next/server'
 import { GET } from './route'
 import { mockUsers } from '@/__tests__/fixtures/users'
-import { createAuthMocks } from '@/__tests__/mocks/handlers/auth'
-import { createPrismaMocks } from '@/__tests__/mocks/handlers/prisma'
 
 // モックを作成
 vi.mock('@/lib/prisma', () => ({
