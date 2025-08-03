@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 import { NextRequest } from 'next/server'
 import { GET } from './route'
-import { mockUsers } from '@/__tests__/fixtures/users'
 
 // モックを作成
 vi.mock('@/lib/prisma', () => ({
@@ -24,7 +23,7 @@ describe('/api/arts/count', () => {
   let mockRequest: NextRequest
 
   beforeAll(() => {
-    // console.errorのモック化
+    // console出力のモック化（テスト実行時の不要な出力を抑制）
     vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
@@ -57,7 +56,12 @@ describe('/api/arts/count', () => {
   describe('作品数取得テスト', () => {
     it('一般ユーザーは自分の作品数のみ取得できる', async () => {
       // 一般ユーザーをモック
-      vi.mocked(getUserFromRequest).mockResolvedValue(mockUsers.regularUser)
+      const mockUser = {
+        userId: 'user-123',
+        email: 'user@example.com',
+        role: 'user',
+      }
+      vi.mocked(getUserFromRequest).mockResolvedValue(mockUser)
       vi.mocked(prisma.art.count).mockResolvedValue(5)
 
       const response = await GET(mockRequest)
@@ -66,13 +70,18 @@ describe('/api/arts/count', () => {
       expect(response.status).toBe(200)
       expect(data.count).toBe(5)
       expect(prisma.art.count).toHaveBeenCalledWith({
-        where: { userId: mockUsers.regularUser.userId },
+        where: { userId: 'user-123' },
       })
     })
 
     it('管理者は全作品数を取得できる', async () => {
       // 管理者ユーザーをモック
-      vi.mocked(getUserFromRequest).mockResolvedValue(mockUsers.adminUser)
+      const mockAdmin = {
+        userId: 'admin-123',
+        email: 'admin@example.com',
+        role: 'admin',
+      }
+      vi.mocked(getUserFromRequest).mockResolvedValue(mockAdmin)
       vi.mocked(prisma.art.count).mockResolvedValue(100)
 
       const response = await GET(mockRequest)
